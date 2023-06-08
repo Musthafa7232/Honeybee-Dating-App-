@@ -2,6 +2,7 @@
   "name": "new-app",
   "private": true,
   "version": "0.0.0",
+  "proxy": "http://localhost:5000",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,7 +11,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/montez": "^5.0.2",
+    "@fontsource/roboto": "^5.0.2",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.13.4",
+    "mui-one-time-password-input": "^1.1.1",
+    "mui-tel-input": "^3.2.0",
     "react": "^18.2.0",
+    "react-backdrop-filter": "^2.1.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {

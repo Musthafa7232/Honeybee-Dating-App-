@@ -1,0 +1,18 @@
+:root {
+background-image: url('/blob.svg');
+background-size: 100vw;
+background-repeat: no-repeat;
+}
+
+::-webkit-scrollbar :root {
+display: hidden
+}
+
+.loginCard{
+  backdrop-filter: blur(10rem)!important;
+  border-radius: 20rem;
+}
+
+:root::-webkit-scrollbar {
+  display: none !important;
+}
