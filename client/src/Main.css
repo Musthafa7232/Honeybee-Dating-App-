@@ -1,0 +1,10 @@
+:root {
+  background-image: url('/blob.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+:root::-webkit-scrollbar {
+  display: none !important;
+}

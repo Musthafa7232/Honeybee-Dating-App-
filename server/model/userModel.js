@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
   },
   Preference:{
     type:String,
-    enum: ["male", "female", "everyone"],
+    enum: ["Male", "Female", "Everyone"],
   },
   LookingFor:{
     type:String
@@ -60,6 +60,10 @@ const userSchema = new mongoose.Schema({
   HoneyVipVerified:{
     type:String,
     enum: ["pending", "verified", "rejected"],
+  },
+  isVerified:{
+    type:Boolean,
+    default:false
   }
 },{ timestamps: true });
 

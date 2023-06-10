@@ -14,7 +14,7 @@ app.use(express.static("./public"));
 app.use(express.urlencoded({ extended: false }));
 
 
-app.use('/',userRouter)
+app.use('/api',userRouter)
 
 
 
