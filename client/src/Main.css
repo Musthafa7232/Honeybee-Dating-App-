@@ -1,4 +1,6 @@
 :root {
+  height: 100vh!important;
+  max-height: 100vh;
   background-image: url('/blob.svg');
   background-size: cover;
   background-repeat: no-repeat;

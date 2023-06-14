@@ -1,13 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { MuiTelInput, matchIsValidTel } from "mui-tel-input";
 import { Typography, Grid } from "@mui/material";
 import "@fontsource/Roboto";
 
-const Phone = ({ changePhone }) => {
+const Phone = ({ changePhone,error,setError }) => {
   const [value, setValue] = React.useState("");
+  
   useEffect(() => {
-    if (matchIsValidTel(value)) {
+    if(value){
+       if (matchIsValidTel(value)) {
+      setError(false)
       addPhone();
+    }
     }
   }, [value]);
 
@@ -44,12 +48,13 @@ const Phone = ({ changePhone }) => {
         </Typography>
       </Grid>
       <Grid item xs={12} sm={6} sx={{ textAlign: "center" }}>
-        <MuiTelInput
-          defaultCountry="IN"
-          variant="standard"
-          value={value}
-          onChange={handleChange}
-        />
+      <MuiTelInput
+  {...(error ? { error: true } : {})}
+  defaultCountry="IN"
+  variant="standard"
+  value={value}
+  onChange={handleChange}
+/>
       </Grid>
     </Grid>
   );

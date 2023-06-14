@@ -1,27 +1,24 @@
-import React from 'react'
-import Navbar from '../../components/Navbar/Navbar'
-import Sidebar from '../../components/Sidebar/Sidebar'
-import { useEffect } from 'react'
-import axios from '../../Axios'
-import { useContext } from "react";
-import {context} from '../../ContextProvider.jsx'
-import { useNavigate } from 'react-router-dom'
+import React from 'react';
+import { Grid } from '@mui/material';
+import Navbar from '../../components/Navbar/Navbar';
+import Sidebar from '../../components/Sidebar/Sidebar';
+import Discover from '../../components/Discover/DiscoverSide';
+
 function HomePage() {
-  const [userDetails,setUserDeatails]=useContext(context)
-  const navigate=useNavigate()
-  // useEffect(()=>{
-  //   axios.get('/userData',{headers:{'auth-token':JSON.parse(localStorage.getItem('authorization.user'))}}).then((res)=>{
-  //     setUserDeatails(res.data)
-  //   })  .catch(error => {
-  //     navigate('/login')
-  //   })
-  // },[])
   return (
-    <div>
-      <Navbar/>
-    <Sidebar/>
-    </div>
-  )
+    <Grid container spacing={6}>
+      <Grid item xs={12}>
+        <Navbar />
+      </Grid>
+      <Grid item xs>
+        <Sidebar />
+      </Grid>
+  
+        <Grid item xs={12} sm={12} md={8} lg={9}>
+          <Discover />
+        </Grid>
+      </Grid>
+  );
 }
 
-export default HomePage
+export default HomePage;

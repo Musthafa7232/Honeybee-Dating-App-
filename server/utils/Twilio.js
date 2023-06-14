@@ -21,6 +21,7 @@ const client = twilio(accountSid, authToken);
         try{
   const status = await client.verify.v2
             .services(verifySid).verificationChecks.create({ to: `${number}`, code: otpCode });
+            console.log(status);
              return status
         }catch(err){
             console.log(err);

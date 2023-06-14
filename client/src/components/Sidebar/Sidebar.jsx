@@ -3,11 +3,6 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
-import { context } from "../../ContextProvider";
-import { useContext } from "react";
-import axios from "../../Axios";
-import { useEffect } from "react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -22,7 +17,7 @@ export default function Sidebar() {
         alignItems="center"
         sx={{ minHeight: "100vh" }}
       >
-        <Grid item xs={12} sm={10} md={3}  xl={4}>
+        <Grid item xs={12} >
         <Card
       sx={{
         borderRadius: 6,
@@ -33,7 +28,7 @@ export default function Sidebar() {
       <CardContent>
         <List component="nav">
           <ListItem >
-            <Button component="a" href="/discover" fullWidth>
+            <Button component="a" href="/home" fullWidth>
               <ListItemText sx={{ color: 'black' }} primary="Discover" />
             </Button>
           </ListItem>

@@ -9,21 +9,21 @@ import { useState } from "react";
 import { useEffect } from "react";
 import axios from "../../Axios";
 import { useNavigate } from 'react-router-dom';
-import { useContext } from "react";
-import {context} from '../../ContextProvider.jsx'
+import { Typography, colors } from "@mui/material";
+import {useDispatch} from 'react-redux'
+import { SetNumber } from "../../features/users/PhoneReducer";
 export default function Login() {
+  const dispatch=useDispatch()
   const [phone, setphone] = useState();
-  const [userDetails,setUserDeatails]=useContext(context)
   const [loading,setLoading]=useState(false)
+  const[error,setError]=useState(false)
   const navigate=useNavigate()
-  useEffect(()=>{
-console.log(userDetails);
-  },[userDetails])
   useEffect(()=>{
 console.log(phone)
   },[phone])
   const handleSubmit = (event) => {
-    if(!loading){
+    if(phone){
+      if(!loading){
       setLoading(true) 
       const data = {
       phone,
@@ -33,7 +33,7 @@ console.log(phone)
       .then((res) => {
         if(res.data.success){
           setLoading(false)
-          setUserDeatails({phone})
+          dispatch(SetNumber(phone))
           navigate('/otp')
         }
         
@@ -43,6 +43,9 @@ console.log(phone)
          console.log(err)
         })
     }
+    }else{
+      setError(true)
+    } 
   }
   const addPhone = (number) => {
     setphone(number);
@@ -61,7 +64,7 @@ console.log(phone)
             variant="outlined"
             sx={{
               borderRadius: 6,
-              backdropFilter: "brightness(0.9) blur(15px)",
+              backdropFilter: " blur(2rem)",
               backgroundColor: "rgba(255, 255, 255, 0.5)",
             }}
           >
@@ -77,9 +80,13 @@ console.log(phone)
                   p: 2,
                 }}
               >
-                <Phone changePhone={addPhone} />
+                <Phone changePhone={addPhone} error={error} setError={setError} />
+               {error &&( <Typography variant="small" sx={{color:'red',fontSize:'12px',textAlign:'start',mt:'0.5rem'}}>
+Phone number is required
+                </Typography>)}  
                 <Button
                   variant="outlined"
+                  color="warning"
                   sx={{ mt: 3, mb: 2 }}
                   onClick={handleSubmit}
                 >

@@ -19,7 +19,9 @@ export const userDetails = async (req, res) => {
   console.log(user);
   try {
     await user.save();
-    res.json({ success: true,redirect:'/home',user }).status(200);
+    const token=createUserToken(user)
+    console.log(token);
+    res.json({ success: true,redirect:'/home',user,token }).status(200);
   } catch (err) {
     console.log(err);
     res.json(err).status(401);
@@ -46,10 +48,12 @@ try{
   
 const {otp,phone}=req.body
 const checking = await checkOtp(otp,phone)
-if (checking.status == "approved") {
+console.log(checking.status);
+if (checking.status ==='approved') {
 try{
-  const user=await userModel.findOne({phone:phone})
-  console.log(user);
+  console.log('hi');
+  const user=await userModel.findOne({phone})
+  console.log(user,'hi');
   if(!user){
     res.json({success:true,newUser:true,redirect:"/createAccount"})
   }else{
@@ -60,6 +64,8 @@ try{
 }catch(err){
   res.json(err).status(401);
 }
+}else{
+  console.log(err);
 }
 }catch(err){
   console.log(err);

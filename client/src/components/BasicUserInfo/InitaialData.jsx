@@ -17,11 +17,13 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { useState } from "react";
 import { useEffect } from "react";
-import { useContext } from "react";
-import {context} from '../../ContextProvider.jsx'
 import axios from '../../Axios'
+import {useSelector,useDispatch} from 'react-redux'
 import { useNavigate } from 'react-router-dom';
+import { Auth_user } from "../../features/users/AuthReducer";
 export default function InitialData() {
+  const dispatch=useDispatch()
+  const Phone=useSelector(state=>state.phone)
   const [userData,setUserData]=useState({ fullName:'',
      email:'',
      birthday:null,
@@ -31,13 +33,11 @@ export default function InitialData() {
         phone:'',
         Preference:'' })
   const [loading,setloading]=useState(false)
-  const [userDetails,setUserDeatails]=useContext(context)
   const navigate=useNavigate()
   useEffect(()=>{
-    console.log(userDetails.phone);
     setUserData((prevState) => ({
       ...prevState,
-     phone:userDetails.phone
+     phone:Phone.number
     }));
   },[])
 
@@ -52,7 +52,8 @@ console.log(userData);
       if(res.data.success){
         console.log(res);
          setloading(false)
-         setUserDeatails(res.data.user)
+         localStorage.setItem('authorization.user', JSON.stringify(res.data.token))
+         dispatch(Auth_user())
         navigate(res.data.redirect)
       }
     }).catch(err=>{
@@ -82,7 +83,6 @@ console.log(userData);
           });
       }, (error) => {
         console.log(error);
-        // Handle the error or prompt the user to allow location access again
       });
     } else {
       alert("Geolocation is not supported by this browser.");

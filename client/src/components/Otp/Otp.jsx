@@ -6,50 +6,61 @@ import CardContent from "@mui/material/CardContent";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Typography } from "@mui/material";
-import { context } from "../../ContextProvider";
-import { useContext } from "react";
 import axios from "../../Axios";
-import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch} from 'react-redux'
+import { SetUser } from "../../features/RegisterUser/RegisterReducer";
+import {useSelector} from 'react-redux'
+import { useEffect } from "react";
+import { Auth_user } from "../../features/users/AuthReducer";
 export default function Otp() {
+  const Phone=useSelector(state=>state.phone)
+  const dispatch=useDispatch()
   const navigate=useNavigate()
   const [otp, setOtp] = useState('')
-const [userDetails,setUserdetails]=useContext(context)
+  const [error,setError]=useState(false)
 const [loading,setLoading]=useState(false)
   const handleChange = (newValue) => {
     setOtp(newValue)
   }
 
-  useEffect(()=>{
-console.log(userDetails.phone);
-  },[])
+ useEffect(()=>{
+console.log(Phone);
+ },[])
 
-  const handleSubmit = (event) => {
-    if(!loading){
-      setLoading(true)
-          const data={
+ const handleSubmit = (event) => {
+  if(otp.length!==6)setError(true)
+  else{
+    if (!loading) {
+    setLoading(true);
+    const data = {
       otp,
-      phone:userDetails.phone
-    }
-axios.post('/verifyOtp',data).then(res=>{
-  if(res.data.success){
-    if(res.data.newUser){
-      setLoading(false)
-      navigate(res.data.redirect)
-    }else{
-      localStorage.setItem('authorization.user', JSON.stringify(res.data.token))
-      setLoading(false)
-      navigate(res.data.redirect)
-    }
-    navigate(res.data.redirect)
-  }}).catch(err=>{
-    setLoading(false)
-    console.log(err);
-  })
-    }
+      phone: Phone.number
+    };
+
+    axios.post('/verifyOtp', data)
+      .then((res) => {
+        console.log(res);
+        setLoading(false);
+        if (res.data.success) {
+          if (res.data.newUser) {
+            dispatch(SetUser()); // <-- Invoke the action creator function
+            navigate(res.data.redirect);
+          } else {
+            localStorage.setItem('authorization.user', JSON.stringify(res.data.token));
+            dispatch(Auth_user);
+            navigate(res.data.redirect);
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
- 
+}
+}
+
   return (
     <>
       <Grid
@@ -101,12 +112,13 @@ axios.post('/verifyOtp',data).then(res=>{
                 </Typography>
               </Grid>
               <Grid >
-              <MuiOtpInput length={6} value={otp} onChange={handleChange} />
+              <MuiOtpInput  {...(error ? { color:'tomato' } : {})}  length={6} value={otp} onChange={handleChange} />
               </Grid>
             </Grid>
              
                 <Button
-                  variant="outlined"
+                 variant="outlined"
+                 color="warning"
                   sx={{ mt: 3, mb: 2 }}
                   onClick={handleSubmit}
                 >
