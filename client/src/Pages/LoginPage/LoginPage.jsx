@@ -4,15 +4,13 @@ import Navbar from '../../components/Navbar/Navbar'
 import axios from '../../Axios'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import bgSvg from '/blob.svg'
 function LoginPage() {
   const navigate=useNavigate()
-  // useEffect(()=>{
-  //   axios.get('/userData',{headers:{'auth-token':JSON.parse(localStorage.getItem('authorization.user'))}}).then((res)=>{
-  //     navigate('/home')
-  //   })  .catch(error => {
-      
-  //   })
-  // },[])
+  useEffect(()=>{
+    document.body.style.backgroundColor = "none";
+    document.body.style.backgroundImage = `url(${bgSvg})`;
+  },[])
   return (
     <div>
       <Navbar/>

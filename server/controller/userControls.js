@@ -28,12 +28,12 @@ export const userDetails = async (req, res) => {
   }
 };
 
-export const phoneOtp =(req, res) => {
+export const phoneOtp =async(req, res) => {
   const phone = req.body.phone;
   try {
     if (phone) {
       console.log(phone);
-      sendOtp(phone);
+     await sendOtp(phone);
       res.json({ success: true }).status(200);
     } 
   } catch (err) {

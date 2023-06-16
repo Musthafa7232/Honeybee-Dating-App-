@@ -12,7 +12,7 @@ const client = twilio(accountSid, authToken);
 
 
   export const sendOtp=(number)=> {
-      client.verify.v2
+  return   client.verify.v2
             .services(verifySid)
             .verifications.create({ to: `${number}`, channel: "sms" })
     }

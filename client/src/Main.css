@@ -1,12 +1,15 @@
-:root {
-  height: 100vh!important;
-  max-height: 100vh;
+body {
+  min-height: 100vh;
+  max-height: max-content;
   background-image: url('/blob.svg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
 }
-
+.App{
+   height:100%;
+  
+}
 :root::-webkit-scrollbar {
   display: none !important;
 }

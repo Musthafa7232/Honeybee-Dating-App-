@@ -14,12 +14,15 @@ import "@fontsource/montez";
 import { Clear_user } from '../../features/users/AuthReducer';
 import { useEffect } from 'react';
 import axios from '../../Axios'
-import { SetUserData } from '../../features/users/UserReducer';
+import { ClearUserData, SetUserData } from '../../features/users/UserReducer';
 import {useNavigate} from 'react-router-dom'
+import LogoutIcon from '@mui/icons-material/Logout';
+import Person2Icon from '@mui/icons-material/Person2';
 export default function Navbar() {
   const dispatch=useDispatch()
   const navigate=useNavigate()
   const {user}=useSelector(state=>state.user)
+  const {auth}=useSelector(state=>state.auth)
   const [anchorEl, setAnchorEl] = React.useState(null);
 useEffect(()=>{
 console.log(user);
@@ -30,13 +33,14 @@ console.log(user);
       console.log(res);
       dispatch(SetUserData(res.data))
     })
-  },[])
+  },[auth])
 
 
 
   const logoutHandler = () => {
     localStorage.removeItem("authorization.user");
   dispatch(Clear_user())
+  dispatch(ClearUserData())
     navigate('/login')
   };
 
@@ -105,8 +109,8 @@ console.log(user);
         onClose={handleClose}
       >
     
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-            <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+        <MenuItem onClick={()=>navigate('/profile')}><Person2Icon  sx={{ marginRight: "0.75rem" }}/>Profile</MenuItem>
+            <MenuItem onClick={logoutHandler}><LogoutIcon  sx={{ marginRight: "0.75rem" }}/>Logout</MenuItem>
       </Menu>
     </div>
   )}

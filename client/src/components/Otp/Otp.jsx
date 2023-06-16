@@ -45,11 +45,11 @@ console.log(Phone);
         setLoading(false);
         if (res.data.success) {
           if (res.data.newUser) {
-            dispatch(SetUser()); // <-- Invoke the action creator function
+            dispatch(SetUser())
             navigate(res.data.redirect);
           } else {
             localStorage.setItem('authorization.user', JSON.stringify(res.data.token));
-            dispatch(Auth_user);
+            dispatch(Auth_user());
             navigate(res.data.redirect);
           }
         }
