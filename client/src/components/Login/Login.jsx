@@ -21,6 +21,7 @@ export default function Login() {
   useEffect(()=>{
 console.log(phone)
   },[phone])
+  
   const handleSubmit = (event) => {
     if(phone){
       if(!loading){
@@ -35,8 +36,9 @@ console.log(phone)
           setLoading(false)
           dispatch(SetNumber(phone))
           navigate('/otp')
+        }else{
+          setError(res.data.message)
         }
-        
       })
       .catch((err) =>{
         setLoading(false)
@@ -44,7 +46,7 @@ console.log(phone)
         })
     }
     }else{
-      setError(true)
+      setError("Phone number is required")
     } 
   }
   const addPhone = (number) => {
@@ -82,7 +84,7 @@ console.log(phone)
               >
                 <Phone changePhone={addPhone} error={error} setError={setError} />
                {error &&( <Typography variant="small" sx={{color:'red',fontSize:'12px',textAlign:'start',mt:'0.5rem'}}>
-Phone number is required
+error
                 </Typography>)}  
                 <Button
                   variant="outlined"

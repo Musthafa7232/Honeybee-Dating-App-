@@ -7,7 +7,7 @@ const UserPrivateRoute=()=> {
     const authState=useSelector(state=>state.auth)
     console.log(authState);
   return (
-    authState.auth?<Outlet/>:<Navigate to='/login'/>
+    authState.auth?<Outlet/>:<Navigate to='/'/>
   )
 }
 

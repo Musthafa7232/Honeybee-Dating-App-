@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useEffect } from "react";
-import Stack from "@mui/joy/Stack";
+import {Box, Link as MuiLink } from '@mui/material';
+import { useLocation } from 'react-router-dom';
 import Modal from "@mui/joy/Modal";
 import ModalClose from "@mui/joy/ModalClose";
 import ModalDialog from "@mui/joy/ModalDialog";
@@ -9,12 +10,16 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useState } from "react";
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import GoogleIcon from '@mui/icons-material/Google';
-import {useNavigate} from 'react-router-dom'
+import {useNavigate } from 'react-router-dom'
+import { getGoogleUrl } from '../../Utils/getGoogleUrl';
 function Landing() {
+  const location = useLocation()
+let from = (location.state && location.state.from && location.state.from.pathname) || '/';
   const navigate=useNavigate()
   const [open, setOpen] = useState(false);
   useEffect(() => {
     document.body.style.backgroundColor = "white";
+    document.body.style.color = "black";
     document.body.style.backgroundImage = "none";
   }, []);
 
@@ -30,12 +35,20 @@ function Landing() {
           variant="outlined"
         >
           <ModalClose />
+         
           <Button sx={{mt:'2.5rem',color:'black'}}   onClick={()=>navigate('/login')}  startIcon={<LocalPhoneIcon/>} fullWidth >
             Sign In with Phone Number
           </Button>
-          <Button  sx={{mt:'1rem',color:'black'}} startIcon={<GoogleIcon/>} fullWidth  autoFocus>
+         
+          <MuiLink
+            href={getGoogleUrl(from)}
+          >
+             <Button  sx={{mt:'1rem',color:'black'}} startIcon={<GoogleIcon/>} fullWidth  autoFocus>
             Sign in with Google
           </Button>
+          </MuiLink>
+       
+        
         </ModalDialog>
       </Modal>
       <Grid
