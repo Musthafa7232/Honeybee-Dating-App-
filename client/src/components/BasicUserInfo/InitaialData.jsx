@@ -33,6 +33,7 @@ import { useNavigate } from "react-router-dom";
 import { Auth_user } from "../../features/users/AuthReducer";
 import AddIcon from "@mui/icons-material/Add";
 import SimpleDialog from "./SimpleDialog";
+import dayjs from "dayjs";
 export default function InitialData() {
   const dispatch = useDispatch();
   const Phone = useSelector((state) => state.phone);
@@ -211,7 +212,7 @@ export default function InitialData() {
     console.log(data.$d);
     setUserData((prevState) => ({
       ...prevState,
-      birthday: data.$d,
+      birthday: dayjs(data.$d),
       age: calculatedAge,
     }));
   };

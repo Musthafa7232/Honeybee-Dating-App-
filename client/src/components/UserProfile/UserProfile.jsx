@@ -5,6 +5,7 @@ import {
   CardContent,
   Grid,
   IconButton,
+  Skeleton,
   TextField,
   Typography,
   colors,
@@ -18,45 +19,20 @@ import EditIcon from "@mui/icons-material/Edit";
 import WineBar from "@mui/icons-material/WineBar";
 import SmokingRoomsIcon from "@mui/icons-material/SmokingRooms";
 import FemaleIcon from "@mui/icons-material/Female";
-import MaleIcon from "@mui/icons-material/Male";
+import GenderIcon from "../icons/GenderIcon";
 import TransgenderIcon from "@mui/icons-material/Transgender";
 import RelationIcon from "../icons/RelationIcon";
 import ReligionIcon from "../icons/ReligionIcon";
 import { useSelector, useDispatch } from "react-redux";
 function UserProfile({ edit, setEdit }) {
   const user = useSelector((state) => state.user.user);
+  const [isLoading, setLoading] = useState(true);
+  useEffect(() => {
+    if (user) {
+      setLoading(false);
+    }
+  }, [user]);
 
-  let images = (
-    <>
-      <Card
-        sx={{
-          mr: 2,
-          width: { xs: 100, lg: 250 },
-          height: { xs: 100, lg: 250 },
-          bgcolor: "lightgray",
-          display: "flex",
-          justifyContent: "center",
-          alignContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CardContent>
-          <Avatar sx={{ bgcolor: "lightgray" }}>
-            <IconButton
-              color="primary"
-              aria-label="upload picture"
-              component="label"
-            >
-              <input hidden accept="image/*" type="file" />
-              <AddIcon sx={{ color: "black" }} />
-            </IconButton>
-          </Avatar>
-        </CardContent>
-      </Card>
-    </>
-  );
-  
-  useEffect(() => {});
   return (
     <>
       <Grid
@@ -75,11 +51,11 @@ function UserProfile({ edit, setEdit }) {
               backgroundColor: "rgba(255, 255, 255, 0.5)",
             }}
           >
-            <Box sx={{ width: "100%", height: "30vh", position: "relative" }}>
+            <Box sx={{ width: "100%", height: "40vh", position: "relative" }}>
               <Box
                 sx={{ objectFit: "cover", width: "100%", height: "100%" }}
                 component="img"
-                src={user?.coverPicture ? user.coverPicture : " "}
+                src={user?.coverPic ? user?.coverPic : "/cover-picture.png"}
               />
               <Box
                 sx={{
@@ -91,17 +67,21 @@ function UserProfile({ edit, setEdit }) {
                   top: "100%",
                   left: { xs: "10%", lg: "0%" },
                   transform: "translate(50%, -50%)",
-                  bgcolor: "black",
                 }}
                 component="img"
-                src={user?.profilePicture ? user.profilePicture : ""}
+                src={user?.profilePic ? user?.profilePic : "/avatar.jpg"}
               />
             </Box>
 
             <CardContent>
               <Grid container>
                 <Grid item xs={2}></Grid>
-                <Grid item xs={8} sx={{ mt: { xs: 10, lg: 0 } }}>
+                <Grid
+                  item
+                  xs={7}
+                  lg={8}
+                  sx={{ mt: { xs: 10, lg: 9, xl: 0 }, ml: 3 }}
+                >
                   <Typography
                     sx={{
                       fontFamily: "sans-serif",
@@ -109,13 +89,24 @@ function UserProfile({ edit, setEdit }) {
                       fontWeight: "bold",
                     }}
                   >
-                    {user?.fullName}
+                    {isLoading ? <Skeleton width="15rem" /> : user.fullName}{" "}
+                    {isLoading ? (
+                      <Skeleton width="5rem" />
+                    ) : (
+                      <Typography variant="caption">{user.age}</Typography>
+                    )}
                   </Typography>
                   <Typography
                     sx={{ fontSize: { xs: 7, lg: 14 } }}
                     variant="subtitle2"
                   >
-                    I am an aspiring actor and a bussinessman
+                    {isLoading ? <Skeleton width="13rem" /> : user.bio}
+                  </Typography>
+                  <Typography
+                    sx={{ fontSize: { xs: 7, lg: 14 } }}
+                    variant="subtitle2"
+                  >
+                    {isLoading ? <Skeleton width="13rem" /> : user.location}
                   </Typography>
                   <Grid
                     item
@@ -126,15 +117,14 @@ function UserProfile({ edit, setEdit }) {
                       display: { lg: "flex" },
                       justifyContent: "space-between",
                     }}
-                    spacing={12}
                   >
                     <Chip
-                      startDecorator={<MaleIcon />}
+                      startDecorator={<GenderIcon />}
                       color="neutral"
                       size="lg"
                       variant="soft"
                     >
-                      Male
+                      {isLoading ? <Skeleton /> : user.gender}
                     </Chip>
                     <Chip
                       startDecorator={<ReligionIcon />}
@@ -142,7 +132,7 @@ function UserProfile({ edit, setEdit }) {
                       size="lg"
                       variant="soft"
                     >
-                      Islam
+                      {isLoading ? <Skeleton /> : user.faith}
                     </Chip>
                     <Chip
                       startDecorator={<RelationIcon />}
@@ -150,7 +140,7 @@ function UserProfile({ edit, setEdit }) {
                       size="lg"
                       variant="soft"
                     >
-                      Single
+                      {isLoading ? <Skeleton /> : user.realationshipStatus}
                     </Chip>
                     <Chip
                       startDecorator={<SmokingRoomsIcon />}
@@ -158,7 +148,7 @@ function UserProfile({ edit, setEdit }) {
                       size="lg"
                       variant="soft"
                     >
-                      Non-Smoker
+                      {isLoading ? <Skeleton /> : user.smoking}
                     </Chip>
                     <Chip
                       startDecorator={<WineBar />}
@@ -166,7 +156,13 @@ function UserProfile({ edit, setEdit }) {
                       size="lg"
                       variant="soft"
                     >
-                      Teetotaler
+                      {isLoading ? (
+                        <Skeleton />
+                      ) : user.drinking ? (
+                        user.drinking
+                      ) : (
+                        ""
+                      )}
                     </Chip>
                   </Grid>
                 </Grid>
@@ -179,14 +175,34 @@ function UserProfile({ edit, setEdit }) {
                     <EditIcon sx={{ color: "black" }} fontSize="inherit" />
                   </IconButton>
                 </Grid>
-
-              
-
-                <Grid item xs={12} sx={{my:4}}>
-                  <Typography variant="caption">My Story</Typography>
-                  <TextField variant="standard" fullWidth />
+                <Grid item xs={2}></Grid>
+                <Grid item xs={12} sx={{ my: 4 }}>
+                  <Card
+                    sx={{
+                      borderRadius: 16,
+                      p: 4,
+                      backdropFilter: "brightness(0.9) blur(15px)",
+                      backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    }}
+                  >
+                    <CardContent>
+                      <Typography variant="h6">My Story</Typography>
+                      {isLoading ? (
+                        <Skeleton height={100} />
+                      ) : user.myStory ? (
+                        <Typography
+                          sx={{ mt: 2 }}
+                          variant="body1"
+                          color="textSecondary"
+                        >
+                          {user.myStory}
+                        </Typography>
+                      ) : (
+                        " "
+                      )}
+                    </CardContent>
+                  </Card>
                 </Grid>
-
                 <Grid
                   item
                   xs={12}
@@ -197,7 +213,26 @@ function UserProfile({ edit, setEdit }) {
                     alignItems: "end",
                   }}
                 >
-                  {images}
+                  {user?.images.map((image) => {
+                    return (
+                      <Card
+                        key={user.phone}
+                        sx={{
+                          mr: 2,
+                          width: { xs: 100, sm: 150, lg: 250 },
+                          height: { xs: 100, sm: 150, lg: 250 },
+                          backgroundImage: `url(${image})`,
+                          bgcolor: "lightgray",
+                          backgroundSize: "cover",
+                          backgroundRepeat: "no-repeat",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignContent: "center",
+                          alignItems: "center",
+                        }}
+                      />
+                    );
+                  })}
                 </Grid>
               </Grid>
             </CardContent>
