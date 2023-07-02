@@ -1,4 +1,4 @@
-export const createJwtToken = async (user,createUserToken) => {
+export const createJwtToken = async (user, createUserToken) => {
   try {
     return createUserToken(user);
   } catch (error) {
@@ -6,12 +6,17 @@ export const createJwtToken = async (user,createUserToken) => {
   }
 };
 
-export const VerifyJwtToken = (req,verifyUserToken) => {
+export const VerifyJwtToken = (req, verifyUserToken) => {
   const token = req.header("auth-token");
-  if (!token) return res.status(401).json({ error: "Access denied" });
-  try {
-    return verifyUserToken(token);
+  console.log(token);
+  if (token) {
+ try {
+    const verifiedUser= verifyUserToken(token,req);
+    return verifiedUser
   } catch (error) {
     throw new Error(error);
+  }
+  }else{
+    throw new Error("Access Denied");
   }
 };
