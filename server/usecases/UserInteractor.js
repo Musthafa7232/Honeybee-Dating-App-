@@ -1,7 +1,13 @@
 import path from "path";
 export const createNewUser = async (userData, userModel) => {
-  const user = new userModel(userData);
-  return user.save();
+  try {
+    const user = new userModel(userData);
+    await user.save();
+    return user;
+  } catch (error) {
+    console.log(err);
+    throw new Error("failed to create new user");
+  }
 };
 
 export const findUserWithPhone = async (phone, userModel) => {
@@ -122,17 +128,84 @@ export const showUsers = async (req, userModel) => {
   try {
     const user = await userModel.findById(req.user.id);
     console.log(user);
-    const users = await userModel.aggregate([
-      {
-        $match: {
-          gender: user.Preference,
+    let users;
+    if (user.Preference === "Everyone") {
+      users = await userModel.find({ _id: { $ne: user._id } });
+    } else {
+      users = await userModel.aggregate([
+        {
+          $match: {
+            gender: user.Preference,
+          },
         },
-      },
-    ]);
-    console.log(users);
+      ]);
+      console.log(users);
+    }
 
     return users;
   } catch (error) {
     throw new Error("Failed to lookup users");
+  }
+};
+
+export const likeUserAndMatch = async (user1, user2, userModel, matchModel) => {
+  try {
+    const user = await userModel.findByIdAndUpdate(
+      user1,
+      {
+        $push: {
+          likedUsers: user2,
+        },
+      },
+      { new: true }
+    );
+    console.log(user);
+
+    let match = await matchModel.findOne({
+      $or: [
+        {
+          $and: [{ "user1._id": user1 }, { "user2._id": user2 }],
+        },
+        {
+          $and: [{ "user1._id": user2 }, { "user2._id": user1 }],
+        },
+      ],
+    });
+    if (match) {
+      (match.user2.liked = true), (match.isMatched = true);
+    } else {
+      match = await new matchModel({
+        user1: {
+          _id: user1,
+          liked: true,
+        },
+        user2: {
+          _id: user2,
+        },
+      });
+      await match.save();
+    }
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw new Error("failed to like User ");
+  }
+};
+
+export const dislikeAUser = async (user1, user2, userModel) => {
+  try {
+    const user = await userModel.findByIdAndUpdate(
+      user1,
+      {
+        $push: {
+          dislikedUsers: user2,
+        },
+      },
+      { new: true }
+    );
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw new Error("failed to like User ");
   }
 };

@@ -61,13 +61,15 @@ export default function InitialData() {
   const [error, setError] = useState({});
   const navigate = useNavigate();
   useEffect(() => {
-    setUserData((prevState) => ({
+    if(user){
+          setUserData((prevState) => ({
       ...prevState,
       phone: Phone.number,
       isVerified: true,
       email:user.email,
       fullName:user.fullName
     }));
+    }
   }, []);
 
   const handleClickOpen = () => {

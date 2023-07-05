@@ -20,7 +20,6 @@ import WineBar from "@mui/icons-material/WineBar";
 import SmokingRoomsIcon from "@mui/icons-material/SmokingRooms";
 import FemaleIcon from "@mui/icons-material/Female";
 import GenderIcon from "../icons/GenderIcon";
-import TransgenderIcon from "@mui/icons-material/Transgender";
 import RelationIcon from "../icons/RelationIcon";
 import ReligionIcon from "../icons/ReligionIcon";
 import { useSelector, useDispatch } from "react-redux";

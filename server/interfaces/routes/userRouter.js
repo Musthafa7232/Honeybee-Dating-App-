@@ -11,7 +11,10 @@ import {
   verifyOtp,
   editUser,
   discoverUsers,
-} from "../Controller/UserController.js";
+  likeUser,
+  dislikeUser,
+  matchedUsers,
+} from "../controller/userController.js";
 
 import {
   createNewUser,
@@ -19,7 +22,9 @@ import {
   findUserWithEmail,
   findUserWithId,
   UpdateUser,
- showUsers
+  showUsers,
+  likeUserAndMatch,
+  dislikeAUser,
 } from "../../usecases/UserInteractor.js";
 
 import { SendPhoneOtp, VerifyPhoneOtp } from "../../usecases/OtpInteractor.js";
@@ -35,6 +40,8 @@ import {
 } from "../../usecases/GoogleInteractor.js";
 
 import userModel from "../../domain/model/userModel.js";
+import chatModel from "../../domain/model/chatModel.js";
+import matchModel from "../../domain/model/matchesModel.js";
 import {
   createUserToken,
   verifyUserToken,
@@ -53,6 +60,7 @@ router.post(
     createUserToken
   )
 );
+import { getMatchedUsers } from "../../usecases/MatchesInteractor.js";
 router.post("/phone", phoneOtp(SendPhoneOtp, sendOtp));
 router.post(
   "/createAccount",
@@ -84,6 +92,30 @@ router.patch(
 
 router.get(
   "/discover",
-  discoverUsers(VerifyJwtToken,verifyUserToken,userModel,showUsers)
-)
+  discoverUsers(VerifyJwtToken, verifyUserToken, userModel, showUsers)
+);
+router.get(
+  "/matches",
+  matchedUsers(
+    VerifyJwtToken,
+    verifyUserToken,
+    getMatchedUsers,
+    matchModel,
+    userModel
+  )
+);
+router.put(
+  "/likeUser",
+  likeUser(
+    userModel,
+    matchModel,
+    VerifyJwtToken,
+    verifyUserToken,
+    likeUserAndMatch
+  )
+);
+router.put(
+  "/dislikeUser",
+  dislikeUser(userModel, VerifyJwtToken, verifyUserToken, dislikeAUser)
+);
 export default router;

@@ -507,7 +507,7 @@ setLoader(false)
                   borderRadius: "13rem",
                   position: "absolute",
                   top: "100%",
-                  left: {sm:'18%', lg: "26%" },
+                  left: {sm:'18%',xl:'26%', lg: "13%" },
                   transform: "translate(50%, -50%)",
                   backgroundImage: `url(${userData.profilePic})`,
                   bgcolor: "black",

@@ -20,6 +20,7 @@ import OtpRoute from "./routes/OtpRoute";
 import NotFound from "./Pages/404Page/NotFound";
 import Profile from "./Pages/Profile/Profile";
 import GoogleLogin from "./Pages/GoogleLogin/GoogleLogin";
+import MatchesPage from "./Pages/Matches/MatchesPage";
 function App() {
   return (
     <div className="App">
@@ -27,11 +28,12 @@ function App() {
         <Router>
           <Routes>
             <Route element={<UserPrivateRoute />}>
-              <Route path="/home" element={<HomePage />} />
+              <Route path="/Discover" element={<HomePage />} />
               <Route path="/profile" element={<Profile/>} />
-              <Route path="/matches" element={<HomePage />} />
-              <Route path="/search" element={<HomePage />} />
-              <Route path="/honeyVip" element={<HomePage />} />
+              <Route path="/Matches" element={<MatchesPage/>} />
+              <Route path="/Search" element={<HomePage />} />
+              <Route path="/HoneyVip" element={<HomePage />} />
+              <Route path="/Chat" element={<HomePage />} />
             </Route>
             <Route element={<UserPublicRoute />}>
               <Route path="/" element={<LandingPage />} />

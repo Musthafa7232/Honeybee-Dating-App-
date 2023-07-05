@@ -3,7 +3,7 @@ config();
 import axios from "axios";
 import qs from "qs";
 
-const getGoogleOauthToken = async ({ code }) => {
+const getGoogleOauthToken = async ( code ) => {
   const rootURl = "https://oauth2.googleapis.com/token";
 
   const options = {
@@ -13,7 +13,6 @@ const getGoogleOauthToken = async ({ code }) => {
     redirect_uri: process.env.GOOGLE_OAUTH_REDIRECT_URL,
     grant_type: "authorization_code",
   };
-
   try {
     const { data } = await axios.post(rootURl, qs.stringify(options), {
       headers: {
@@ -28,7 +27,7 @@ const getGoogleOauthToken = async ({ code }) => {
   }
 };
 
-const getGoogleUser = async ({ id_token, access_token }) => {
+const getGoogleUser = async ( id_token, access_token ) => {
   try {
     const { data } = await axios.get(
       `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`,

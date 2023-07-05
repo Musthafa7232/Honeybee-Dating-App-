@@ -2,9 +2,12 @@ export const userDetails =
   (createNewUser, createJwtToken, userModel, createUserToken) =>
   async (req, res) => {
     try {
+      console.log(req.body);
       const user = await createNewUser(req.body, userModel);
+      console.log(user);
       const token = await createJwtToken(user, createUserToken);
-      res.status(200).json({ success: true, redirect: "/home", user, token });
+      console.log(token);
+      res.status(200).json({ success: true, redirect: "/Discover", user, token });
     } catch (error) {
       res.status(400).json({ error: "Failed to create user" });
     }
@@ -44,7 +47,7 @@ export const verifyOtp =
           });
         } else {
           const token = await createJwtToken(user, createUserToken);
-          res.json({ success: true, token, redirect: "/home" });
+          res.json({ success: true, token, redirect: "/Discover" });
         }
       } else {
         throw new Error("Failed to verify OTP");
@@ -55,19 +58,6 @@ export const verifyOtp =
     }
   };
 
-  export const userData =
-  (VerifyJwtToken, verifyUserToken, findUserWithId, userModel) =>
-  async (req, res) => {
-    console.log('hi');
-    try {
-      await VerifyJwtToken(req, verifyUserToken);
-      const user = await findUserWithId(req.user.id, userModel);
-      console.log(user);
-      res.json(user).status(200);
-    } catch (error) {
-      res.status(400).json({ error: error });
-    }
-  };
 
 export const googleData =
   (userModel, findUserWithEmail, getGoogleOauthToken, getGoogleUser) =>
@@ -77,11 +67,14 @@ export const googleData =
       if (!code) {
         throw new Error("Authorization code not provided");
       }
+      console.log("google activated");
       const { id_token, access_token } = await getGoogleOauthToken(code);
       const { name, verified_email, email } = await getGoogleUser(
         id_token,
         access_token
       );
+      console.log(id_token,access_token);
+      console.log( name, verified_email, email);
       if (!verified_email) {
         throw new Error("Google account not verified");
       }
@@ -95,7 +88,7 @@ export const googleData =
       }
     } catch (error) {
       console.error("Failed to authorize Google User", error);
-      res.redirect(`${config.get("origin")}/oauth/error`);
+      res.redirect(`http://localhost:5173`);
     }
   };
 
@@ -109,7 +102,7 @@ export const googleLogin =
         throw new Error("User not found");
       }
       const token = await createJwtToken(user, createUserToken);
-      res.status(200).json({ success: true, token });
+      res.status(200).json({ success: true, token ,redirect:"/Discover"});
     } catch (error) {
       console.error(error);
       res
@@ -120,7 +113,6 @@ export const googleLogin =
 
 export const editUser=(userModel,updateUser,VerifyJwtToken,verifyUserToken)=>async(req,res)=>{
 try{
-  console.log(req,'from userController');
   await VerifyJwtToken(req, verifyUserToken);
 const user=await updateUser(userModel,req)
 res.json(user)
@@ -129,13 +121,58 @@ res.status(400).json(error)
 }
 }
 
+export const userData =
+(VerifyJwtToken, verifyUserToken, findUserWithId, userModel) =>
+async (req, res) => {
+  try {
+    await VerifyJwtToken(req, verifyUserToken);
+    const user = await findUserWithId(req.user.id, userModel);
+    console.log(user);
+    res.json(user).status(200);
+  } catch (error) {
+    res.status(400).json({ error: error });
+  }
+};
+
 export const discoverUsers=(VerifyJwtToken,verifyUserToken,userModel,showUsers)=>async(req,res)=>{
 try {
   await VerifyJwtToken(req, verifyUserToken);
-  console.log('babu');
  const users= await showUsers(req,userModel)
  console.log(users);
  res.json(users)
+} catch (error) {
+  res.status(400).json(error)
+}
+}
+
+export const likeUser=(userModel,matchModel,VerifyJwtToken, verifyUserToken,likeUserAndMatch)=>async(req,res)=>{
+try {
+  const {User}=req.body
+  await VerifyJwtToken(req, verifyUserToken);
+  console.log(User);
+  const user=await likeUserAndMatch(req.user.id,User,userModel,matchModel)
+  res.status(200).json(user)
+} catch (error) {
+  res.status(400).json({message:error.message})
+}
+}
+
+export const dislikeUser=(userModel,VerifyJwtToken, verifyUserToken,dislikeAUser)=>async(req,res)=>{
+  try {
+    const {User}=req.body
+    await VerifyJwtToken(req, verifyUserToken);
+    const user=await dislikeAUser(req.user.id,User,userModel)
+    res.status(200).json(user)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+}
+
+export const matchedUsers=(VerifyJwtToken, verifyUserToken,getMatchedUsers,matchModel,userModel)=>async(req,res)=>{
+try {
+  await VerifyJwtToken(req, verifyUserToken);
+  const matches=await getMatchedUsers(req.user.id,matchModel,userModel)
+  res.status(200).json(matches)
 } catch (error) {
   res.status(400).json(error)
 }

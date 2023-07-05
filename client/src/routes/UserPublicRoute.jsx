@@ -7,7 +7,7 @@ const UserPublicRoute=()=> {
     const authState=useSelector(state=>state.auth)
     console.log(authState);
   return (
-    authState.auth?<Navigate to='/home'/>:<Outlet/>
+    authState.auth?<Navigate to='/Discover'/>:<Outlet/>
   )
 }
 

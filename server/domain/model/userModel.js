@@ -69,6 +69,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    likedUsers:{
+      type:[mongoose.Schema.Types.ObjectId]
+    },
+    dislikedUsers:{
+      type:[mongoose.Schema.Types.ObjectId]
+    }
   },
   { timestamps: true }
 );

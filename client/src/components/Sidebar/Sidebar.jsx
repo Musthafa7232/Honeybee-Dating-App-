@@ -9,6 +9,14 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 export default function Sidebar() {
   const navigate=useNavigate()
+
+  const navItems=[
+    "Discover",
+    "Matches",
+    "Chat",
+    "Search",
+    "HoneyVip"
+  ]
   return (
     <>
       <Grid
@@ -27,26 +35,15 @@ export default function Sidebar() {
     >
       <CardContent>
         <List component="nav">
-          <ListItem >
-            <Button component="a" href="/home" fullWidth>
-              <ListItemText sx={{ color: 'black' }} primary="Discover" />
+          {navItems.map(item=>{
+            return(
+                 <ListItem key={item}>
+            <Button component="a" onClick={()=>navigate(`/${item}`)} fullWidth>
+              <ListItemText sx={{ color: 'black' }} primary={item} />
             </Button>
           </ListItem>
-          <ListItem >
-            <Button component="a" href="/matches" fullWidth>
-              <ListItemText sx={{ color: 'black' }} primary="Matches" />
-            </Button>
-          </ListItem>
-          <ListItem >
-            <Button component="a" href="/search" fullWidth>
-              <ListItemText sx={{ color: 'black' }} primary="Search" />
-            </Button>
-          </ListItem>
-          <ListItem >
-            <Button component="a" href="/honeyvip" fullWidth>
-              <ListItemText sx={{ color: 'black' }} primary="HoneyVip" />
-            </Button>
-          </ListItem>
+            )
+          })}
         </List>
       </CardContent>
     </Card>
