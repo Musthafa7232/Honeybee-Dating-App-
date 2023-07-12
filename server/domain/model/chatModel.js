@@ -2,14 +2,11 @@ import mongoose from "mongoose";
 
 const chatSchema = new mongoose.Schema(
   {
-    from: {
-      type: [mongoose.Schema.Types.ObjectId],
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    to: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "User",
-    },
+    users: Array,
     messageType: {
       type: String,
       enum: ["text", "video", "audio", "image"],
@@ -17,6 +14,10 @@ const chatSchema = new mongoose.Schema(
     message: {
       type: String,
     },
+    conversationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Matches",
+    }
   },
   { timestamps: true }
 );
