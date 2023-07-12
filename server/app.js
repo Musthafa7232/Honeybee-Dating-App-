@@ -3,6 +3,9 @@ import express from "express";
 import cors from "cors";
 import connectDB from "./Frameworks/database/dbConfig.js";
 import userRouter from "./interfaces/routes/userRouter.js";
+import ChatRouter from "./interfaces/routes/ChatRouter.js";
+import io from './Sockets/Socket.js'
+
 config();
 const app = express();
 const PORT = process.env.PORT;
@@ -12,10 +15,16 @@ app.use(express.json());
 app.use(express.static("./public"));
 app.use(express.urlencoded({ extended: false }));
 
+app.use("/api/chat", ChatRouter);
+app.use("/api/call", ChatRouter);
 app.use("/api", userRouter);
 
+let server;
+
 connectDB().then(() => {
-  app.listen(PORT, () => {
+  server = app.listen(PORT, () => {
     console.log(`Server listening to port ${PORT}`);
   });
+  io.attach(server)
 });
+
