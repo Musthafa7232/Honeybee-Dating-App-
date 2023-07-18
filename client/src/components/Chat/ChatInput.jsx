@@ -7,10 +7,32 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { Button, TextField, Grid, Box, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import MicIcon from '@mui/icons-material/Mic';
-export default function ChatInput({ handleSendMsg }) {
+import { socket } from "../../Socket";
+export default function ChatInput({ handleSendMsg,currentChat }) {
   const [msg, setMsg] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [typingTimeout, setTypingTimeout] = useState(null);
 
+  const handleTextChange = (e) => {
+    const message = e.target.value;
+    setMsg(message);
+  
+    // Clear the previous typing timeout if it exists
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+  
+    // Start a new typing timeout of 1 second
+    const newTypingTimeout = setTimeout(() => {
+      socket.emit('stop-typing', currentChat._id);
+    }, 1000);
+  
+    // Set the new typing timeout
+    setTypingTimeout(newTypingTimeout);
+  
+    // Emit the "typing" event
+    socket.emit('typing', currentChat._id);
+  }
   const handleEmojiPickerhideShow = () => {
     setShowEmojiPicker(!showEmojiPicker);
   };
@@ -34,6 +56,7 @@ export default function ChatInput({ handleSendMsg }) {
     // You can use libraries like FilePond or handle the upload logic yourself
     console.log("Uploaded files:", files);
   };
+
 
   const sendChat = () => {
     if (msg.length > 0) {
@@ -72,7 +95,7 @@ export default function ChatInput({ handleSendMsg }) {
             fullWidth
             value={msg}
             placeholder="Type Something..."
-            onChange={(e) => setMsg(e.target.value)}
+            onChange={(e) => handleTextChange(e)}
           />
           <label htmlFor="file-upload">
             <IconButton component="span">
@@ -87,8 +110,7 @@ export default function ChatInput({ handleSendMsg }) {
             multiple
             onChange={handleFileUpload}
           />
-<Button {...msg?'':'disabled'} startIcon={<SendIcon />} onClick={sendChat} />
-        {/* {!msg? (
+        {!msg? (
             <> <label htmlFor="file-upload">
             <IconButton component="span">
               <MicIcon />
@@ -103,7 +125,7 @@ export default function ChatInput({ handleSendMsg }) {
             onChange={handleAudioUpload}
           />
             </>):
-         ( <Button startIcon={<SendIcon />} onClick={sendChat} />)} */}
+         ( <Button startIcon={<SendIcon />} onClick={sendChat} />)}
         </Box>
       </Grid>
     </Grid>

@@ -7,11 +7,11 @@ import Grid from "@mui/material/Grid";
 import Phone from "../PhoneNumber/Phone";
 import { useState } from "react";
 import { useEffect } from "react";
-import axios from "../../Axios";
 import { useNavigate } from 'react-router-dom';
 import { Typography, colors } from "@mui/material";
 import {useDispatch} from 'react-redux'
 import { SetNumber } from "../../features/users/PhoneReducer";
+import { phoneNumberApi } from "../../services/api";
 export default function Login() {
   const dispatch=useDispatch()
   const [phone, setphone] = useState();
@@ -29,9 +29,7 @@ console.log(phone)
       const data = {
       phone,
     }
-    axios
-      .post("/phone", data)
-      .then((res) => {
+   phoneNumberApi(data).then((res) => {
         if(res.data.success){
           setLoading(false)
           dispatch(SetNumber(phone))

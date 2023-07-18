@@ -49,7 +49,6 @@ export const UpdateUser = async (userModel, req) => {
       gender,
       location,
       faith,
-      myStory,
       drinking,
       smoking,
       bio,
@@ -67,7 +66,6 @@ export const UpdateUser = async (userModel, req) => {
       (user.phone = phone),
       (user.Preference = Preference),
       (user.faith = faith),
-      (user.myStory = myStory),
       (user.drinking = drinking),
       (user.smoking = smoking),
       (user.bio = bio),
@@ -139,9 +137,8 @@ export const showUsers = async (req, userModel) => {
           },
         },
       ]);
-      console.log(users);
     }
-
+    console.log(users);
     return users;
   } catch (error) {
     throw new Error("Failed to lookup users");
@@ -171,8 +168,10 @@ export const likeUserAndMatch = async (user1, user2, userModel, matchModel) => {
         },
       ],
     });
+    console.log(match);
     if (match) {
       (match.user2.liked = true), (match.isMatched = true);
+      await match.save();
     } else {
       match = await new matchModel({
         user1: {
@@ -185,6 +184,7 @@ export const likeUserAndMatch = async (user1, user2, userModel, matchModel) => {
       });
       await match.save();
     }
+    console.log(user);
     return user;
   } catch (error) {
     console.log(error);
@@ -207,5 +207,16 @@ export const dislikeAUser = async (user1, user2, userModel) => {
   } catch (error) {
     console.log(error);
     throw new Error("failed to like User ");
+  }
+};
+
+export const showAllLikedUsers = async (id, userModel) => {
+  try {
+    const user = await userModel.findById(id);
+    const users = await userModel.find({ _id: { $in: user.likedUsers } });
+
+    return users;
+  } catch (error) {
+    console.log(error);
   }
 };

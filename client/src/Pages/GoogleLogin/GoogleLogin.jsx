@@ -1,9 +1,9 @@
 import React from 'react'
 import { useEffect } from 'react'
-import axios from '../../Axios'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from "react-redux";
 import { Auth_user } from "../../features/users/AuthReducer";
+import { googleLoginApi } from '../../services/api';
 function GoogleLogin() {
     const navigate=useNavigate()
     const dispatch = useDispatch();
@@ -14,7 +14,7 @@ console.log(email)
 const data={
     email
 }
-axios.post('/googleLogin',data).then(res=>{
+googleLoginApi(data).then(res=>{
     console.log(res);
     if(res.data.success){
         localStorage.setItem(

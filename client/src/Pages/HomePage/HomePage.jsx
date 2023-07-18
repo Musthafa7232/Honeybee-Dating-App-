@@ -6,15 +6,14 @@ import Discover from '../../components/Discover/DiscoverSide';
 
 function HomePage() {
   return (
-    <Grid container spacing={6}>
+    <Grid container spacing={12}>
       <Grid item xs={12}>
         <Navbar />
       </Grid>
-      <Grid item xs sx={{display:{xs:'none',lg:'block'}}}>
+      <Grid item xs sx={{display:{xs:'none',md:"block",lg:'block'}}}>
         <Sidebar />
       </Grid>
-  
-        <Grid item xs={12} sm={12} md={8} lg={9}>
+        <Grid item xs={12} sm={12} md={8} lg={8}>
           <Discover />
         </Grid>
       </Grid>

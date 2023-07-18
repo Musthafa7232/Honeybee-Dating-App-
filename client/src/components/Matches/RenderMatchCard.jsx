@@ -3,15 +3,18 @@ import React from "react";
 import Card1 from "@mui/joy/Card";
 import CardCover from "@mui/joy/CardCover";
 import CardContent1 from "@mui/joy/CardContent";
-import KeepMountedModal from "./KeepMountedModal";
+import KeepMountedModal from "../Modal/KeepMountedModal";
 import { useState } from "react";
-function RenderMatchCard({ matches,isLoading }) {
-    const [open, setOpen] = React.useState(false);
-const [user,setUser]=useState(null)
-    const handleViewProfile=(item)=>{
-        setOpen(true)
-        setUser(item)
-    }
+
+function RenderMatchCard({ matches, isLoading }) {
+  const [open, setOpen] = React.useState(false);
+  const [user, setUser] = useState(null);
+
+  const handleViewProfile = (item) => {
+    setOpen(true);
+    setUser(item);
+  };
+
   return (
     <>
       <Grid item xs={12} sx={{ my: 2 }}>
@@ -20,18 +23,44 @@ const [user,setUser]=useState(null)
           variant="outlined"
           sx={{
             mb: 4,
-            minHeight: "120vh",
             borderRadius: 6,
             backdropFilter: "brightness(0.9) blur(15px)",
             backgroundColor: "rgba(255, 255, 255, 0.5)",
+            overflow: "hidden",
           }}
         >
-          <CardContent component={Grid} container>
+          <CardContent
+            sx={{
+              height: "100%",
+              overflowY: "scroll",
+              "&::-webkit-scrollbar": {
+                width: "7px",
+              },
+              "&::-webkit-scrollbar-track": {
+                background: "transparent",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "darkgrey",
+                borderRadius: "2rem",
+              },
+              "&::-webkit-scrollbar-thumb:hover": {
+                backgroundColor: "grey",
+                borderRadius: "2rem",
+              },
+            }}
+            component={Grid}
+            container
+          >
             {matches?.map((item) => {
               return (
-                <Grid item xs={12} lg={4} sx={{my:1}}>
+                <Grid
+                  key={item._id}
+                  item
+                  xs={12}
+                  lg={4}
+                  sx={{ my: 1, mx: { xs: 2, lg: 0 } }}
+                >
                   <Card1
-                    key={item._id}
                     sx={{
                       width: { xs: 250, sm: 150, lg: 250 },
                       height: { xs: 250, sm: 150, lg: 250 },
@@ -52,21 +81,28 @@ const [user,setUser]=useState(null)
                       <Typography level="h2" fontSize="lg" mb={1}>
                         {item.fullName}
                       </Typography>
-                      <Button sx={{ m: 1 }} color="warning" variant="outlined" onClick={()=>handleViewProfile(item)}>
+                      <Button
+                        sx={{ m: 1 }}
+                        color="warning"
+                        variant="outlined"
+                        onClick={() => handleViewProfile(item)}
+                      >
                         View Profile
                       </Button>
-                      <Button sx={{ m: 1 }} color="inherit" variant="outlined">
-                        Chat
-                      </Button>
                     </CardContent1>
-                  </Card1> 
-                  <KeepMountedModal user={user} setUser={setUser} open={open} setOpen={setOpen} isLoading={isLoading} />
+                  </Card1>
+                  <KeepMountedModal
+                    user={user}
+                    setUser={setUser}
+                    open={open}
+                    setOpen={setOpen}
+                    isLoading={isLoading}
+                  />
                 </Grid>
               );
             })}
           </CardContent>
         </Card>
-       
       </Grid>
     </>
   );

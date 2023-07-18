@@ -6,7 +6,6 @@ import CardContent from "@mui/material/CardContent";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Typography } from "@mui/material";
-import axios from "../../Axios";
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -15,6 +14,7 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { Auth_user } from "../../features/users/AuthReducer";
 import Timer from "./Timer";
+import { otpApi, phoneNumberApi } from "../../services/api";
 export default function Otp() {
   const Phone = useSelector((state) => state.phone);
   const dispatch = useDispatch();
@@ -40,7 +40,7 @@ export default function Otp() {
     const data = {
       phone: Phone.number,
     };
-    axios.post("/phone", data).then((res) => {
+   phoneNumberApi(data).then((res) => {
       console.log(res);
       if (res.data.success) {
       } else {
@@ -64,9 +64,7 @@ export default function Otp() {
           phone: Phone.number,
         };
 
-        axios
-          .post("/verifyOtp", data)
-          .then((res) => {
+       otpApi(data).then((res) => {
             console.log(res);
             setLoading(false);
             if (res.data.success) {

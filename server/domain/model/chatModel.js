@@ -17,6 +17,10 @@ const chatSchema = new mongoose.Schema(
     conversationId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Matches",
+    },
+    read: {
+      type: Boolean,
+      default: false,
     }
   },
   { timestamps: true }

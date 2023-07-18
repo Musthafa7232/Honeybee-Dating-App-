@@ -1,4 +1,7 @@
 import { Server } from "socket.io";
+import chatModel from "../domain/model/chatModel.js";
+import { addNewMsg } from "../usecases/ChatInteractor.js";
+
 
 const io = new Server({
     cors: {
@@ -14,14 +17,40 @@ io.on("connection", (Socket) => {
     console.log('ll');
     onlineUsers.set(userId, Socket.id);
   });
-
-  Socket.on("send-msg", (data) => {
-    console.log("hi");
+  Socket.on("send-msg", async(data) => {
     const sendUserSocket = onlineUsers.get(data.to);
+   const result=await addNewMsg(data,chatModel)
+   console.log(result);
     if (sendUserSocket) {
-        Socket.to(sendUserSocket).emit("msg-recieve", data.msg);
+        Socket.to(sendUserSocket).emit("msg-recieve", result);
     }
   });
+
+  Socket.on('typing',(to)=>{
+    const sendUserSocket = onlineUsers.get(to);
+    if (sendUserSocket) {
+      Socket.to(sendUserSocket).emit("show-typing");
+  }
+  })
+
+  Socket.on('stop-typing', (to) => {
+    const sendUserSocket = onlineUsers.get(to);
+    if (sendUserSocket) {
+      Socket.to(sendUserSocket).emit("hide-typing");
+    }
+  });
+
+
+  Socket.on('getOnlineUsers',(user)=>{
+    let users=[]
+   for (const [key,value] of onlineUsers.entries()) {
+ users.push(key)
+    } 
+     users.filter(id=>id!=user)
+     console.log(user);
+   
+  })
+
 });
 
 

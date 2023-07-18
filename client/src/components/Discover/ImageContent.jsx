@@ -20,14 +20,15 @@ function ImageContent({ user }) {
             return (
               <Card
                 key={index}
+                component="img"
+                src={image}
+                loading="lazy"
                 sx={{
                   mr: 2,
                   width: { xs: 100, sm: 150, lg: 250 },
                   height: { xs: 100, sm: 150, lg: 250 },
-                  backgroundImage: `url(${image})`,
                   bgcolor: "lightgray",
-                  backgroundSize: "cover",
-                  backgroundRepeat: "no-repeat",
+                  objectFit: "cover",
                   display: "flex",
                   justifyContent: "center",
                   alignContent: "center",

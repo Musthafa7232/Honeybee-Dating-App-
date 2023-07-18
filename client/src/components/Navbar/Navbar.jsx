@@ -13,11 +13,11 @@ import { useDispatch, useSelector } from "react-redux";
 import "@fontsource/montez";
 import { Clear_user } from "../../features/users/AuthReducer";
 import { useEffect } from "react";
-import axios from "../../Axios";
 import { ClearUserData, SetUserData } from "../../features/users/UserReducer";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Person2Icon from "@mui/icons-material/Person2";
+import { userDataApi } from "../../services/api";
 export default function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,12 +29,7 @@ export default function Navbar() {
   }, [user]);
 
   useEffect(() => {
-    axios
-      .get("/userData", {
-        headers: {
-          "auth-token": JSON.parse(localStorage.getItem("authorization.user")),
-        },
-      })
+ userDataApi()
       .then((res) => {
         if (res.data) {
           console.log(res);
@@ -64,7 +59,7 @@ export default function Navbar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const SideBarItems = ["Discover","LikedUsers", "Matches", "Chat", "Search", "HoneyVip"];
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar color="transparent" position="static">
@@ -132,6 +127,13 @@ export default function Navbar() {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                   >
+                    {SideBarItems.map((item) => {
+                      return (
+                        <MenuItem key={item}  sx={{display:{xs:"block",lg:"none"}}} onClick={() => navigate(`/${item}`)}>
+                          {item}
+                        </MenuItem>
+                      );
+                    })}
                     <MenuItem onClick={() => navigate("/profile")}>
                       <Person2Icon sx={{ marginRight: "0.75rem" }} />
                       Profile

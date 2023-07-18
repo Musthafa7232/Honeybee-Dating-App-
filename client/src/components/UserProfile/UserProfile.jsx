@@ -11,6 +11,7 @@ import {
   colors,
 } from "@mui/material";
 import Chip from "@mui/joy/Chip";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import TextareaAutosize from "@mui/base/TextareaAutosize";
 import React, { useEffect } from "react";
 import AddIcon from "@mui/icons-material/Add";
@@ -23,9 +24,12 @@ import GenderIcon from "../icons/GenderIcon";
 import RelationIcon from "../icons/RelationIcon";
 import ReligionIcon from "../icons/ReligionIcon";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/base";
 function UserProfile({ edit, setEdit }) {
   const user = useSelector((state) => state.user.user);
   const [isLoading, setLoading] = useState(true);
+  const navigate=useNavigate()
   useEffect(() => {
     if (user) {
       setLoading(false);
@@ -38,13 +42,12 @@ function UserProfile({ edit, setEdit }) {
         container
         justifyContent="center"
         alignItems="center"
-        sx={{ my: { lg: 13 }, minHeight: "100vh" }}
+        sx={{ mt: { lg: 15 }}}
       >
         <Grid item xs={12} sm={10} md={8} lg={6} xl={10}>
           <Card
             variant="outlined"
             sx={{
-              my: { xs: 9, lg: 0 },
               borderRadius: 6,
               backdropFilter: "brightness(0.9) blur(15px)",
               backgroundColor: "rgba(255, 255, 255, 0.5)",
@@ -52,10 +55,23 @@ function UserProfile({ edit, setEdit }) {
           >
             <Box sx={{ width: "100%", height: "40vh", position: "relative" }}>
               <Box
-                sx={{ objectFit: "cover", width: "100%", height: "100%" }}
-                component="img"
-                src={user?.coverPic ? user?.coverPic : "/cover-picture.png"}
-              />
+              sx={{
+                width: "100%",
+                height: "100%",
+                backgroundImage: `url(${user?.coverPic ? user?.coverPic : "/cover-picture.png"})`,
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+              }}
+              >
+              <Box display={"flex"} sx={{height:'4rem', backdropFilter: "brightness(-5)",}} alignItems={"center"} component='nav' color="Menu">
+                <IconButton sx={{ml:2,fontWeight:'bold'}}  onClick={()=>navigate('/')}>
+                  <ArrowBackIosIcon /> 
+                </IconButton>
+                    <Typography color="black" marginLeft={2} fontFamily={"initial"} fontWeight={'bold'} variant="h5" >
+              Profile
+              </Typography>
+              </Box>
+              </Box>
               <Box
                 sx={{
                   objectFit: "cover",
@@ -174,34 +190,8 @@ function UserProfile({ edit, setEdit }) {
                     <EditIcon sx={{ color: "black" }} fontSize="inherit" />
                   </IconButton>
                 </Grid>
-                <Grid item xs={2}></Grid>
-                <Grid item xs={12} sx={{ my: 4 }}>
-                  <Card
-                    sx={{
-                      borderRadius: 16,
-                      p: 4,
-                      backdropFilter: "brightness(0.9) blur(15px)",
-                      backgroundColor: "rgba(255, 255, 255, 0.5)",
-                    }}
-                  >
-                    <CardContent>
-                      <Typography variant="h6">My Story</Typography>
-                      {isLoading ? (
-                        <Skeleton height={100} />
-                      ) : user.myStory ? (
-                        <Typography
-                          sx={{ mt: 2 }}
-                          variant="body1"
-                          color="textSecondary"
-                        >
-                          {user.myStory}
-                        </Typography>
-                      ) : (
-                        " "
-                      )}
-                    </CardContent>
-                  </Card>
-                </Grid>
+              
+               
                 <Grid
                   item
                   xs={12}
@@ -212,10 +202,10 @@ function UserProfile({ edit, setEdit }) {
                     alignItems: "end",
                   }}
                 >
-                  {user?.images.map((image) => {
+                  {user?.images.map((image,index) => {
                     return (
                       <Card
-                        key={user.phone}
+                        key={index}
                         sx={{
                           mr: 2,
                           width: { xs: 100, sm: 150, lg: 250 },

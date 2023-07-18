@@ -17,23 +17,14 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { useState } from "react";
 import { useEffect } from "react";
-import PropTypes from "prop-types";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Dialog from "@mui/material/Dialog";
 import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
-import axios from "../../Axios";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Auth_user } from "../../features/users/AuthReducer";
 import AddIcon from "@mui/icons-material/Add";
 import SimpleDialog from "./SimpleDialog";
 import dayjs from "dayjs";
+import { createAccountApi, fetchLocationApi } from "../../services/api";
 export default function InitialData() {
   const dispatch = useDispatch();
   const Phone = useSelector((state) => state.phone);
@@ -69,6 +60,12 @@ export default function InitialData() {
       email:user.email,
       fullName:user.fullName
     }));
+    }else{
+      setUserData((prevState) => ({
+        ...prevState,
+        phone: Phone.number,
+        isVerified: true
+      }));
     }
   }, []);
 
@@ -89,72 +86,97 @@ export default function InitialData() {
     console.log(user);
   }, [userData]);
 
-  const handleSubmit = (event) => {
+
+  const validateInputs=()=>{
     const regexEmail =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    // setUserData((prev) => ({
-    //   ...prev,
-    //   firstData: true,
-    // }));
-    if (!userData.fullName)
-      setError((prevState) => ({
-        ...prevState,
-        fullName: "*FullName is required",
-      }));
-    else setError((prevState) => ({ ...prevState, fullName: null }));
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  // setUserData((prev) => ({
+  //   ...prev,
+  //   firstData: true,
+  // }));
+  if (!userData.fullName){
+    setError((prevState) => ({
+      ...prevState,
+      fullName: "*FullName is required",
+    }));
+    return false
+  }
+  else setError((prevState) => ({ ...prevState, fullName: null }));
 
-    if (!userData.email)
-      setError((prevState) => ({ ...prevState, email: "*Email is required" }));
-    else if (!regexEmail.test(userData.email))
-      setError((prevState) => ({
-        ...prevState,
-        email: "*Enter a valid email",
-      }));
-    else setError((prevState) => ({ ...prevState, email: null }));
+  if (!userData.email){
+    setError((prevState) => ({ ...prevState, email: "*Email is required" }));
+    return false
+  }
+  else if (!regexEmail.test(userData.email)){
+     setError((prevState) => ({
+      ...prevState,
+      email: "*Enter a valid email",
+    }));
+    return  false
+  }
+  else setError((prevState) => ({ ...prevState, email: null }));
 
-    if (!userData.birthday)
-      setError((prevState) => ({
-        ...prevState,
-        birthday: "*Birthdate is required",
-      }));
-    else if (userData.age < 18)
-      setError((prevState) => ({ ...prevState, birthday: "*Should be  18+" }));
-    else setError((prevState) => ({ ...prevState, birthday: null }));
+  if (!userData.birthday){
+    setError((prevState) => ({
+      ...prevState,
+      birthday: "*Birthdate is required",
+    }));
+    return false
+  }
+    
+  else if (userData.age < 18){
+    setError((prevState) => ({ ...prevState, birthday: "*Should be  18+" }));
+    return false
+  }
+    
+  else setError((prevState) => ({ ...prevState, birthday: null }));
 
-    if (!userData.gender)
+  if (!userData.gender){
       setError((prevState) => ({
-        ...prevState,
-        gender: "*Gender is required",
-      }));
-    else setError((prevState) => ({ ...prevState, gender: null }));
+      ...prevState,
+      gender: "*Gender is required",
+    }));
+    return false
+  }
+  
+  else setError((prevState) => ({ ...prevState, gender: null }));
 
-    if (!userData.Preference)
-      setError((prevState) => ({
-        ...prevState,
-        Preference: "*Preference is required",
-      }));
-    else setError((prevState) => ({ ...prevState, Preference: null }));
+  if (!userData.Preference){
+    setError((prevState) => ({
+      ...prevState,
+      Preference: "*Preference is required",
+    }));
+    return false
+  }
+  else setError((prevState) => ({ ...prevState, Preference: null }));
 
-    if (!userData.location)
-      setError((prevState) => ({
-        ...prevState,
-        location: "*Location is required",
-      }));
-    else setError((prevState) => ({ ...prevState, location: null }));
-    if (
-      error.fullName === null &&
-      error.email === null &&
-      error.birthday === null &&
-      error.gender === null &&
-      error.Preference === null &&
-      error.location === null
-    )
-      setError(false);
-    if (!error) {
+
+  if (!userData.location){
+    setError((prevState) => ({
+      ...prevState,
+      location: "*Location is required",
+    }));
+    return false
+  }
+  else setError((prevState) => ({ ...prevState, location: null }));
+  if (
+    error.fullName === null &&
+    error.email === null &&
+    error.birthday === null &&
+    error.gender === null &&
+    error.Preference === null &&
+    error.location === null
+  ) {
+    setError(false)
+    return true
+  }
+  }
+
+  const handleSubmit = (event) => {
+     if(validateInputs){  
       if (!loading) {
         setloading(true);
-        axios
-          .post("/createAccount", userData)
+       createAccountApi(userData)
           .then((res) => {
             if (res.data.success) {
               console.log(res);
@@ -182,10 +204,7 @@ export default function InitialData() {
           console.log(position);
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
-          const geoApiUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
-
-          fetch(geoApiUrl)
-            .then((res) => res.json())
+         fetchLocationApi(latitude,longitude).then((res) => res.json())
             .then((data) => {
               console.log(data.city + "," + data.principalSubdivision);
               setUserData((prevState) => ({
@@ -301,6 +320,20 @@ export default function InitialData() {
                           email: e.target.value,
                         }))
                       }
+                    />
+                    {error.email && (
+                      <Typography sx={{ color: "red" }}>
+                        {error.email}
+                      </Typography>
+                    )}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Phone"
+                      variant="outlined"
+                      value={userData.phone}
+                      fullWidth
+                     disabled
                     />
                     {error.email && (
                       <Typography sx={{ color: "red" }}>

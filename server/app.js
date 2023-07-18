@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from "./Frameworks/database/dbConfig.js";
 import userRouter from "./interfaces/routes/userRouter.js";
 import ChatRouter from "./interfaces/routes/ChatRouter.js";
+import callRouter from "./interfaces/routes/callRouter.js";
 import io from './Sockets/Socket.js'
 
 config();
@@ -16,7 +17,7 @@ app.use(express.static("./public"));
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/chat", ChatRouter);
-app.use("/api/call", ChatRouter);
+app.use("/api/call", callRouter);
 app.use("/api", userRouter);
 
 let server;

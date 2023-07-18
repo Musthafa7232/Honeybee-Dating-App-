@@ -1,7 +1,6 @@
 import React from 'react'
 import Login from '../../components/Login/Login'
 import Navbar from '../../components/Navbar/Navbar'
-import axios from '../../Axios'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import bgSvg from '/blob.svg'

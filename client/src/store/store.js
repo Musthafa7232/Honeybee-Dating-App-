@@ -1,4 +1,4 @@
-import {configureStore,createSlice} from '@reduxjs/toolkit'
+import {configureStore} from '@reduxjs/toolkit'
 
 import AuthReducer from '../features/users/AuthReducer'
 import RegisterReducer from '../features/RegisterUser/RegisterReducer.js'

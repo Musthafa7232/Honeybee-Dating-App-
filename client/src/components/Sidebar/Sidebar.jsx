@@ -12,6 +12,7 @@ export default function Sidebar() {
 
   const navItems=[
     "Discover",
+    "LikedUsers",
     "Matches",
     "Chat",
     "Search",
@@ -23,7 +24,7 @@ export default function Sidebar() {
         container
         justifyContent="start"
         alignItems="center"
-        sx={{ minHeight: "100vh" }}
+        sx={{ mt:15 }}
       >
         <Grid item xs={12} >
         <Card

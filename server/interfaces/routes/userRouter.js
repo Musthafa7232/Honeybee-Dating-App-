@@ -1,6 +1,5 @@
 import express from "express";
 const router = express.Router();
-router.use(express.urlencoded({ extended: false }));
 
 import {
   googleData,
@@ -14,7 +13,8 @@ import {
   likeUser,
   dislikeUser,
   matchedUsers,
-} from "../controller/userController.js";
+  getAllLikedUsers,
+} from "../../controller/userController.js";
 
 import {
   createNewUser,
@@ -25,30 +25,36 @@ import {
   showUsers,
   likeUserAndMatch,
   dislikeAUser,
+  showAllLikedUsers,
 } from "../../usecases/UserInteractor.js";
 
 import { SendPhoneOtp, VerifyPhoneOtp } from "../../usecases/OtpInteractor.js";
-
 import {
   VerifyJwtToken,
   createJwtToken,
 } from "../../usecases/AuthInteractor.js";
-
-import {
-  getGoogleOauthToken,
-  getGoogleUser,
-} from "../../usecases/GoogleInteractor.js";
-
-import userModel from "../../domain/model/userModel.js";
-import chatModel from "../../domain/model/chatModel.js";
-import matchModel from "../../domain/model/matchesModel.js";
 import {
   createUserToken,
   verifyUserToken,
 } from "../../Frameworks/utils/Jwt.js";
+import {
+  getGoogleOauthToken,
+  getGoogleUser,
+} from "../../usecases/GoogleInteractor.js";
+import userModel from "../../domain/model/userModel.js";
+import matchModel from "../../domain/model/matchesModel.js";
 import { checkOtp, sendOtp } from "../../Frameworks/utils/Twilio.js";
-
 import { upload } from "../../Frameworks/utils/Multer.js";
+import { getMatchedUsers } from "../../usecases/MatchesInteractor.js";
+
+//route Handlers
+router.post("/phone", phoneOtp(SendPhoneOtp, sendOtp));
+
+router.get(
+  "/oAuth/google",
+  googleData(userModel, findUserWithEmail, getGoogleOauthToken, getGoogleUser)
+);
+
 router.post(
   "/verifyOtp",
   verifyOtp(
@@ -60,24 +66,23 @@ router.post(
     createUserToken
   )
 );
-import { getMatchedUsers } from "../../usecases/MatchesInteractor.js";
-router.post("/phone", phoneOtp(SendPhoneOtp, sendOtp));
+
 router.post(
   "/createAccount",
   userDetails(createNewUser, createJwtToken, userModel, createUserToken)
 );
+
 router.post(
   "/googleLogin",
   googleLogin(findUserWithEmail, userModel, createUserToken, createJwtToken)
 );
-router.get(
-  "/userData",
-  userData(VerifyJwtToken, verifyUserToken, findUserWithId, userModel)
-);
-router.get(
-  "/oAuth/google",
-  googleData(userModel, findUserWithEmail, getGoogleOauthToken, getGoogleUser)
-);
+
+//verifyUserTocken
+
+router.use(VerifyJwtToken(verifyUserToken));
+
+router.get("/userData", userData(findUserWithId, userModel));
+
 router.patch(
   "/userEdit",
   upload.fields([
@@ -87,35 +92,13 @@ router.patch(
     { name: "image1", maxCount: 1 },
     { name: "image2", maxCount: 1 },
   ]),
-  editUser(userModel, UpdateUser, VerifyJwtToken, verifyUserToken)
+  editUser(userModel, UpdateUser)
 );
 
-router.get(
-  "/discover",
-  discoverUsers(VerifyJwtToken, verifyUserToken, userModel, showUsers)
-);
-router.get(
-  "/matches",
-  matchedUsers(
-    VerifyJwtToken,
-    verifyUserToken,
-    getMatchedUsers,
-    matchModel,
-    userModel
-  )
-);
-router.put(
-  "/likeUser",
-  likeUser(
-    userModel,
-    matchModel,
-    VerifyJwtToken,
-    verifyUserToken,
-    likeUserAndMatch
-  )
-);
-router.put(
-  "/dislikeUser",
-  dislikeUser(userModel, VerifyJwtToken, verifyUserToken, dislikeAUser)
-);
+router.get("/discover", discoverUsers(userModel, showUsers));
+router.get("/matches", matchedUsers(getMatchedUsers, matchModel, userModel));
+router.put("/likeUser", likeUser(userModel, matchModel, likeUserAndMatch));
+router.put("/dislikeUser", dislikeUser(userModel, dislikeAUser));
+
+router.post("/allLikedUsers", getAllLikedUsers(showAllLikedUsers, userModel));
 export default router;

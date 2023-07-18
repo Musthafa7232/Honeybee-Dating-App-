@@ -1,12 +1,12 @@
 import * as React from "react";
 import { Grid, Skeleton } from "@mui/material";
-import axios from "../../Axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { SetUserData } from "../../features/users/UserReducer";
 import RenderContentData from "./RenderContentData";
+import { DiscoverUsersApi, disLikeUserApi, likeUserApi } from "../../services/api";
 export default function DiscoverSide() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
@@ -16,17 +16,14 @@ export default function DiscoverSide() {
 
   useEffect(() => {
     if (user) {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 4000);
     }
   }, [user]);
 
   useEffect(() => {
-    axios
-      .get("/discover", {
-        headers: {
-          "auth-token": JSON.parse(localStorage.getItem("authorization.user")),
-        },
-      })
+  DiscoverUsersApi()
       .then((res) => {
         setusers(res.data);
       });
@@ -42,11 +39,13 @@ export default function DiscoverSide() {
       dislikedUser.toString()
     );
 
-    filteredUsers = users.filter(
+    filteredUsers = shuffledUsers?.filter(
       (user) =>
-        !likedUserIds.includes(user._id.toString()) &&
-        !dislikedUserIds.includes(user._id.toString())
+        !likedUserIds.includes(user?._id.toString()) &&
+        !dislikedUserIds.includes(user?._id.toString())
     );
+
+    console.log(filteredUsers);
   }
 
   useEffect(() => {
@@ -63,7 +62,7 @@ export default function DiscoverSide() {
       return shuffledArray;
     };
 
-    setShuffledUsers(shuffleArray(filteredUsers));
+    setShuffledUsers(shuffleArray(users));
   }, [users]);
 
   const likeHandler = async (id) => {
@@ -71,11 +70,7 @@ export default function DiscoverSide() {
       User: id,
     };
     try {
-      const response = await axios.put("/likeUser", data, {
-        headers: {
-          "auth-token": JSON.parse(localStorage.getItem("authorization.user")),
-        },
-      });
+      const response =await likeUserApi(data)
       dispatch(SetUserData(response.data));
     } catch (err) {
       console.log(err);
@@ -87,11 +82,8 @@ export default function DiscoverSide() {
       User: id,
     };
     try {
-      const response = await axios.put("/dislikeUser", data, {
-        headers: {
-          "auth-token": JSON.parse(localStorage.getItem("authorization.user")),
-        },
-      });
+      const response = await disLikeUserApi(data)
+      console.log(response);
       dispatch(SetUserData(response.data));
     } catch (err) {
       console.log(err);
@@ -100,28 +92,22 @@ export default function DiscoverSide() {
 
   return (
     <>
-      <Grid container sx={{ minHeight: "100vh" }}>
-        {isLoading ? (
-          // Skeleton loader while loading users
-          <Grid item xs={12} md={6}>
-            <Skeleton variant="rectangular" height="80%" width="100%" />
-          </Grid>
-        ) : (
-          <Grid
-            item
-            xs={12}
-            lg={11}
-            container
-            sx={{ minHeight: "155vh", position: "relative" }}
-          >
-            <RenderContentData
-              isLoading={isLoading}
-              filteredUsers={filteredUsers}
-              likeHandler={likeHandler}
-              dislikeHandler={dislikeHandler}
-            />
-          </Grid>
-        )}
+      <Grid container>
+        <Grid
+          item
+          xs={12}
+          lg={11}
+          container
+          sx={{ mb: 83, position: "relative" }}
+        >
+          <RenderContentData
+            user={user}
+            isLoading={isLoading}
+            filteredUsers={filteredUsers}
+            likeHandler={likeHandler}
+            dislikeHandler={dislikeHandler}
+          />
+        </Grid>
       </Grid>
     </>
   );

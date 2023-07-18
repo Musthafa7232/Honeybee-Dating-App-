@@ -10,36 +10,32 @@ import { useRef } from "react";
 import SelectUserChat from "./SelectUserChat";
 import { host } from "../../constants/Constants";
 import {socket } from '../../Socket'
+import { ReadMsgsApi, ShowMatchesApi } from "../../services/api";
 function ChatContainer() {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.user);
     const [contacts, setContacts] = useState([]);
     const [currentChat, setCurrentChat] = useState(undefined);
 
-      useEffect(() => {
-        if (user) {
-          socket.emit("add-user", user._id);
-        }
-      }, [user]);
 
       useEffect(() => {
         if (user) {
-            axios
-            .get("/matches", {
-              headers: {
-                "auth-token": JSON.parse(localStorage.getItem("authorization.user")),
-              },
-            })
-            .then((res) => {
+          ShowMatchesApi().then((res) => {
                 console.log(res.data);
                 setContacts(res.data);
             });
         }
       }, [user]);
 
-      const handleChatChange = (chat) => {
-        console.log(chat);
+      const handleChatChange = (chat,id) => {
         setCurrentChat(chat);
+        if(id)markChatAsRead(id)
+      };
+
+      const markChatAsRead = (id) => {
+        console.log(id);
+            const data={ msgId: id }
+       ReadMsgsApi(data)
       };
   return (
     <>
@@ -64,7 +60,7 @@ function ChatContainer() {
     >
     <CardContent>
         {currentChat === undefined ? (
- <SelectUserChat contacts={contacts} changeChat={handleChatChange}/>
+ <SelectUserChat contacts={contacts} changeChat={handleChatChange} user={user}/>
       ) : (
         <ChatCard currentChat={currentChat} setCurrentChat={setCurrentChat} socket={socket} />
       )}
