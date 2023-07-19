@@ -34,7 +34,7 @@ function IncomingCallModal({ open, close }) {
       >
         <Box sx={{ mb: 3 }}>
           <Typography variant="h6" component="div" textAlign="center">
-            Incoming Video Call
+            Incoming {open.video?"Video":"Audio"} Call
           </Typography>
           <Avatar src={open?.profilePic} sx={{ width: 80, height: 80, my: 2, mx: "auto" }} />
           <Typography variant="h6" component="div">

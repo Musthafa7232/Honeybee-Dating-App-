@@ -41,7 +41,6 @@ export const addNewMsg = async (
 
 export const getLatestMessage = async ({ conversationIds }, chatModel) => {
   try {
-
     let latestChats = await chatModel.find({ conversationId: { $in: conversationIds } });
 
     // Sort the documents in descending order by updatedAt field

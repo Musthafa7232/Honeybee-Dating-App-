@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import chatModel from "../domain/model/chatModel.js";
-import { addNewMsg } from "../usecases/ChatInteractor.js";
+import { addNewMsg, getLatestMessage } from "../usecases/ChatInteractor.js";
 
 const io = new Server({
   cors: {
@@ -37,6 +37,11 @@ io.on("connection", (Socket) => {
    
     if (sendUserSocket) { 
       Socket.to(sendUserSocket).emit("msg-recieve", result);
+      const body={
+        conversationIds:result.conversationId
+      }
+       const newData=await getLatestMessage(body,chatModel)
+      Socket.to(sendUserSocket).emit('new-msg',newData)
     }
   });
 

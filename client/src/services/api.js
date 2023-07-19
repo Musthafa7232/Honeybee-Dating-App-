@@ -44,8 +44,13 @@ export const ShowMatchesApi = () => axios.get("/matches", headers);
 export const showAllLikedUsersApi = () =>
   axios.post("/allLikedUsers", { data: "hi" }, headers);
 
-export const getAllmsgsApi = (data) =>axios.post("/chat/getmsg", data, headers);
+export const getAllmsgsApi = (data) =>
+  axios.post("/chat/getmsg", data, headers);
 
 export const addNewMSgApi = (data) => axios.post("/chat/addmsg", data, headers);
 
-export const ReadMsgsApi=(data)=>axios.post('/chat/markRead',data,headers)
+export const getLastMsgsApi = (data) =>
+  axios.post("/chat/lastmsg", data, headers);
+
+export const ReadMsgsApi = (data) =>
+  axios.post("/chat/markRead", data, headers);

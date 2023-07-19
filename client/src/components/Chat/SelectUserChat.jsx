@@ -16,7 +16,8 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
-import axios from "../../Axios";
+import { socket } from "../../Socket";
+import { getLastMsgsApi } from "../../services/api";
 function SelectUserChat({ contacts, changeChat, user }) {
   const [searchText, setSearchText] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
@@ -27,22 +28,36 @@ function SelectUserChat({ contacts, changeChat, user }) {
     contacts.forEach((contact) => {
       conversationIds.push(contact.conversationId);
     });
-    axios
-      .post(
-        "/chat/lastmsg",
-        {
-          conversationIds,
-        },
-        {
-          headers: {
-            "auth-token": JSON.parse(
-              localStorage.getItem("authorization.user")
-            ),
-          },
-        }
-      )
-      .then((res) => setLastChattedUser(res.data));
+   const data= {
+     conversationIds,
+   }
+    getLastMsgsApi(data).then((res) => setLastChattedUser(res.data));
   }, [contacts]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('new-msg', (data) => {
+        console.log(data[0]);
+        setLastChattedUser((prev) => {
+          const updatedUsers = prev.map((user) => {
+            if (user.conversationId === data[0].conversationId) {
+              return { ...user, ...data[0] };
+            }
+            return user;
+          });
+          // Sort the updatedUsers array based on updatedAt property
+          updatedUsers.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+          return updatedUsers;
+        });
+      });
+    }
+  }, []);
+  
+  
+
+  useEffect(()=>{
+console.log(lastChatteduser);
+  },[lastChatteduser])
   
   const filteredContacts = Array.from(contacts).filter((contact) =>
     contact?.fullName.toLowerCase().includes(searchText.toLowerCase())
