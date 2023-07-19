@@ -112,9 +112,9 @@ export const googleLogin =
     }
   };
 
-export const editUser = (userModel, updateUser) => async (req, res) => {
+export const editUser = (userModel, updateUser,cloudinary,uploadProfilePic,uploadCoverPic,removeFile) => async (req, res) => {
   try {
-    const user = await updateUser(userModel, req);
+    const user = await updateUser(userModel, req,cloudinary,uploadProfilePic,uploadCoverPic,removeFile);
     res.json(user);
   } catch (error) {
     res.status(400).json(error);

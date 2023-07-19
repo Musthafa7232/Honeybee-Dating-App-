@@ -6,9 +6,9 @@ import Picker from "emoji-picker-react";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { Button, TextField, Grid, Box, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import MicIcon from '@mui/icons-material/Mic';
+import MicIcon from "@mui/icons-material/Mic";
 import { socket } from "../../Socket";
-export default function ChatInput({ handleSendMsg,currentChat }) {
+export default function ChatInput({ handleSendMsg, currentChat }) {
   const [msg, setMsg] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
@@ -16,23 +16,19 @@ export default function ChatInput({ handleSendMsg,currentChat }) {
   const handleTextChange = (e) => {
     const message = e.target.value;
     setMsg(message);
-  
-    // Clear the previous typing timeout if it exists
+
     if (typingTimeout) {
       clearTimeout(typingTimeout);
     }
-  
-    // Start a new typing timeout of 1 second
+
     const newTypingTimeout = setTimeout(() => {
-      socket.emit('stop-typing', currentChat._id);
+      socket.emit("stop-typing", currentChat._id);
     }, 1000);
-  
-    // Set the new typing timeout
+
     setTypingTimeout(newTypingTimeout);
-  
-    // Emit the "typing" event
-    socket.emit('typing', currentChat._id);
-  }
+
+    socket.emit("typing", currentChat._id);
+  };
   const handleEmojiPickerhideShow = () => {
     setShowEmojiPicker(!showEmojiPicker);
   };
@@ -48,7 +44,7 @@ export default function ChatInput({ handleSendMsg,currentChat }) {
     // Process the uploaded files
     // You can use libraries like FilePond or handle the upload logic yourself
     console.log("Uploaded files:", files);
-  }
+  };
 
   const handleAudioUpload = (event) => {
     const files = event.target.files;
@@ -56,7 +52,6 @@ export default function ChatInput({ handleSendMsg,currentChat }) {
     // You can use libraries like FilePond or handle the upload logic yourself
     console.log("Uploaded files:", files);
   };
-
 
   const sendChat = () => {
     if (msg.length > 0) {
@@ -89,9 +84,9 @@ export default function ChatInput({ handleSendMsg,currentChat }) {
             )}
           </Box>
           <TextField
-          sx={{
-            borderRadius:5
-          }}
+            sx={{
+              borderRadius: 5,
+            }}
             fullWidth
             value={msg}
             placeholder="Type Something..."
@@ -110,22 +105,26 @@ export default function ChatInput({ handleSendMsg,currentChat }) {
             multiple
             onChange={handleFileUpload}
           />
-        {!msg? (
-            <> <label htmlFor="file-upload">
-            <IconButton component="span">
-              <MicIcon />
-            </IconButton>
-          </label>
-          <input
-            id="file-upload"
-            type="file"
-            accept="audio/*"
-            style={{ display: "none" }}
-            multiple
-            onChange={handleAudioUpload}
-          />
-            </>):
-         ( <Button startIcon={<SendIcon />} onClick={sendChat} />)}
+          {!msg ? (
+            <>
+              {" "}
+              <label htmlFor="file-upload">
+                <IconButton component="span">
+                  <MicIcon />
+                </IconButton>
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                accept="audio/*"
+                style={{ display: "none" }}
+                multiple
+                onChange={handleAudioUpload}
+              />
+            </>
+          ) : (
+            <Button startIcon={<SendIcon />} onClick={sendChat} />
+          )}
         </Box>
       </Grid>
     </Grid>

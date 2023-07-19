@@ -16,6 +16,8 @@ import {
   getAllLikedUsers,
 } from "../../controller/userController.js";
 
+import cloudinary from "../../Frameworks/utils/Cloudinary.js";
+
 import {
   createNewUser,
   findUserWithPhone,
@@ -46,7 +48,8 @@ import matchModel from "../../domain/model/matchesModel.js";
 import { checkOtp, sendOtp } from "../../Frameworks/utils/Twilio.js";
 import { upload } from "../../Frameworks/utils/Multer.js";
 import { getMatchedUsers } from "../../usecases/MatchesInteractor.js";
-
+import removeFile from "../../Frameworks/utils/FileRemover.js";
+import {uploadProfilePic,uploadCoverPic} from '../../usecases/CloudinaryInteractor.js'
 //route Handlers
 router.post("/phone", phoneOtp(SendPhoneOtp, sendOtp));
 
@@ -92,7 +95,7 @@ router.patch(
     { name: "image1", maxCount: 1 },
     { name: "image2", maxCount: 1 },
   ]),
-  editUser(userModel, UpdateUser)
+  editUser(userModel, UpdateUser,cloudinary,uploadProfilePic,uploadCoverPic,removeFile)
 );
 
 router.get("/discover", discoverUsers(userModel, showUsers));

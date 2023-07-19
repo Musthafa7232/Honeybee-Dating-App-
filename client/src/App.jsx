@@ -11,6 +11,7 @@ import { useState, useEffect, lazy, Suspense } from "react";
 import RegisterRoute from "./routes/RegisterRoute";
 import UserPrivateRoute from "./routes/UserPrivateRoute";
 import UserPublicRoute from "./routes/UserPublicRoute";
+import AudioRecorder from "./components/Audio/AudioRecorder";
 
 const CreateAccount = lazy(() => import("./Pages/CreateAccount/CreateAccount"));
 const HomePage = lazy(() => import("./Pages/HomePage/HomePage"));
@@ -50,7 +51,7 @@ function App() {
               <Route path="/Matches" element={<MatchesPage />} />
               <Route path="/LikedUsers" element={<LikedUsersPage />} />
               <Route path="/Search" element={<HomePage />} />
-              <Route path="/HoneyVip" element={<HomePage />} />
+              <Route path="/HoneyVip" element={<AudioRecorder />} />
               <Route path="/Chat" element={<ChatPage />} />
               <Route path="/room/:roomId" element={<VideoCall />} />
             </Route>

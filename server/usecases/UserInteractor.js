@@ -39,7 +39,7 @@ export const findUserWithId = async (id, userModel) => {
   }
 };
 
-export const UpdateUser = async (userModel, req) => {
+export const UpdateUser = async (userModel, req,cloudinary,uploadProfilePic,uploadCoverPic,removeFile) => {
   try {
     const {
       fullName,
@@ -72,21 +72,23 @@ export const UpdateUser = async (userModel, req) => {
       (user.realationshipStatus = realationshipStatus);
 
     if (req?.files?.profilePic) {
-      const profilePicPath = req.files.profilePic[0].path
-        .slice(7)
-        .replace(new RegExp("\\" + path.sep, "g"), "/");
-      const profilePicFile =
-        process.env.BASEURL + process.env.PORT + "/" + profilePicPath;
-      user.profilePic = profilePicFile;
+     const result=await uploadProfilePic(req.files.profilePic[0].path,cloudinary,removeFile)
+      // const profilePicPath = req.files.profilePic[0].path
+      //   .slice(7)
+      //   .replace(new RegExp("\\" + path.sep, "g"), "/");
+      // const profilePicFile =
+      //   process.env.BASEURL + process.env.PORT + "/" + profilePicPath;
+      user.profilePic = result;
     }
 
     if (req?.files?.coverPic) {
-      const coverPicPath = req.files.coverPic[0].path
-        .slice(7)
-        .replace(new RegExp("\\" + path.sep, "g"), "/");
-      const coverPicFile =
-        process.env.BASEURL + process.env.PORT + "/" + coverPicPath;
-      user.coverPic = coverPicFile;
+     const result=await uploadCoverPic(req.files.coverPic[0].path,cloudinary,removeFile)
+      // const coverPicPath = req.files.coverPic[0].path
+      //   .slice(7)
+      //   .replace(new RegExp("\\" + path.sep, "g"), "/");
+      // const coverPicFile =
+      //   process.env.BASEURL + process.env.PORT + "/" + coverPicPath;
+       user.coverPic = result;
     }
 
     if (req?.files?.image0) {
