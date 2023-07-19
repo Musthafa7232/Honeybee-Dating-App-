@@ -166,15 +166,7 @@ function RenderContentData({
                         >
                           DisLike
                         </Button>
-                        <Button
-                          color="primary"
-                          variant="outlined"
-                          sx={{ borderRadius: "1rem", px: { xs: 1, lg: 13 } }}
-                          size="medium"
-                          onClick={() => handleSubmit(user)}
-                        >
-                          Vist Profile
-                        </Button>
+                      
                         <Button
                           startIcon={<ThumbUpIcon />}
                           color="error"
@@ -185,6 +177,25 @@ function RenderContentData({
                         >
                           Like
                         </Button>
+                      </Grid>  
+                      <Grid item sx={{mt:3}} xs={12}>
+                        <Grid    sx={{
+                          display: "flex",
+                          alignContent: "center",
+                          alignItems: "center",
+                          justifyContent: "space-around",
+                        }}>
+
+                      <Button
+                          color="primary"
+                          variant="outlined"
+                          sx={{ borderRadius: "1rem", px: { xs: 1, lg: 13 } }}
+                          size="medium"
+                          onClick={() => handleSubmit(user)}
+                        >
+                          Vist Profile
+                        </Button>
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>

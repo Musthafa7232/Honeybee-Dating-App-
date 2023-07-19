@@ -16,10 +16,7 @@ export default function ContentBar() {
   const navigate=useNavigate()
 const [userDetails,setUserdetails]=useContext(context)
 const [loading,setLoading]=useState(false)
-  useEffect(()=>{
-console.log(userDetails.phone);
-  },[])
-
+ 
   const handleSubmit = (event) => {
     if(!loading){
   

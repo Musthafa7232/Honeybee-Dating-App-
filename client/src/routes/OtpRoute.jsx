@@ -4,7 +4,6 @@ import {Outlet,Navigate} from 'react-router-dom'
 
 function OtpRoute() {
     const PhoneState=useSelector(state=>state.phone)
-    console.log(PhoneState);
   return PhoneState.number?<Outlet/>:<Navigate to='/login'/>
 }
 

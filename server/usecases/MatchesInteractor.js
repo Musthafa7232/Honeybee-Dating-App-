@@ -30,7 +30,6 @@
 // };
 export const getMatchedUsers = async (id, matchModel, userModel) => {
   try {
-    console.log('k');
     let match = await matchModel.find({
       $or: [
         {
@@ -43,8 +42,6 @@ export const getMatchedUsers = async (id, matchModel, userModel) => {
       isMatched: true,
     });
 
-    console.log(match);
-
     let matches = [];
 
     match.forEach((arr) => {
@@ -55,7 +52,6 @@ export const getMatchedUsers = async (id, matchModel, userModel) => {
       }
     });
 
-    console.log(matches);
 
     const matchIds = matches.map((match) => match.user);
 
@@ -67,7 +63,6 @@ export const getMatchedUsers = async (id, matchModel, userModel) => {
         return { ...user._doc, conversationId: match.conversationId };
       }
     });
-console.log(userData,'hiiiiii');
    return userData
   } catch (error) {
     console.log(error);

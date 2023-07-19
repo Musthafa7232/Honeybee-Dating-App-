@@ -8,7 +8,6 @@ export const createJwtToken = async (user, createUserToken) => {
 
 export const VerifyJwtToken = (verifyUserToken) => (req, res, next) => {
   const token = req.header("auth-token");
-  console.log(token);
   if (token) {
     try {
       const verifiedUser = verifyUserToken(token, req);

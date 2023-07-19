@@ -12,6 +12,7 @@ import RegisterRoute from "./routes/RegisterRoute";
 import UserPrivateRoute from "./routes/UserPrivateRoute";
 import UserPublicRoute from "./routes/UserPublicRoute";
 import AudioRecorder from "./components/Audio/AudioRecorder";
+import IncomingCallModal from "./components/IncomingCall/IncomingCallModal";
 
 const CreateAccount = lazy(() => import("./Pages/CreateAccount/CreateAccount"));
 const HomePage = lazy(() => import("./Pages/HomePage/HomePage"));
@@ -31,19 +32,45 @@ const ChatPage = lazy(() => import("./Pages/ChatPage/ChatPage"));
 
 function App() {
   const user = useSelector((state) => state.user.user);
-
+  const [call, setCall] = useState({
+    modal: false,
+  });
   useEffect(() => {
     if (user) {
       socket.connect();
       socket.emit("add-user", user._id);
-      socket.emit('getOnlineUsers',user._id)
-    }
+      socket.emit("getOnlineUsers", user._id);
+    } 
+   
   }, [user]);
 
+  
+useEffect(()=>{
+  if(socket){
+    socket.on("connect_error", (error) => {
+      console.log("Socket connect_error:", error)
+    })
+
+    socket.on("error", (error) => {
+      console.log("Socket error:", error)
+    })
+    socket.on("incoming-video-call", (data) => {
+      console.log("incoming Call",data);
+      setCall(data);
+    });
+  }
+  return()=>{
+    socket.off('connect_error')
+    socket.off('error')
+  }
+},[])
+  
+  const handleClose = () => {
+    setCall(prev=>({...prev,modal:false}));
+  };
   return (
     <div className="App">
       <Suspense fallback={<div>Loading...</div>}>
-        <Router>
           <Routes>
             <Route element={<UserPrivateRoute />}>
               <Route path="/Discover" element={<HomePage />} />
@@ -68,7 +95,7 @@ function App() {
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </Router>
+          <IncomingCallModal open={call} close={handleClose} />
       </Suspense>
     </div>
   );

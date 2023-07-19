@@ -41,7 +41,6 @@ export const addNewMsg = async (
 
 export const getLatestMessage = async ({ conversationIds }, chatModel) => {
   try {
-    console.log("Conversation IDs:", conversationIds);
 
     let latestChats = await chatModel.find({ conversationId: { $in: conversationIds } });
 
@@ -67,7 +66,6 @@ export const getLatestMessage = async ({ conversationIds }, chatModel) => {
 
 export const markChatAsRead = async (userId,{ msgId },chatModel) => {
   try {
-    console.log(msgId);
    const marked= await chatModel.updateOne(
       { _id:msgId, sender: { $ne:userId } },
       { $set: { read: true } }

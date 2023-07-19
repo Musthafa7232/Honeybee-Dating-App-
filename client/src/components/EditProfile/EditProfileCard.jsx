@@ -38,9 +38,10 @@ function EditProfileCard({
   openModal,
   handleSubmit,
   isLoading,
+  loader,
+  setLoader
 }) {
   const handleProfilePic = (e) => {
-    console.log(e.target.files[0]);
     if (e.target.files[0]) {
       setUserData((prev) => ({
         ...prev,
@@ -81,19 +82,22 @@ function EditProfileCard({
     }
   };
 
-
+const handleClick=()=>{
+  if (!loader) {
+    setLoader(true);
+    handleSubmit()
+  }
+}
 
   const locationSelector = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log(position);
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
          fetchLocationApi(latitude,longitude)
             .then((res) => res.json())
             .then((data) => {
-              console.log(data.city + "," + data.principalSubdivision);
               setUserData((prevState) => ({
                 ...prevState,
                 location: data.city + "," + data.principalSubdivision,
@@ -109,6 +113,7 @@ function EditProfileCard({
     }
   };
 
+  
   const dateToAge = (data) => {
     const selectedDate = new Date(data.$d);
     const currentDate = new Date();
@@ -117,7 +122,6 @@ function EditProfileCard({
     const ageDate = new Date(ageDiff);
 
     const calculatedAge = Math.abs(ageDate.getUTCFullYear() - 1970);
-    console.log(data.$d);
     setUserData((prevState) => ({
       ...prevState,
       birthday: data.$d,
@@ -456,8 +460,16 @@ function EditProfileCard({
             </Card>
           </Grid>
           <Grid item sx={{display:'flex',justifyContent:'center',alignContent:'center',alignItems:'center',mt:4}} xs={12}>
-            <Button variant="outlined" color="warning" fullWidth onClick={handleSubmit}>
-              Submit Changes
+            <Button variant="outlined" color="warning" fullWidth onClick={handleClick}>
+              {loader?(
+                <>
+                Loading...
+                </>
+              ):(
+                <>
+                Save Changes
+                </>
+              )}
             </Button>
           </Grid>
         </Grid>

@@ -73,21 +73,11 @@ export const UpdateUser = async (userModel, req,cloudinary,uploadProfilePic,uplo
 
     if (req?.files?.profilePic) {
      const result=await uploadProfilePic(req.files.profilePic[0].path,cloudinary,removeFile)
-      // const profilePicPath = req.files.profilePic[0].path
-      //   .slice(7)
-      //   .replace(new RegExp("\\" + path.sep, "g"), "/");
-      // const profilePicFile =
-      //   process.env.BASEURL + process.env.PORT + "/" + profilePicPath;
       user.profilePic = result;
     }
 
     if (req?.files?.coverPic) {
      const result=await uploadCoverPic(req.files.coverPic[0].path,cloudinary,removeFile)
-      // const coverPicPath = req.files.coverPic[0].path
-      //   .slice(7)
-      //   .replace(new RegExp("\\" + path.sep, "g"), "/");
-      // const coverPicFile =
-      //   process.env.BASEURL + process.env.PORT + "/" + coverPicPath;
        user.coverPic = result;
     }
 
@@ -127,7 +117,6 @@ export const UpdateUser = async (userModel, req,cloudinary,uploadProfilePic,uplo
 export const showUsers = async (req, userModel) => {
   try {
     const user = await userModel.findById(req.user.id);
-    console.log(user);
     let users;
     if (user.Preference === "Everyone") {
       users = await userModel.find({ _id: { $ne: user._id } });
@@ -140,7 +129,6 @@ export const showUsers = async (req, userModel) => {
         },
       ]);
     }
-    console.log(users);
     return users;
   } catch (error) {
     throw new Error("Failed to lookup users");
@@ -158,7 +146,6 @@ export const likeUserAndMatch = async (user1, user2, userModel, matchModel) => {
       },
       { new: true }
     );
-    console.log(user);
 
     let match = await matchModel.findOne({
       $or: [
@@ -170,7 +157,6 @@ export const likeUserAndMatch = async (user1, user2, userModel, matchModel) => {
         },
       ],
     });
-    console.log(match);
     if (match) {
       (match.user2.liked = true), (match.isMatched = true);
       await match.save();
@@ -186,7 +172,6 @@ export const likeUserAndMatch = async (user1, user2, userModel, matchModel) => {
       });
       await match.save();
     }
-    console.log(user);
     return user;
   } catch (error) {
     console.log(error);

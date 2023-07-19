@@ -21,7 +21,6 @@ function ChatContainer() {
       useEffect(() => {
         if (user) {
           ShowMatchesApi().then((res) => {
-                console.log(res.data);
                 setContacts(res.data);
             });
         }
@@ -33,7 +32,6 @@ function ChatContainer() {
       };
 
       const markChatAsRead = (id) => {
-        console.log(id);
             const data={ msgId: id }
        ReadMsgsApi(data)
       };

@@ -44,8 +44,6 @@ export default function DiscoverSide() {
         !likedUserIds.includes(user?._id.toString()) &&
         !dislikedUserIds.includes(user?._id.toString())
     );
-
-    console.log(filteredUsers);
   }
 
   useEffect(() => {
@@ -83,7 +81,6 @@ export default function DiscoverSide() {
     };
     try {
       const response = await disLikeUserApi(data)
-      console.log(response);
       dispatch(SetUserData(response.data));
     } catch (err) {
       console.log(err);

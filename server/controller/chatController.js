@@ -8,7 +8,6 @@ export const getMessage=(chatModel,getAllChats)=>async(req,res)=>{
 }
 export const addMessage=(chatModel,addNewMsg)=>async(req,res)=>{
   try {
-    console.log('in here');
    const data=await addNewMsg(req.body,chatModel)
     if (data) return res.status(200).json({ msg: "Message added successfully." });
     else return res.status(400).json({ msg: "Failed to add message to the database" });

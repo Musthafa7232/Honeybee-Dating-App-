@@ -2,11 +2,8 @@ export const userDetails =
   (createNewUser, createJwtToken, userModel, createUserToken) =>
   async (req, res) => {
     try {
-      console.log(req.body);
       const user = await createNewUser(req.body, userModel);
-      console.log(user);
       const token = await createJwtToken(user, createUserToken);
-      console.log(token);
       res
         .status(200)
         .json({ success: true, redirect: "/Discover", user, token });
@@ -68,14 +65,11 @@ export const googleData =
       if (!code) {
         throw new Error("Authorization code not provided");
       }
-      console.log("google activated");
       const { id_token, access_token } = await getGoogleOauthToken(code);
       const { name, verified_email, email } = await getGoogleUser(
         id_token,
         access_token
       );
-      console.log(id_token, access_token);
-      console.log(name, verified_email, email);
       if (!verified_email) {
         throw new Error("Google account not verified");
       }
@@ -124,7 +118,6 @@ export const editUser = (userModel, updateUser,cloudinary,uploadProfilePic,uploa
 export const userData = (findUserWithId, userModel) => async (req, res) => {
   try {
     const user = await findUserWithId(req.user.id, userModel);
-    console.log(user);
     res.json(user).status(200);
   } catch (error) {
     res.status(400).json({ error: error });
@@ -134,7 +127,6 @@ export const userData = (findUserWithId, userModel) => async (req, res) => {
 export const discoverUsers = (userModel, showUsers) => async (req, res) => {
   try {
     const users = await showUsers(req, userModel);
-    console.log(users);
     res.json(users);
   } catch (error) {
     res.status(400).json(error);
@@ -145,14 +137,12 @@ export const likeUser =
   (userModel, matchModel, likeUserAndMatch) => async (req, res) => {
     try {
       const { User } = req.body;
-      console.log(User,'hi');
       const user = await likeUserAndMatch(
         req.user.id,
         User,
         userModel,
         matchModel
       );
-      console.log(user);
       res.status(200).json(user);
     } catch (error) {
       res.status(400).json({ message: error.message });
@@ -172,7 +162,6 @@ export const dislikeUser = (userModel, dislikeAUser) => async (req, res) => {
 export const matchedUsers =
   (getMatchedUsers, matchModel, userModel) => async (req, res) => {
     try {
-      console.log('hi');
       const matches = await getMatchedUsers(req.user.id, matchModel, userModel);
       res.status(200).json(matches);
     } catch (error) {

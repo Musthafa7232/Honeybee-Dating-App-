@@ -43,9 +43,7 @@ function SelectUserChat({ contacts, changeChat, user }) {
       )
       .then((res) => setLastChattedUser(res.data));
   }, [contacts]);
-  useEffect(() => {
-    console.log(lastChatteduser);
-  }, [lastChatteduser]);
+  
   const filteredContacts = Array.from(contacts).filter((contact) =>
     contact?.fullName.toLowerCase().includes(searchText.toLowerCase())
   );

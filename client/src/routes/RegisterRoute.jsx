@@ -5,7 +5,6 @@ import {Outlet,Navigate} from 'react-router-dom'
 
 const RegisterRoute=()=> {
     const registerState=useSelector(state=>state.register)
-    console.log(registerState);
   return (
     registerState.newUser?<Outlet/>:<Navigate to='/login'/>
   )

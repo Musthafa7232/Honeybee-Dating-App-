@@ -10,12 +10,10 @@ function GoogleLogin() {
     const params = new URLSearchParams(window.location.search);
     const email = params.get('email');
     useEffect(()=>{
-console.log(email)
 const data={
     email
 }
 googleLoginApi(data).then(res=>{
-    console.log(res);
     if(res.data.success){
         localStorage.setItem(
             "authorization.user",

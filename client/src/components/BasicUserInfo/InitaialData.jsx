@@ -80,11 +80,7 @@ export default function InitialData() {
       gender: value,
     }));
   };
-  useEffect(() => {
-    console.log(userData);
-    console.log(error, "ji");
-    console.log(user);
-  }, [userData]);
+ 
 
 
   const validateInputs=()=>{
@@ -179,7 +175,6 @@ export default function InitialData() {
        createAccountApi(userData)
           .then((res) => {
             if (res.data.success) {
-              console.log(res);
               setloading(false);
               localStorage.setItem(
                 "authorization.user",
@@ -201,12 +196,10 @@ export default function InitialData() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log(position);
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
          fetchLocationApi(latitude,longitude).then((res) => res.json())
             .then((data) => {
-              console.log(data.city + "," + data.principalSubdivision);
               setUserData((prevState) => ({
                 ...prevState,
                 location: data.city + "," + data.principalSubdivision,
@@ -230,7 +223,6 @@ export default function InitialData() {
     const ageDate = new Date(ageDiff);
 
     const calculatedAge = Math.abs(ageDate.getUTCFullYear() - 1970);
-    console.log(data.$d);
     setUserData((prevState) => ({
       ...prevState,
       birthday: dayjs(data.$d),
@@ -239,7 +231,6 @@ export default function InitialData() {
   };
 
   const genderHandler = (value) => {
-    console.log(value);
     if (value === "Other") {
       handleClickOpen();
     } else {

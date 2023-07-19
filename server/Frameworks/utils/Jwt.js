@@ -8,7 +8,6 @@ try {
       name: user.name,
     };
     const token = jwt.sign(payload, process.env.SECRET_KEY_USER);
-    console.log(token);
     return token;
 } catch (error) {
   console.log(error)

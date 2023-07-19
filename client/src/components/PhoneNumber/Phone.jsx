@@ -16,9 +16,7 @@ const Phone = ({ changePhone,error,setError }) => {
   }, [value]);
 
   const handleChange = (newValue) => {
-    console.log(matchIsValidTel(newValue));
     setValue(newValue);
-    console.log(value);
   };
 
   const addPhone = () => {

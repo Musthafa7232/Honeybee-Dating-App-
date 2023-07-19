@@ -49,9 +49,6 @@ function EditProfile({ edit, setEdit }) {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(userData);
-  }, [userData]);
 
   const openModal = (data) => {
     setOption(data);
@@ -63,8 +60,7 @@ function EditProfile({ edit, setEdit }) {
   };
 
   const handleSubmit = async () => {
-    if (!loader) {
-      setLoader(true);
+  
       const formData = new FormData();
       formData.append("fullName", userData.fullName);
       formData.append("email", userData.email);
@@ -117,9 +113,7 @@ function EditProfile({ edit, setEdit }) {
           image2.current.files[0].name
         );
       }
-      for (let [key, value] of formData.entries()) {
-        console.log(value);
-      }
+      
       try {
         const { data } =await editUserDataApi(formData)
         dispatch(SetUserData(data));
@@ -129,7 +123,7 @@ function EditProfile({ edit, setEdit }) {
         console.log(error.message);
         setLoader(false);
       }
-    }
+    
   };
 
   return (
@@ -153,6 +147,8 @@ function EditProfile({ edit, setEdit }) {
             openModal={openModal}
             handleSubmit={handleSubmit}
             isLoading={isLoading}
+            loader={loader}
+            setLoader={setLoader}
           />
         </Grid>
         <ModalEditUser

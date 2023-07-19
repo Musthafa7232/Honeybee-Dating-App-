@@ -36,12 +36,10 @@ export default function Otp() {
     setOtp(newValue);
   };
   const handleResend = () => {
-    console.log("hi", Phone);
     const data = {
       phone: Phone.number,
     };
    phoneNumberApi(data).then((res) => {
-      console.log(res);
       if (res.data.success) {
       } else {
         setError(res.data.message);
@@ -49,9 +47,6 @@ export default function Otp() {
     });
   };
 
-  useEffect(() => {
-    console.log(Phone);
-  }, []);
 
   const handleSubmit = (event) => {
     if (otp.length !== 6) setError("Enter the otp");
@@ -65,7 +60,6 @@ export default function Otp() {
         };
 
        otpApi(data).then((res) => {
-            console.log(res);
             setLoading(false);
             if (res.data.success) {
               if (res.data.newUser) {

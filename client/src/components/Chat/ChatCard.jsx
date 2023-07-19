@@ -24,23 +24,12 @@ function ChatCard({ currentChat, setCurrentChat, socket }) {
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [typing, setTyping] = useState(null);
 
-  useEffect(() => {
-    if (typing) {
-      console.log("fuck");
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log(currentChat);
-  }, []);
-
   const data = {
     from: user._id,
     to: currentChat._id,
   };
   const navigate = useNavigate();
   useEffect(() => {
-    console.log("res");
     getAllmsgsApi(data)
       .then((res) => {
         setMessages(res.data);
@@ -50,9 +39,7 @@ function ChatCard({ currentChat, setCurrentChat, socket }) {
       });
   }, [currentChat]);
 
-  useEffect(() => {
-    console.log(messages);
-  }, [messages]);
+
 
   const handleSendMsg = async (msg) => {
     const data = {
@@ -102,7 +89,15 @@ function ChatCard({ currentChat, setCurrentChat, socket }) {
   }, [messages]);
 
   const handleVideoCall = () => {
-    navigate(`/room/${currentChat.conversationId}`);
+    const data={
+      conversationId:currentChat.conversationId,
+      to:currentChat._id,
+      from:user._id,
+      profilePic:user.profilePic,
+      fullname:user.fullName
+    }
+     window.open(`/room/${currentChat.conversationId}`, "_blank", "height=400,width=600");  
+    socket.emit('videoCall',data)
   };
 
   const messageSection = () => {

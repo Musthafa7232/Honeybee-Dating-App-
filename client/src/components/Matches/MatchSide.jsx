@@ -25,9 +25,6 @@ function MatchSide() {
         setMatchedUsers(res.data);
       });
   }, [isLoading]);
-  useEffect(() => {
-    console.log(matchedUsers);
-  }, [matchedUsers]);
 
   return (
     <Grid container sx={{ minHeight: "84vh" }}>

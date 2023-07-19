@@ -9,7 +9,6 @@ const RegisterSlice=createSlice({
     initialState,
     reducers:{
         SetUser:(state)=> {
-            console.log('new User');
             state.newUser= true
         },
         removeUser:(state)=>state.newUser=false

@@ -24,15 +24,12 @@ export default function Navbar() {
   const { user } = useSelector((state) => state.user);
   const { auth } = useSelector((state) => state.auth);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
+
 
   useEffect(() => {
  userDataApi()
       .then((res) => {
         if (res.data) {
-          console.log(res);
           dispatch(SetUserData(res.data));
         } else {
           dispatch(ClearUserData());
@@ -48,7 +45,6 @@ export default function Navbar() {
     localStorage.removeItem("authorization.user");
     dispatch(ClearUserData());
     dispatch(Clear_user());
-    console.log("hii");
     navigate("/");
   };
 
