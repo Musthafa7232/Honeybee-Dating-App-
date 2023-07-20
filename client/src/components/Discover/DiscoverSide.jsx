@@ -26,6 +26,8 @@ export default function DiscoverSide() {
   DiscoverUsersApi()
       .then((res) => {
         setusers(res.data);
+      }).catch((err)=>{
+        window.location.reload()
       });
   }, [isLoading]);
 

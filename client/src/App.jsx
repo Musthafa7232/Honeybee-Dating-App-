@@ -5,7 +5,7 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { socket } from "./Socket";
 import { useState, useEffect, lazy, Suspense } from "react";
 import RegisterRoute from "./routes/RegisterRoute";
@@ -13,6 +13,8 @@ import UserPrivateRoute from "./routes/UserPrivateRoute";
 import UserPublicRoute from "./routes/UserPublicRoute";
 import AudioRecorder from "./components/Audio/AudioRecorder";
 import IncomingCallModal from "./components/IncomingCall/IncomingCallModal";
+import IntialLoader from "./components/Loader/IntialLoader";
+import { SetOnlineUserData } from "./features/users/OnlineUsers";
 
 const CreateAccount = lazy(() => import("./Pages/CreateAccount/CreateAccount"));
 const HomePage = lazy(() => import("./Pages/HomePage/HomePage"));
@@ -35,15 +37,22 @@ function App() {
   const [call, setCall] = useState({
     modal: false,
   });
+  const [loader,setLoader]=useState(true)
+  const { pathname } = useLocation()
+  const dispatch=useDispatch()
   useEffect(() => {
     if (user) {
       socket.connect();
       socket.emit("add-user", user._id);
       socket.emit("getOnlineUsers", user._id);
     } 
-   
-  }, [user]);
+  }, [user,pathname]);
 
+  useEffect(()=>{
+    setTimeout(()=>{
+    setLoader(false)
+    },6000)
+      },[])
   
 useEffect(()=>{
   if(socket){
@@ -58,19 +67,25 @@ useEffect(()=>{
       console.log("incoming Call",data);
       setCall(data);
     });
+    socket.on("onlineUsersList", (data) => {
+      console.log('users are here',);
+     dispatch(SetOnlineUserData(data))
+    });
   }
   return()=>{
     socket.off('connect_error')
     socket.off('error')
   }
 },[])
+
+
   
   const handleClose = () => {
     setCall(prev=>({...prev,modal:false}));
   };
   return (
     <div className="App">
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense  fallback={<div>Loading...</div>} >
           <Routes>
             <Route element={<UserPrivateRoute />}>
               <Route path="/Discover" element={<HomePage />} />

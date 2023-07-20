@@ -6,3 +6,5 @@ export const socket = io(URL, {
   autoConnect: false,
   secure: true,
 })
+
+socket.io.opts.debug = true;

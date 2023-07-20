@@ -14,6 +14,7 @@ import {
   dislikeUser,
   matchedUsers,
   getAllLikedUsers,
+  blockUser,
 } from "../../controller/userController.js";
 
 import cloudinary from "../../Frameworks/utils/Cloudinary.js";
@@ -28,6 +29,7 @@ import {
   likeUserAndMatch,
   dislikeAUser,
   showAllLikedUsers,
+  blockAUser,
 } from "../../usecases/UserInteractor.js";
 
 import { SendPhoneOtp, VerifyPhoneOtp } from "../../usecases/OtpInteractor.js";
@@ -101,7 +103,9 @@ router.patch(
 router.get("/discover", discoverUsers(userModel, showUsers));
 router.get("/matches", matchedUsers(getMatchedUsers, matchModel, userModel));
 router.put("/likeUser", likeUser(userModel, matchModel, likeUserAndMatch));
-router.put("/dislikeUser", dislikeUser(userModel, dislikeAUser));
+router.put("/dislikeUser", dislikeUser(userModel, dislikeAUser,matchModel));
 
 router.post("/allLikedUsers", getAllLikedUsers(showAllLikedUsers, userModel));
+
+router.put('/blockUser',blockUser(userModel,blockAUser))
 export default router;

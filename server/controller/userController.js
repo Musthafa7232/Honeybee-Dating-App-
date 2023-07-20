@@ -97,7 +97,7 @@ export const googleLogin =
         throw new Error("User not found");
       }
       const token = await createJwtToken(user, createUserToken);
-      res.status(200).json({ success: true, token, redirect: "/Discover" });
+      res.status(200).json({ success: true, token, redirect: "/Discover",user:user });
     } catch (error) {
       console.error(error);
       res
@@ -149,10 +149,19 @@ export const likeUser =
     }
   };
 
-export const dislikeUser = (userModel, dislikeAUser) => async (req, res) => {
+export const dislikeUser = (userModel, dislikeAUser,matchModel) => async (req, res) => {
   try {
     const { User } = req.body;
-    const user = await dislikeAUser(req.user.id, User, userModel);
+    const user = await dislikeAUser(req.user.id, User, userModel,matchModel);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+export const blockUser = (userModel, blockAUser) => async (req, res) => {
+  try {
+    const { User } = req.body;
+    const user = await blockAUser(req.user.id, User, userModel);
     res.status(200).json(user);
   } catch (error) {
     res.status(400).json(error);

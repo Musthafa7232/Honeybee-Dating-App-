@@ -11,7 +11,7 @@ import ImageContent from "./ImageContent";
 import ChipsContent from "./ChipsContent";
 import { useState } from "react";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import Loader from "../Loader/Loader";
+import Loader from "../MatchesLoader/Loader";
 import KeepMountedModal from "../Modal/KeepMountedModal";
 function RenderContentData({
   user,

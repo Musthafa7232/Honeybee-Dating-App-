@@ -1,20 +1,11 @@
-import { Card, CardContent, Grid, Typography } from "@mui/material";
+import { Card, CardContent, Grid, Typography} from "@mui/material";
+import  Button  from "@mui/material/Button";
 import React from "react";
 import Card1 from "@mui/joy/Card";
 import CardCover from "@mui/joy/CardCover";
 import CardContent1 from "@mui/joy/CardContent";
-import KeepMountedModal from "../Modal/KeepMountedModal";
-import { useState } from "react";
 
-function RenderLikedUsersCard({ matches, isLoading }) {
-  const [open, setOpen] = React.useState(false);
-  const [user, setUser] = useState(null);
-
-  const handleViewProfile = (item) => {
-    setOpen(true);
-    setUser(item);
-  };
-
+function RenderLikedUsersCard({handleUnLikeProfile,handleBlockUser, matches, isLoading,user }) {
   return (
     <>
       <Grid item xs={12} sx={{ my: 2 }}>
@@ -59,7 +50,8 @@ function RenderLikedUsersCard({ matches, isLoading }) {
                   key={item._id}
                   item
                   xs={12}
-                  md={4}
+                  md={5}
+                  lg={5}
                   xl={4}
                   sx={{ my: 1, mx: { xs: 2, lg: 0 } }}
                 >
@@ -84,15 +76,25 @@ function RenderLikedUsersCard({ matches, isLoading }) {
                       <Typography level="h2" fontSize="lg" mb={1}>
                         {item.fullName}
                       </Typography>
+                      <Button
+  sx={{ m: 1 }}
+  color="error"
+  variant="outlined"
+  onClick={() => handleUnLikeProfile(item)}
+>
+  UnLike 
+</Button>
+<Button
+  sx={{ m: 1 }}
+  color={user.blockedUsers.includes(item._id) ? "success" : "error"}
+  variant="outlined"
+  onClick={() => handleBlockUser(item)}
+>
+ {user.blockedUsers.includes(item._id)?"UnBlock":"Block"}
+</Button>
+
                     </CardContent1>
                   </Card1>
-                  <KeepMountedModal
-                    user={user}
-                    setUser={setUser}
-                    open={open}
-                    setOpen={setOpen}
-                    isLoading={isLoading}
-                  />
                 </Grid>
               );
             })}

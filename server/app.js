@@ -6,7 +6,6 @@ import userRouter from "./interfaces/routes/userRouter.js";
 import ChatRouter from "./interfaces/routes/ChatRouter.js";
 import callRouter from "./interfaces/routes/callRouter.js";
 import io from './Sockets/Socket.js'
-
 config();
 const app = express();
 const PORT = process.env.PORT;
@@ -19,7 +18,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/chat", ChatRouter);
 app.use("/api/call", callRouter);
 app.use("/api", userRouter);
-
 let server;
 
 connectDB().then(() => {

@@ -39,6 +39,9 @@ export const likeUserApi = (data) => axios.put("/likeUser", data, headers);
 export const disLikeUserApi = (data) =>
   axios.put("/dislikeUser", data, headers);
 
+export const blockUserApi = (data) =>
+  axios.put("/blockUser", data, headers);
+
 export const ShowMatchesApi = () => axios.get("/matches", headers);
 
 export const showAllLikedUsersApi = () =>

@@ -39,7 +39,14 @@ export const findUserWithId = async (id, userModel) => {
   }
 };
 
-export const UpdateUser = async (userModel, req,cloudinary,uploadProfilePic,uploadCoverPic,removeFile) => {
+export const UpdateUser = async (
+  userModel,
+  req,
+  cloudinary,
+  uploadProfilePic,
+  uploadCoverPic,
+  removeFile
+) => {
   try {
     const {
       fullName,
@@ -72,13 +79,21 @@ export const UpdateUser = async (userModel, req,cloudinary,uploadProfilePic,uplo
       (user.realationshipStatus = realationshipStatus);
 
     if (req?.files?.profilePic) {
-     const result=await uploadProfilePic(req.files.profilePic[0].path,cloudinary,removeFile)
+      const result = await uploadProfilePic(
+        req.files.profilePic[0].path,
+        cloudinary,
+        removeFile
+      );
       user.profilePic = result;
     }
 
     if (req?.files?.coverPic) {
-     const result=await uploadCoverPic(req.files.coverPic[0].path,cloudinary,removeFile)
-       user.coverPic = result;
+      const result = await uploadCoverPic(
+        req.files.coverPic[0].path,
+        cloudinary,
+        removeFile
+      );
+      user.coverPic = result;
     }
 
     if (req?.files?.image0) {
@@ -179,9 +194,41 @@ export const likeUserAndMatch = async (user1, user2, userModel, matchModel) => {
   }
 };
 
-export const dislikeAUser = async (user1, user2, userModel) => {
+export const dislikeAUser = async (user1, user2, userModel, matchModel) => {
   try {
-    const user = await userModel.findByIdAndUpdate(
+    console.log(user2);
+    let user;
+    const isUserLiked = await userModel.findOne({
+      _id: user1,
+      likedUsers: { $in: [user2] },
+    });
+    console.log(isUserLiked);
+    if (isUserLiked) {
+      isUserLiked.likedUsers.pull(user2);
+      const match = await matchModel.findOne({
+        $or: [
+          {
+            $and: [{ "user1._id": user1 }, { "user2._id": user2 }],
+          },
+          {
+            $and: [{ "user1._id": user2 }, { "user2._id": user1 }],
+          },
+        ],
+        isMatched: true,
+      });
+      if (match) {
+        if (match.user1._id == user1) {
+          match.user1.liked = false;
+          match.isMatched = false;
+        } else {
+          match.user2.liked = false;
+          match.isMatched = false;
+        }
+        await match.save();
+      }
+      await isUserLiked.save();
+    }
+    user = await userModel.findByIdAndUpdate(
       user1,
       {
         $push: {
@@ -190,10 +237,40 @@ export const dislikeAUser = async (user1, user2, userModel) => {
       },
       { new: true }
     );
+
     return user;
   } catch (error) {
     console.log(error);
-    throw new Error("failed to like User ");
+    throw new Error("failed to dislike User");
+  }
+};
+
+export const blockAUser = async (user1, user2, userModel) => {
+  try {
+    let user;
+    const isUserBlocked = await userModel.findOne({
+      _id: user1,
+      blockedUsers: { $in: [user2] },
+    });
+    if (isUserBlocked) {
+      isUserBlocked.blockedUsers.pull(user2);
+      await isUserBlocked.save();
+      user = isUserBlocked;
+    } else {
+      user = await userModel.findByIdAndUpdate(
+        user1,
+        {
+          $push: {
+            blockedUsers: user2,
+          },
+        },
+        { new: true }
+      );
+    }
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw new Error("failed to block User");
   }
 };
 

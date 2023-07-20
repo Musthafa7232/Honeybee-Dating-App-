@@ -5,6 +5,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import MenuIcon from '@mui/icons-material/Menu';
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -27,7 +28,7 @@ export default function Navbar() {
 
 
   useEffect(() => {
- userDataApi()
+    userDataApi()
       .then((res) => {
         if (res.data) {
           dispatch(SetUserData(res.data));
@@ -97,52 +98,51 @@ export default function Navbar() {
 
             <Grid item xs={1}>
               {user && (
-                <div>
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    onClick={handleMenu}
-                    color="inherit"
-                  >
-                    <AccountCircle />
-                  </IconButton>
-                  <Menu
-                    id="menu-appbar"
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "left",
-                    }}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                  >
-                    {SideBarItems.map((item) => {
-                      return (
-                        <MenuItem key={item}  sx={{display:{xs:"block",lg:"none"}}} onClick={() => navigate(`/${item}`)}>
-                          {item}
-                        </MenuItem>
-                      );
-                    })}
-                    <MenuItem onClick={() => navigate("/profile")}>
-                      <Person2Icon sx={{ marginRight: "0.75rem" }} />
-                      Profile
-                    </MenuItem>
-                    <MenuItem onClick={logoutHandler}>
-                      <LogoutIcon sx={{ marginRight: "0.75rem" }} />
-                      Logout
-                    </MenuItem>
-                  </Menu>
-                </div>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <MenuIcon />
+                </IconButton>
               )}
             </Grid>
           </Grid>
+          <Menu
+  id="menu-appbar"
+  anchorEl={anchorEl}
+  anchorOrigin={{
+    vertical: "bottom",
+    horizontal: "right",
+  }}
+  keepMounted
+  transformOrigin={{
+    vertical: "top",
+    horizontal: "left",
+  }}
+  open={Boolean(anchorEl)}
+  onClose={handleClose}
+  style={{ width: "100%", maxWidth: "100%" }}
+>
+  {SideBarItems.map((item) => {
+    return (
+      <MenuItem key={item}  sx={{display:{xs:"block",lg:"none"}}} onClick={() => navigate(`/${item}`)}>
+        {item}
+      </MenuItem>
+    );
+  })}
+  <MenuItem onClick={() => navigate("/profile")}>
+    <Person2Icon sx={{ marginRight: "0.75rem" }} />
+    Profile
+  </MenuItem>
+  <MenuItem onClick={logoutHandler}>
+    <LogoutIcon sx={{ marginRight: "0.75rem" }} />
+    Logout
+  </MenuItem>
+</Menu>
         </Toolbar>
       </AppBar>
     </Box>
