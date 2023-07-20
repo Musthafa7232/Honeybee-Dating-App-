@@ -3,6 +3,7 @@ import CardContent from "@mui/material/CardContent";
 import Box from "@mui/material/Box";
 import {
   Avatar,
+  Button,
   Divider,
   Grid,
   IconButton,
@@ -17,13 +18,42 @@ import ChatInput from "./ChatInput";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import { useNavigate } from "react-router-dom";
 import { ReadMsgsApi, addNewMSgApi, getAllmsgsApi } from "../../services/api";
+import { styled } from '@mui/material/styles';
+import Badge from '@mui/material/Badge';
 function ChatCard({ currentChat, setCurrentChat, socket }) {
   const user = useSelector((state) => state.user.user);
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [typing, setTyping] = useState(null);
-
+  const StyledBadge = styled(Badge)(({ theme }) => ({
+    '& .MuiBadge-badge': {
+      backgroundColor: '#44b700',
+      color: '#44b700',
+      boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+      '&::after': {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        borderRadius: '50%',
+        animation: 'ripple 1.2s infinite ease-in-out',
+        border: '1px solid currentColor',
+        content: '""',
+      },
+    },
+    '@keyframes ripple': {
+      '0%': {
+        transform: 'scale(.8)',
+        opacity: 1,
+      },
+      '100%': {
+        transform: 'scale(2.4)',
+        opacity: 0,
+      },
+    },
+  }));
   const data = {
     from: user._id,
     to: currentChat._id,
@@ -38,8 +68,6 @@ function ChatCard({ currentChat, setCurrentChat, socket }) {
         navigate("/Chat");
       });
   }, [currentChat]);
-
-
 
   const handleSendMsg = async (msg) => {
     const data = {
@@ -58,14 +86,14 @@ function ChatCard({ currentChat, setCurrentChat, socket }) {
 
   useEffect(() => {
     if (socket) {
-      socket.on("show-typing", () => {
+      socket.on("show-typing", (to) => {
         setTyping(true);
       });
-    
-      socket.on("hide-typing", () => {
+
+      socket.on("hide-typing", (to) => {
         setTyping(false);
       });
-    
+
       socket.on("msg-recieve", (data) => {
         const id = {
           msgId: data._id,
@@ -89,15 +117,21 @@ function ChatCard({ currentChat, setCurrentChat, socket }) {
   }, [messages]);
 
   const handleVideoCall = () => {
-    const data={
-      conversationId:currentChat.conversationId,
-      to:currentChat._id,
-      from:user._id,
-      profilePic:user.profilePic,
-      fullname:user.fullName
-    }
-     window.open(`/room/${currentChat.conversationId}`, "_blank", "height=400,width=600");  
-    socket.emit('videoCall',data)
+    const data = {
+      conversationId: currentChat.conversationId,
+      to: currentChat._id,
+      from: user._id,
+      profilePic: user.profilePic,
+      fullname: user.fullName,
+    };
+    console.log(socket);
+    socket.emit("videoCall", data)
+    console.log('video call emitted',data);
+    window.open(
+      `/room/${currentChat.conversationId}`,
+      "_blank",
+      "height=400,width=600"
+    );
   };
 
   const messageSection = () => {
@@ -190,10 +224,10 @@ function ChatCard({ currentChat, setCurrentChat, socket }) {
           borderBottom: "solid 1px #DFDFDF",
         }}
       >
-        <Grid item xs={0.5}>
-          <IconButton onClick={() => setCurrentChat(undefined)}>
+        <Grid item xs={0.5} sx={{mr:1}}>
+          <Button color="inherit" onClick={() => setCurrentChat(undefined)}>
             <ArrowBackIcon />
-          </IconButton>
+          </Button>
         </Grid>
         <Grid item xs>
           <Box
@@ -203,7 +237,28 @@ function ChatCard({ currentChat, setCurrentChat, socket }) {
               m: 1,
             }}
           >
-            <Avatar src={currentChat.profilePic} sx={{ mx: 1 }} />
+          {currentChat.isOnline ? (
+                      <StyledBadge
+                        overlap="circular"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                        sx={{ mr: 2 }}
+                        variant="dot"
+                      >
+                        <Avatar
+                          alt={currentChat.name}
+                          src={currentChat.profilePic}
+                        />
+                      </StyledBadge>
+                    ) : (
+                      <Avatar
+                        sx={{ mr: 2 }}
+                        alt={currentChat.name}
+                        src={currentChat.profilePic}
+                      />
+                    )}
 
             <Typography sx={{ fontWeight: "500" }}>
               {currentChat.fullName}
@@ -219,9 +274,9 @@ function ChatCard({ currentChat, setCurrentChat, socket }) {
           </Box>
         </Grid>
         <Grid item xs={1}>
-          <IconButton onClick={handleVideoCall}>
+          <Button onClick={handleVideoCall}>
             <VideoCallIcon sx={{ color: "black" }} />
-          </IconButton>
+          </Button>
         </Grid>
       </Grid>
       <Grid item xs={12} sx={{ minHeight: "28rem", maxHeight: "28rem" }}>
@@ -251,7 +306,11 @@ function ChatCard({ currentChat, setCurrentChat, socket }) {
       </Grid>
 
       <Grid item xs={12}>
-        <ChatInput handleSendMsg={handleSendMsg} currentChat={currentChat} />
+        <ChatInput
+          handleSendMsg={handleSendMsg}
+          currentChat={currentChat}
+          user={user}
+        />
       </Grid>
     </Grid>
   );

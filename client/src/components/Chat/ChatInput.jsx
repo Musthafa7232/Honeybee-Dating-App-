@@ -8,11 +8,11 @@ import { Button, TextField, Grid, Box, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import MicIcon from "@mui/icons-material/Mic";
 import { socket } from "../../Socket";
-export default function ChatInput({ handleSendMsg, currentChat }) {
+
+export default function ChatInput({ handleSendMsg, currentChat,user }) {
   const [msg, setMsg] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
-
   const handleTextChange = (e) => {
     const message = e.target.value;
     setMsg(message);
@@ -22,12 +22,12 @@ export default function ChatInput({ handleSendMsg, currentChat }) {
     }
 
     const newTypingTimeout = setTimeout(() => {
-      socket.emit("stop-typing", currentChat._id);
+      socket.emit("stop-typing", {to:currentChat._id,from:user._id});
     }, 1000);
 
     setTypingTimeout(newTypingTimeout);
 
-    socket.emit("typing", currentChat._id);
+    socket.emit("typing", {to:currentChat._id,from:user._id});
   };
   const handleEmojiPickerhideShow = () => {
     setShowEmojiPicker(!showEmojiPicker);
@@ -67,6 +67,7 @@ export default function ChatInput({ handleSendMsg, currentChat }) {
           sx={{
             display: "flex",
             alignItems: "center",
+            mt:3
           }}
         >
           <Box sx={{ position: "relative" }}>
@@ -84,14 +85,16 @@ export default function ChatInput({ handleSendMsg, currentChat }) {
             )}
           </Box>
           <TextField
-            sx={{
-              borderRadius: 5,
-            }}
-            fullWidth
-            value={msg}
-            placeholder="Type Something..."
-            onChange={(e) => handleTextChange(e)}
-          />
+  fullWidth
+  value={msg}
+  placeholder="Type Something..."
+  onChange={(e) => handleTextChange(e)}
+  inputProps={{
+    style: {
+      borderRadius: '45rem', // Set your desired border radius value here
+    },
+  }}
+/>
           <label htmlFor="file-upload">
             <IconButton component="span">
               <AddPhotoAlternateIcon />

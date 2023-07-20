@@ -58,7 +58,7 @@ function ChatContainer() {
     >
     <CardContent>
         {currentChat === undefined ? (
- <SelectUserChat contacts={contacts} changeChat={handleChatChange} user={user}/>
+ <SelectUserChat contacts={contacts} setContacts={setContacts} changeChat={handleChatChange} user={user}/>
       ) : (
         <ChatCard currentChat={currentChat} setCurrentChat={setCurrentChat} socket={socket} />
       )}
