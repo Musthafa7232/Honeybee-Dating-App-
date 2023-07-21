@@ -124,9 +124,7 @@ function ChatCard({ currentChat, setCurrentChat, socket }) {
       profilePic: user.profilePic,
       fullname: user.fullName,
     };
-    console.log(socket);
     socket.emit("videoCall", data)
-    console.log('video call emitted',data);
     window.open(
       `/room/${currentChat.conversationId}`,
       "_blank",

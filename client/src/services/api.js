@@ -39,8 +39,7 @@ export const likeUserApi = (data) => axios.put("/likeUser", data, headers);
 export const disLikeUserApi = (data) =>
   axios.put("/dislikeUser", data, headers);
 
-export const blockUserApi = (data) =>
-  axios.put("/blockUser", data, headers);
+export const blockUserApi = (data) => axios.put("/blockUser", data, headers);
 
 export const ShowMatchesApi = () => axios.get("/matches", headers);
 
@@ -57,3 +56,12 @@ export const getLastMsgsApi = (data) =>
 
 export const ReadMsgsApi = (data) =>
   axios.post("/chat/markRead", data, headers);
+
+export const GoldSubscriptionApi = (data) =>
+  axios.post("/payment/gold", data, headers);
+
+export const PlatinumSubscriptionApi = (data) =>
+  axios.post("/payment/platinum", data, headers);
+
+export const PaymentSuccessApi = (data) =>
+  axios.post("/paymentVerified", data, headers);

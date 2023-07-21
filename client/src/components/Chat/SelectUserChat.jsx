@@ -64,7 +64,6 @@ function SelectUserChat({ contacts, setContacts, changeChat, user }) {
 
   useEffect(() => {
     if (onlineUsers.length>0) {
-      console.log('hey there');
       setContacts((contacts) =>
         contacts.map((contact) => {
           if (onlineUsers.includes(contact._id)) {
@@ -88,9 +87,7 @@ function SelectUserChat({ contacts, setContacts, changeChat, user }) {
     getLastMsgsApi(data).then((res) => setLastChattedUser(res.data));
   }, [contacts]);
 
-  useEffect(() => {
-    console.log(typing);
-  }, [typing]);
+
 
   useEffect(() => {
     if (socket) {
@@ -106,7 +103,6 @@ function SelectUserChat({ contacts, setContacts, changeChat, user }) {
   useEffect(() => {
     if (socket) {
       socket.on("new-msg", (data) => {
-        console.log(data[0]);
         setLastChattedUser((prev) => {
           const updatedUsers = prev.map((user) => {
             if (user.conversationId === data[0].conversationId) {
@@ -124,12 +120,7 @@ function SelectUserChat({ contacts, setContacts, changeChat, user }) {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(lastChatteduser);
-  }, [lastChatteduser]);
-  useEffect(() => {
-    console.log(contacts, "<=contacts");
-  }, [contacts]);
+
 
   const filteredContacts = Array.from(contacts).filter((contact) =>
     contact?.fullName.toLowerCase().includes(searchText.toLowerCase())

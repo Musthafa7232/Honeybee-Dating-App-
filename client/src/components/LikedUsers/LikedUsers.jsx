@@ -27,13 +27,11 @@ function LikedUsers() {
   }, [likedUsers]);
 
   const handleUnLikeProfile = async (item) => {
-    console.log("unlike", item.fullName);
     const id = {
       User: item._id,
     };
     try {
       const { data } = await disLikeUserApi(id);
-      console.log(data);
       dispatch(SetUserData(data));
       
     } catch (error) {
@@ -42,13 +40,11 @@ function LikedUsers() {
   };
 
   const handleBlockUser = async (item) => {
-    console.log("unlike", item.fullName);
     const id = {
       User: item._id,
     };
     try {
       const { data } = await blockUserApi(id);
-      console.log(data);
       dispatch(SetUserData(data));
       
     } catch (error) {
