@@ -284,3 +284,25 @@ export const showAllLikedUsers = async (id, userModel) => {
     console.log(error);
   }
 };
+
+export const verifySubscription=async(userModel,pack,user)=>{
+try {
+  let updatedUser
+  const isuserPresent=await userModel.find({_id:user,HoneyVipType:{
+    $in:[pack]
+  }})
+  console.log(isuserPresent);
+if(!isuserPresent.length>0){
+  updatedUser=await userModel.findByIdAndUpdate(user,{
+    $push:{
+      HoneyVipType:pack
+    }
+  })
+}else{
+  updatedUser=isuserPresent
+}
+return updatedUser
+} catch (error) {
+  console.log(error,'');
+}
+}
