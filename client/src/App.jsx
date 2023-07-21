@@ -18,7 +18,7 @@ import SubscriptionPage from "./Pages/SubscriptionPage/SubscriptionPage.jsx";
 const CreateAccount = lazy(() => import("./Pages/CreateAccount/CreateAccount.jsx"));
 const HomePage = lazy(() => import("./Pages/HomePage/HomePage.jsx"));
 const LoginPage = lazy(() => import("./Pages/LoginPage/LoginPage.jsx"));
-const LandingPage = lazy(() => import("./Pages/LandingPage/landingPage.jsx"));
+const LandingPage = lazy(() => import("./Pages/LandingPage/LandingPage.jsx"));
 const OtpPage = lazy(() => import("./Pages/OtpPage/otpPage.jsx"));
 const VideoCall = lazy(() => import("./Pages/VideoCall/VideoCall.jsx"));
 const LikedUsersPage = lazy(() =>
