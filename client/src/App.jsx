@@ -24,7 +24,7 @@ const VideoCall = lazy(() => import("./Pages/VideoCall/VideoCall.jsx"));
 const LikedUsersPage = lazy(() =>
   import("./Pages/LikedUsersPage/LikedUsersPage.jsx")
 );
-const OtpRoute = lazy(() => import("./routes/OtpRoute.jsx"));
+const OtpRoute = lazy(() => import("./routes/OtpRoute"));
 const NotFound = lazy(() => import("./Pages/404Page/NotFound.jsx"));
 const Profile = lazy(() => import("./Pages/Profile/Profile.jsx"));
 const GoogleLogin = lazy(() => import("./Pages/GoogleLogin/GoogleLogin.jsx"));
