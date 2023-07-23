@@ -6,7 +6,7 @@ export const userDetails =
       const token = await createJwtToken(user, createUserToken);
       res
         .status(200)
-        .json({ success: true, redirect: "/Discover", user, token });
+        .json({ success: true, redirect: "/profile", user, token });
     } catch (error) {
       res.status(400).json({ error: "Failed to create user" });
     }
@@ -115,6 +115,7 @@ export const editUser =
     cloudinary,
     uploadProfilePic,
     uploadCoverPic,
+    image,
     removeFile
   ) =>
   async (req, res) => {
@@ -125,6 +126,7 @@ export const editUser =
         cloudinary,
         uploadProfilePic,
         uploadCoverPic,
+        image,
         removeFile
       );
       res.json(user);
@@ -210,12 +212,23 @@ export const getAllLikedUsers =
 export const verifyPayment =
   (verifySubscription, userModel) => async (req, res) => {
     try {
-      const {pack}=req.body
-      console.log(req.user.id,'inpayment');
-        const user =await verifySubscription(userModel, pack,req.user.id);
-      console.log( pack);
-      console.log(user)
+      const { pack } = req.body;
+      console.log(req.user.id, "inpayment");
+      const user = await verifySubscription(userModel, pack, req.user.id);
+      console.log(pack);
+      console.log(user);
       res.json(user);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const searchFilterUsers =
+  (searchOrFilterUsers, userModel) => async (req, res) => {
+    try {
+      let users = await searchOrFilterUsers(req.body, userModel);
+      let result = users.filter((user) => user._id.toString() !== req.user.id);
+      res.status(200).json(result);
     } catch (error) {
       console.log(error);
     }

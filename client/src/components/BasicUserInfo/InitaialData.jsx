@@ -21,9 +21,16 @@ import Avatar from "@mui/material/Avatar";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Auth_user } from "../../features/users/AuthReducer";
-import AddIcon from "@mui/icons-material/Add";
 import SimpleDialog from "./SimpleDialog";
 import dayjs from "dayjs";
+import AddIcon from "@mui/icons-material/Add";
+import WineBar from "@mui/icons-material/WineBar";
+import SmokingRoomsIcon from "@mui/icons-material/SmokingRooms";
+import GenderIcon from "../icons/GenderIcon";
+import RelationIcon from "../icons/RelationIcon";
+import ReligionIcon from "../icons/ReligionIcon";
+import ModalEditUser from "../EditProfile/ModalEditUser";
+import Chip from "@mui/joy/Chip";
 import { createAccountApi, fetchLocationApi } from "../../services/api";
 export default function InitialData() {
   const dispatch = useDispatch();
@@ -31,6 +38,8 @@ export default function InitialData() {
   const {user}=useSelector(state=>state.google)
   const [open, setOpen] = React.useState(false);
   const [loading, setloading] = useState(false);
+  const [option, setOption] = useState(null);
+  const [isModalOpen, setModalOpen] = useState(false);
   const [userData, setUserData] = useState({
     fullName: "",
     email: "",
@@ -81,7 +90,14 @@ export default function InitialData() {
     }));
   };
  
+  const openModal = (data) => {
+    setOption(data);
+    setModalOpen(true);
+  };
 
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
   const validateInputs=()=>{
     const regexEmail =
@@ -145,6 +161,14 @@ export default function InitialData() {
     return false
   }
   else setError((prevState) => ({ ...prevState, Preference: null }));
+  if (!userData.bio){
+    setError((prevState) => ({
+      ...prevState,
+      bio: "*Bio is required",
+    }));
+    return false
+  }
+  else setError((prevState) => ({ ...prevState, bio: null }));
 
 
   if (!userData.location){
@@ -242,11 +266,18 @@ export default function InitialData() {
   };
   const item = (
     <>
+        <ModalEditUser
+          isModalOpen={isModalOpen}
+          closeModal={closeModal}
+          option={option}
+          setModalOpen={setModalOpen}
+          setUserData={setUserData}
+        />
       <Grid
         container
         justifyContent="center"
         alignItems="center"
-        sx={{ minHeight: "100vh" }}
+        sx={{ minHeight: "100vh",mt:3 }}
       >
         <Grid item xs={12} sm={10} md={8} lg={6} xl={6}>
           <Card
@@ -502,6 +533,72 @@ export default function InitialData() {
                       </Typography>
                     )}
                   </Grid>
+                  <Grid item xs={12} sm={12}>
+            <TextField
+              id="bio"
+              label="Your Bio"
+              multiline
+              fullWidth
+              rows={4}
+              value={userData.bio}
+              onChange={(e) =>
+                setUserData((prev) => ({ ...prev, bio: e.target.value }))
+              }
+            />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            lg
+            sx={{
+              my: 3,
+              display: { xs: "flex", lg: "flex" },
+              flexDirection: { xs: "column", lg: "row" },
+              justifyContent: "space-between",
+            }}
+          >
+          
+            <Chip
+              sx={{ m: 1 }}
+              onClick={() => openModal("faith")}
+              startDecorator={<ReligionIcon />}
+              color="neutral"
+              size="lg"
+              variant="soft"
+            >
+              { userData.faith?userData.faith:'Your Faith'}
+            </Chip>
+            <Chip
+              sx={{ m: 1 }}
+              onClick={() => openModal("realationshipStatus")}
+              startDecorator={<RelationIcon />}
+              color="neutral"
+              size="lg"
+              variant="soft"
+            >
+              { userData.realationshipStatus? userData.realationshipStatus:'RelationShip Status'}
+            </Chip>
+            <Chip
+              sx={{ m: 1 }}
+              onClick={() => openModal("smoking")}
+              startDecorator={<SmokingRoomsIcon />}
+              color="neutral"
+              size="lg"
+              variant="soft"
+            >
+              { userData.smoking?userData.smoking:'Smoking'}
+            </Chip>
+            <Chip
+              sx={{ m: 1 }}
+              onClick={() => openModal("drinking")}
+              startDecorator={<WineBar />}
+              color="neutral"
+              size="lg"
+              variant="soft"
+            >
+              { userData.drinking?userData.drinking:'Drinking'}
+            </Chip>
+          </Grid>
                 </Grid>
                 <Button
                   size="large"

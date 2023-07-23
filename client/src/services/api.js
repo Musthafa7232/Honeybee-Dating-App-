@@ -65,5 +65,5 @@ export const PlatinumSubscriptionApi = (data) =>
 export const PaymentSuccessApi = (data) =>
   axios.post("/paymentVerified", data, headers);
 
-export const SearchFilterApi = (search, filter) =>
-  axios.get(`/searchFilter?search=${search}&filter=${filter}`, headers);
+export const SearchFilterApi = (data) =>
+  axios.post(`/searchFilter`, data, headers);

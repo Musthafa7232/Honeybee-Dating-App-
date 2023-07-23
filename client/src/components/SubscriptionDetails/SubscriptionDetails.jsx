@@ -184,7 +184,7 @@ const SubscriptionDetails = () => {
                 alignContent: "center",
               }}
             >
-       {user.HoneyVipType.includes('gold')?(
+       {user?.HoneyVipType.includes('gold')?(
         <Button
                 variant="contained"
                 color="success"
@@ -266,7 +266,7 @@ const SubscriptionDetails = () => {
                 alignContent: "center",
               }}
             >
-               {user.HoneyVipType.includes('platinum')?(
+               {user?.HoneyVipType.includes('platinum')?(
                   <Button
                   variant="contained"
                   color="inherit"

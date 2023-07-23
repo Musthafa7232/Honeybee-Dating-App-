@@ -3,14 +3,14 @@ import { Modal, Box, Typography, Button, } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from "react-router-dom";
 
-function BlockedUsermodal({ open, close }) {
-
+function SearchErrorModal({ open }) {
+const navigate=useNavigate()
   const onDeclineCall = () => {
-    close();
+    navigate('/HoneyVip')
   };
 
   return (
-    <Modal open={open}>
+    <Modal open={open} >
       <Box
         sx={{
           position: "absolute",
@@ -33,8 +33,8 @@ function BlockedUsermodal({ open, close }) {
         </Button>
 
         <Box>
-          <Typography variant="overline" component="div" textAlign="center">
-            User is Blocked. Please Unblock to continue chatting.
+          <Typography variant="overline" textAlign="center">
+            Inorder to use Videocall you must have  HoneyPlatinum Subscription.
           </Typography>
         </Box>
       </Box>
@@ -42,5 +42,4 @@ function BlockedUsermodal({ open, close }) {
   );
 }
 
-export default BlockedUsermodal;
-
+export default SearchErrorModal;

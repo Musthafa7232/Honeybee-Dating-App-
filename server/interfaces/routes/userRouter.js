@@ -16,6 +16,7 @@ import {
   getAllLikedUsers,
   blockUser,
   verifyPayment,
+  searchFilterUsers,
 } from "../../controller/userController.js";
 
 import cloudinary from "../../Frameworks/utils/Cloudinary.js";
@@ -32,6 +33,7 @@ import {
   showAllLikedUsers,
   blockAUser,
   verifySubscription,
+  searchOrFilterUsers,
 } from "../../usecases/UserInteractor.js";
 
 import { SendPhoneOtp, VerifyPhoneOtp } from "../../usecases/OtpInteractor.js";
@@ -53,7 +55,11 @@ import { checkOtp, sendOtp } from "../../Frameworks/utils/Twilio.js";
 import { upload } from "../../Frameworks/utils/Multer.js";
 import { getMatchedUsers } from "../../usecases/MatchesInteractor.js";
 import removeFile from "../../Frameworks/utils/FileRemover.js";
-import {uploadProfilePic,uploadCoverPic} from '../../usecases/CloudinaryInteractor.js'
+import {
+  uploadProfilePic,
+  uploadCoverPic,
+  image,
+} from "../../usecases/CloudinaryInteractor.js";
 //route Handlers
 router.post("/phone", phoneOtp(SendPhoneOtp, sendOtp));
 
@@ -99,18 +105,26 @@ router.patch(
     { name: "image1", maxCount: 1 },
     { name: "image2", maxCount: 1 },
   ]),
-  editUser(userModel, UpdateUser,cloudinary,uploadProfilePic,uploadCoverPic,removeFile)
+  editUser(
+    userModel,
+    UpdateUser,
+    cloudinary,
+    uploadProfilePic,
+    uploadCoverPic,
+    image,
+    removeFile
+  )
 );
 
 router.get("/discover", discoverUsers(userModel, showUsers));
 router.get("/matches", matchedUsers(getMatchedUsers, matchModel, userModel));
-router.get("/searchFilter", );
+router.post("/searchFilter", searchFilterUsers(searchOrFilterUsers, userModel));
 router.put("/likeUser", likeUser(userModel, matchModel, likeUserAndMatch));
-router.put("/dislikeUser", dislikeUser(userModel, dislikeAUser,matchModel));
+router.put("/dislikeUser", dislikeUser(userModel, dislikeAUser, matchModel));
 
 router.get("/allLikedUsers", getAllLikedUsers(showAllLikedUsers, userModel));
 
-router.post("/paymentVerified",verifyPayment(verifySubscription,userModel));
+router.post("/paymentVerified", verifyPayment(verifySubscription, userModel));
 
-router.put('/blockUser',blockUser(userModel,blockAUser))
+router.put("/blockUser", blockUser(userModel, blockAUser));
 export default router;

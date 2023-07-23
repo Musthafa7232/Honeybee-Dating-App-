@@ -45,6 +45,7 @@ export const UpdateUser = async (
   cloudinary,
   uploadProfilePic,
   uploadCoverPic,
+  image,
   removeFile
 ) => {
   try {
@@ -97,30 +98,30 @@ export const UpdateUser = async (
     }
 
     if (req?.files?.image0) {
-      const image0Path = req.files.image0[0].path
-        .slice(7)
-        .replace(new RegExp("\\" + path.sep, "g"), "/");
-      const image0File =
-        process.env.BASEURL + process.env.PORT + "/" + image0Path;
-      user.images[0] = image0File;
+      const result = await image(
+        req.files.image0[0].path,
+        cloudinary,
+        removeFile
+      );
+      user.profilePic = result;
     }
 
     if (req?.files?.image1) {
-      const image1Path = req.files.image1[0].path
-        .slice(7)
-        .replace(new RegExp("\\" + path.sep, "g"), "/");
-      const image1File =
-        process.env.BASEURL + process.env.PORT + "/" + image1Path;
-      user.images[1] = image1File;
+      const result = await image(
+        req.files.image0[1].path,
+        cloudinary,
+        removeFile
+      );
+      user.profilePic = result;
     }
 
     if (req?.files?.image2) {
-      const image2Path = req.files.image2[0].path
-        .slice(7)
-        .replace(new RegExp("\\" + path.sep, "g"), "/");
-      const image2File =
-        process.env.BASEURL + process.env.PORT + "/" + image2Path;
-      user.images[2] = image2File;
+      const result = await image(
+        req.files.image0[2].path,
+        cloudinary,
+        removeFile
+      );
+      user.profilePic = result;
     }
     user.save();
     return user;
@@ -310,10 +311,61 @@ export const verifySubscription = async (userModel, pack, user) => {
   }
 };
 
-export const searchOrFilterUsers =async (data, userModel) => {
+export const searchOrFilterUsers = async (data, userModel) => {
+  console.log(data);
+  const {
+    fullName,
+    faith,
+    realationshipStatus,
+    location,
+    drinking,
+    smoking,
+    ageMin,
+    ageMax,
+  } = data;
+  const filter = {};
+
+  if (fullName) {
+    filter.fullName = { $regex: new RegExp(fullName, "i") };
+    console.log(fullName);
+  }
+
+  if (faith) {
+    filter.faith = faith;
+  }
+
+  if (realationshipStatus) {
+    console.log("relation");
+    filter.realationshipStatus = realationshipStatus;
+  }
+
+  if (location) {
+    const locations = location.replace(/\s/g, "");
+    filter.location = { $regex: new RegExp(locations, "i") };
+  }
+
+  if (drinking) {
+    filter.drinking = drinking;
+  }
+
+  if (smoking) {
+    console.log("smoke");
+    filter.smoking = smoking;
+  }
+
+  if (ageMin != 0 && ageMax != 0) {
+    filter.age = { $gte: ageMin, $lte: ageMax };
+  } else if (ageMin != 0) {
+    filter.age = { $gte: ageMin };
+  } else if (ageMax != 0) {
+    filter.age = { $lte: ageMax };
+  }
+  console.log(filter);
   try {
-    const users=await userModel.find()
+    const results = await userModel.find(filter);
+
+    return results;
   } catch (error) {
-    throw new Error('cannot find users')
+    throw new Error("Error while searching users: " + error.message);
   }
 };
