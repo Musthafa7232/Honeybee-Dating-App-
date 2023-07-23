@@ -7,16 +7,22 @@ import { useEffect } from "react";
 import RenderLikedUsersCard from "./RenderLikedUsersCard";
 import { SetUserData } from "../../features/users/UserReducer";
 import { blockUserApi, disLikeUserApi, showAllLikedUsersApi } from "../../services/api";
+import Loader from "../MatchesLoader/Loader";
 
 function LikedUsers() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const [isLoading, setLoading] = useState(true);
   const [likedUsers, setLikedUsers] = useState([]);
-
+const [isEmpty,setIsEmpty]=useState(false)
   useEffect(() => {
     showAllLikedUsersApi().then((res) => {
-      setLikedUsers(res.data);
+      if(res.data.length>0){
+        setLikedUsers(res.data);
+      }else{
+        setIsEmpty(true)
+      }
+      
     });
   }, [user]);
 
@@ -54,32 +60,13 @@ function LikedUsers() {
 
   return (
     <Grid container sx={{ minHeight: "84vh" }}>
-      {isLoading ? (
-        // Skeleton loader while loading users
-        <Grid item xs={12} md={6}>
-          <Card
-            variant="outlined"
-            sx={{
-              width: "100%",
-              height: "38rem",
-              borderRadius: 6,
-              backdropFilter: "brightness(0.9) blur(15px)",
-              backgroundColor: "rgba(255, 255, 255, 0.5)",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Skeleton variant="rectangular" height={118} />
-          </Card>
-        </Grid>
-      ) : (
+    
         <Grid item xs={12} lg={11} container sx={{ minHeight: "39rem" }}>
-          {likedUsers ? (
+          {likedUsers.length>0 ? (
             <RenderLikedUsersCard
               handleUnLikeProfile={handleUnLikeProfile}
               handleBlockUser={handleBlockUser}
               matches={likedUsers}
-              isLoading={isLoading}
               user={user}
             />
           ) : (
@@ -95,11 +82,16 @@ function LikedUsers() {
                 justifyContent: "center",
               }}
             >
-              <Typography variant="h5">No matches Found</Typography>
+             {isEmpty?(
+    <Typography variant="h5">No matches Found</Typography>
+             ):(
+            <Loader user={user}/>
+             )} 
+            
             </Card>
           )}
         </Grid>
-      )}
+    
     </Grid>
   );
 }
