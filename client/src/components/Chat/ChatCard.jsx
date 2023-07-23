@@ -20,12 +20,18 @@ import { useNavigate } from "react-router-dom";
 import { ReadMsgsApi, addNewMSgApi, getAllmsgsApi } from "../../services/api";
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
+import VIdeoCallModal from "../ErrorModals/VIdeoCallModal";
 function ChatCard({ currentChat, setCurrentChat, socket }) {
   const user = useSelector((state) => state.user.user);
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [typing, setTyping] = useState(null);
+  const [modal,setModal]=useState(false)
+
+  const handleClose=()=>{
+    setModal(false)
+  }
   const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
       backgroundColor: '#44b700',
@@ -117,6 +123,8 @@ function ChatCard({ currentChat, setCurrentChat, socket }) {
   }, [messages]);
 
   const handleVideoCall = () => {
+    console.log(user)
+    if(user.HoneyVipType.length>0 || user.HoneyVipType.includes('gold')){
     const data = {
       conversationId: currentChat.conversationId,
       to: currentChat._id,
@@ -130,6 +138,9 @@ function ChatCard({ currentChat, setCurrentChat, socket }) {
       "_blank",
       "height=400,width=600"
     );
+  }else{
+    setModal(true)
+  }
   };
 
   const messageSection = () => {
@@ -210,6 +221,7 @@ function ChatCard({ currentChat, setCurrentChat, socket }) {
 
   return (
     <Grid container>
+      <VIdeoCallModal open={modal} close={handleClose}  />
       <Grid
         item
         container
