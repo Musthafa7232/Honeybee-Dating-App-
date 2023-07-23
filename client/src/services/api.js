@@ -43,8 +43,7 @@ export const blockUserApi = (data) => axios.put("/blockUser", data, headers);
 
 export const ShowMatchesApi = () => axios.get("/matches", headers);
 
-export const showAllLikedUsersApi = () =>
-  axios.post("/allLikedUsers", { data: "hi" }, headers);
+export const showAllLikedUsersApi = () => axios.get("/allLikedUsers", headers);
 
 export const getAllmsgsApi = (data) =>
   axios.post("/chat/getmsg", data, headers);
@@ -65,3 +64,6 @@ export const PlatinumSubscriptionApi = (data) =>
 
 export const PaymentSuccessApi = (data) =>
   axios.post("/paymentVerified", data, headers);
+
+export const SearchFilterApi = (search, filter) =>
+  axios.get(`/searchFilter?search=${search}&filter=${filter}`, headers);

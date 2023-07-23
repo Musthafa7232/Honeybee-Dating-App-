@@ -104,10 +104,11 @@ router.patch(
 
 router.get("/discover", discoverUsers(userModel, showUsers));
 router.get("/matches", matchedUsers(getMatchedUsers, matchModel, userModel));
+router.get("/searchFilter", );
 router.put("/likeUser", likeUser(userModel, matchModel, likeUserAndMatch));
 router.put("/dislikeUser", dislikeUser(userModel, dislikeAUser,matchModel));
 
-router.post("/allLikedUsers", getAllLikedUsers(showAllLikedUsers, userModel));
+router.get("/allLikedUsers", getAllLikedUsers(showAllLikedUsers, userModel));
 
 router.post("/paymentVerified",verifyPayment(verifySubscription,userModel));
 

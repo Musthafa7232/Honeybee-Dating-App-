@@ -285,24 +285,35 @@ export const showAllLikedUsers = async (id, userModel) => {
   }
 };
 
-export const verifySubscription=async(userModel,pack,user)=>{
-try {
-  let updatedUser
-  const isuserPresent=await userModel.find({_id:user,HoneyVipType:{
-    $in:[pack]
-  }})
-  console.log(isuserPresent);
-if(!isuserPresent.length>0){
-  updatedUser=await userModel.findByIdAndUpdate(user,{
-    $push:{
-      HoneyVipType:pack
+export const verifySubscription = async (userModel, pack, user) => {
+  try {
+    let updatedUser;
+    const isuserPresent = await userModel.find({
+      _id: user,
+      HoneyVipType: {
+        $in: [pack],
+      },
+    });
+    console.log(isuserPresent);
+    if (!isuserPresent.length > 0) {
+      updatedUser = await userModel.findByIdAndUpdate(user, {
+        $push: {
+          HoneyVipType: pack,
+        },
+      });
+    } else {
+      updatedUser = isuserPresent;
     }
-  })
-}else{
-  updatedUser=isuserPresent
-}
-return updatedUser
-} catch (error) {
-  console.log(error,'');
-}
-}
+    return updatedUser;
+  } catch (error) {
+    console.log(error, "");
+  }
+};
+
+export const searchOrFilterUsers =async (data, userModel) => {
+  try {
+    const users=await userModel.find()
+  } catch (error) {
+    throw new Error('cannot find users')
+  }
+};

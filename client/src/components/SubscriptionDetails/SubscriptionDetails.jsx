@@ -70,7 +70,7 @@ const SubscriptionDetails = () => {
     }
   };
   return (
-    <Grid item xs={12} lg={11} container sx={{ mb: 10, position: "relative" }}>
+    <Grid item xs={11.9} lg={11} container sx={{ mb: 10, position: "relative" }}>
       <Card
         className="CardItems"
         variant="outlined"
@@ -88,6 +88,7 @@ const SubscriptionDetails = () => {
               item
               xs={12}
               sx={{
+                mt:1,
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "center",
@@ -128,7 +129,7 @@ const SubscriptionDetails = () => {
                 component="a"
                 href="/"
                 sx={{
-                  ml: 25,
+                  mt:1,mr:1,
                   fontFamily: "Montez",
                   fontWeight: 700,
                   letterSpacing: ".3rem",
@@ -143,15 +144,15 @@ const SubscriptionDetails = () => {
               item
               xs={12}
               sx={{
-                mt: 7,
+                mt: 5,
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "center",
                 alignContent: "center",
               }}
             >
-              <Typography variant="h6" noWrap>
-                GOLD TIER SUBSCRIPTION
+              <Typography variant="h6" noWrap sx={{color:'goldenrod',mb:2}}>
+               <b>GOLD TIER SUBSCRIPTION</b> 
               </Typography>
             </Grid>
 
@@ -165,7 +166,7 @@ const SubscriptionDetails = () => {
                 alignContent: "center",
               }}
             >
-              <Typography variant="subtitle2" component="ul">
+              <Typography variant="subtitle2" component="ul" sx={{color:'goldenrod'}}>
                 <li>
                   Video Call - Gold tier subscribers can initiate video calls
                   with Matched users.
@@ -201,6 +202,14 @@ const SubscriptionDetails = () => {
                 large
                 fullWidth
                 onClick={handleGold}
+                sx={{
+                  backgroundColor: 'goldenrod',
+                  color: 'black',
+                  '&:hover': {
+                    backgroundColor: 'black',
+                    color: 'goldenrod',
+                  },
+                }}
               >
                 Access Gold Now for just RS:500
               </Button>
@@ -211,15 +220,15 @@ const SubscriptionDetails = () => {
               item
               xs={12}
               sx={{
-                mt: 10,
+                mt: 4,
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "center",
                 alignContent: "center",
               }}
             >
-              <Typography variant="h6" noWrap>
-                PLATINUM TIER SUBSCRIPTION
+              <Typography variant="h6" noWrap sx={{color:'grey',mb:2}}>
+                <b>PLATINUM TIER SUBSCRIPTION</b>
               </Typography>
             </Grid>
             <Grid
@@ -232,7 +241,11 @@ const SubscriptionDetails = () => {
                 alignContent: "center",
               }}
             >
-              <Typography variant="subtitle2" component="ul">
+              <Typography variant="subtitle2" component="ul"  sx={{color:'grey'}}>
+              <li>
+                  Video Call - Gold tier subscribers can initiate video calls
+                  with Matched users.
+                </li>
                 <li>
                   Advanced Search Functionality Platinum tier subscribers can
                   enjoy advanced search capabilities. They can search for other
@@ -271,6 +284,14 @@ const SubscriptionDetails = () => {
                 large
                 fullWidth
                 onClick={handlePlatinum}
+                sx={{
+                  backgroundColor:'grey',
+                  color: 'black',
+                  '&:hover': {
+                    backgroundColor: 'black',
+                    color: 'white',
+                  },
+                }}
               >
                 Access Platinum Now for just RS:1500
               </Button>

@@ -21,7 +21,7 @@ import { getLastMsgsApi } from "../../services/api";
 import { useSelector } from "react-redux";
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
-import BlockedUsermodal from "../BlockeduserModal/BlockedUsermodal";
+import BlockedUsermodal from "../ErrorModals/BlockedUsermodal";
 function SelectUserChat({ contacts, setContacts, changeChat, user }) {
   const [searchText, setSearchText] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
