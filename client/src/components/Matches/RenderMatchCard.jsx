@@ -17,11 +17,15 @@ function RenderMatchCard({ matches, isLoading }) {
 
   return (
     <>
-      <Grid item xs={12} sx={{ my: 2 }}>
+     <Grid item xs={2} sm={0}>
+
+</Grid>
+<Grid item xs={8.2} lg={12} sx={{ my: 2 }}>
         <Card
           className="CardItems"
           variant="outlined"
           sx={{
+            height: '38rem',
             mb: 4,
             borderRadius: 6,
             backdropFilter: "brightness(0.9) blur(15px)",
@@ -32,6 +36,7 @@ function RenderMatchCard({ matches, isLoading }) {
           <CardContent
             sx={{
               height: "100%",
+              overflowX:'hidden',
               overflowY: "scroll",
               "&::-webkit-scrollbar": {
                 width: "7px",
@@ -49,6 +54,7 @@ function RenderMatchCard({ matches, isLoading }) {
               },
             }}
             component={Grid}
+            spacing={2}
             container
           >
             {matches?.map((item) => {
@@ -57,13 +63,15 @@ function RenderMatchCard({ matches, isLoading }) {
                   key={item._id}
                   item
                   xs={12}
-                  lg={4}
-                  sx={{ my: 1, mx: { xs: 2, lg: 0 } }}
+                  md={5}
+                  lg={5}
+                  xl={4}
+                  sx={{ my: 1,mx:{md:2,lg:0} }}
                 >
                   <Card1
                     sx={{
-                      width: { xs: 250, sm: 150, lg: 250 },
-                      height: { xs: 250, sm: 150, lg: 250 },
+                      width: { xs: 300, sm: 450,md:250, lg: 250 },
+                      height: { xs: 500, sm: 500,md:250, lg: 250 },
                     }}
                   >
                     <CardCover>

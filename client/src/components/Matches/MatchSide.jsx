@@ -7,11 +7,12 @@ import { useEffect } from "react";
 import RenderMatchCard from "./RenderMatchCard";
 import { SetUserData } from "../../features/users/UserReducer";
 import { ShowMatchesApi } from "../../services/api";
-
+import Loader from "../MatchesLoader/Loader";
 function MatchSide() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const [isLoading, setLoading] = useState(true);
+  const [isEmpty,setIsEmpty]=useState(false)
   const [matchedUsers, setMatchedUsers] = useState([]);
   useEffect(() => {
     if (matchedUsers) {
@@ -20,10 +21,13 @@ function MatchSide() {
   }, [matchedUsers]);
 
   useEffect(() => {
-   ShowMatchesApi()
-      .then((res) => {
+    ShowMatchesApi().then((res) => {
+      if (res.data.length > 0) {
         setMatchedUsers(res.data);
-      });
+      } else {
+        setIsEmpty(true);
+      }
+    });
   }, [isLoading]);
 
   return (
@@ -42,15 +46,19 @@ function MatchSide() {
               variant="outlined"
               sx={{
                 width: "100%",
-                height:'38rem',
+                height: "38rem",
                 borderRadius: 6,
                 backdropFilter: "brightness(0.9) blur(15px)",
                 backgroundColor: "rgba(255, 255, 255, 0.5)",
-                display:'flex',
-                justifyContent:'center'
+                display: "flex",
+                justifyContent: "center",
               }}
             >
-              <Typography variant="h5" >No matches Found</Typography>
+              {isEmpty ? (
+                <Typography variant="h5">No matches Found</Typography>
+              ) : (
+                <Loader user={user} />
+              )}
             </Card>
           )}
         </Grid>
