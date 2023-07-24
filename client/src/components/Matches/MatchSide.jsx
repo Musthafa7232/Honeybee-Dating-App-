@@ -12,7 +12,7 @@ function MatchSide() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const [isLoading, setLoading] = useState(true);
-  const [isEmpty,setIsEmpty]=useState(false)
+  const [isEmpty, setIsEmpty] = useState(false);
   const [matchedUsers, setMatchedUsers] = useState([]);
   useEffect(() => {
     if (matchedUsers) {
@@ -55,7 +55,26 @@ function MatchSide() {
               }}
             >
               {isEmpty ? (
-                <Typography variant="h5">No matches Found</Typography>
+                <Grid
+                  container
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignContent: "center",
+                    height: "100%",
+                  }}
+                >
+                  <Grid sx={{}}>
+                    <lottie-player
+                      src="https://lottie.host/fd72ffec-6def-4055-bd06-6cbd9333bb25/ajpBAR9H9V.json"
+                      background="transparent"
+                      speed="1"
+                      style={{ width: "20rem", height: "20rem" }}
+                      loop
+                      autoplay
+                    ></lottie-player>
+                  </Grid>
+                </Grid>
               ) : (
                 <Loader user={user} />
               )}
