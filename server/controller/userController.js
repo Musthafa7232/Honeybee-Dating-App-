@@ -1,3 +1,5 @@
+import { config } from "dotenv";
+config();
 export const userDetails =
   (createNewUser, createJwtToken, userModel, createUserToken) =>
   async (req, res) => {
@@ -60,6 +62,7 @@ export const verifyOtp =
 export const googleData =
   (userModel, findUserWithEmail, getGoogleOauthToken, getGoogleUser) =>
   async (req, res) => {
+    const host=process.env.BASEURL
     try {
       const { code } = req.query;
       if (!code) {
@@ -75,15 +78,15 @@ export const googleData =
       }
       const user = await findUserWithEmail(email, userModel);
       if (user) {
-        res.redirect(`http://localhost:5173/googleLogin?email=${email}`);
+        res.redirect(`${host}/googleLogin?email=${email}`);
       } else {
         res.redirect(
-          `http://localhost:5173/login?fullName=${name}&email=${email}`
+          `${host}/login?fullName=${name}&email=${email}`
         );
       }
     } catch (error) {
       console.error("Failed to authorize Google User", error);
-      res.redirect(`http://localhost:5173`);
+      res.redirect(`${host}`);
     }
   };
 

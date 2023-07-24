@@ -1,4 +1,7 @@
+import { config } from "dotenv";
+config();
 export const stripePayment = async (stripe, email, price,pack) => {
+  const host=process.env.BASEURL
     const session = await stripe.checkout.sessions.create({
       customer_email: `${email}`,
       submit_type: 'pay',
@@ -10,8 +13,8 @@ export const stripePayment = async (stripe, email, price,pack) => {
         },
       ],
       mode: 'payment',
-      success_url: `http://localhost:5173/HoneyVip?pack=${pack}`, 
-      cancel_url: `http://localhost:5173/HoneyVip?canceled=true`, 
+      success_url: `${host}?pack=${pack}`, 
+      cancel_url: `${host}?canceled=true`, 
     });
     return session;
   };
