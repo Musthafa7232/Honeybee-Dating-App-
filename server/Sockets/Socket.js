@@ -5,7 +5,7 @@ import { addNewMsg, getLatestMessage } from "../usecases/ChatInteractor.js";
 import { isUserMatched } from "../usecases/MatchesInteractor.js";
 const io = new Server({
   cors: {
-    origin: "https://honeybeedating.netlify.app/",
+    origin: "https://honeybeedating.netlify.app",
   },
   pingTimeout: 60000,
 });
