@@ -3,33 +3,33 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { socket } from "./Socket";
 import { useState, useEffect, lazy, Suspense } from "react";
-import RegisterRoute from "./routes/RegisterRoute.jsx";
-import UserPrivateRoute from "./routes/UserPrivateRoute.jsx";
-import UserPublicRoute from "./routes/UserPublicRoute.jsx";
-import IncomingCallModal from "./components/IncomingCall/IncomingCallModal.jsx";
+import RegisterRoute from "./routes/RegisterRoute";
+import UserPrivateRoute from "./routes/UserPrivateRoute";
+import UserPublicRoute from "./routes/UserPublicRoute";
+import IncomingCallModal from "./components/IncomingCall/IncomingCallModal";
 import { SetOnlineUserData } from "./features/users/OnlineUsers.js";
 import Loader from "./routes/Loader";
 const CreateAccount = lazy(() =>
-  import("./pages/CreateAccount/CreateAccount.jsx")
+  import("./pages/CreateAccount/CreateAccount")
 );
 const SubscriptionPage = lazy(() =>
   import("./pages/SubscriptionPage/SubscriptionPage")
 );
 const SearchPage = lazy(() => import("./pages/SearchPage/SearchPage"));
-const HomePage = lazy(() => import("./pages/HomePage/HomePage.jsx"));
-const LoginPage = lazy(() => import("./pages/LoginPage/LoginPage.jsx"));
-const LandingPage = lazy(() => import("./pages/LandingPage/LandingPage.jsx"));
-const OtpPage = lazy(() => import("./pages/OtpPage/otpPage.jsx"));
+const HomePage = lazy(() => import("./pages/HomePage/HomePage"));
+const LoginPage = lazy(() => import("./pages/LoginPage/LoginPage"));
+const LandingPage = lazy(() => import("./pages/LandingPage/LandingPage"));
+const OtpPage = lazy(() => import("./pages/OtpPage/otpPage"));
 const VideoCall = lazy(() => import("./pages/VideoCall/VideoCall"));
 const LikedUsersPage = lazy(() =>
-  import("./pages/LikedUsersPage/LikedUsersPage.jsx")
+  import("./pages/LikedUsersPage/LikedUsersPage")
 );
 const OtpRoute = lazy(() => import("./routes/OtpRoute"));
-const NotFound = lazy(() => import("./pages/404Page/NotFound.jsx"));
-const Profile = lazy(() => import("./pages/Profile/Profile.jsx"));
-const GoogleLogin = lazy(() => import("./pages/GoogleLogin/GoogleLogin.jsx"));
-const MatchesPage = lazy(() => import("./pages/Matches/MatchesPage.jsx"));
-const ChatPage = lazy(() => import("./pages/ChatPage/ChatPage.jsx"));
+const NotFound = lazy(() => import("./pages/404Page/NotFound"));
+const Profile = lazy(() => import("./pages/Profile/Profile"));
+const GoogleLogin = lazy(() => import("./pages/GoogleLogin/GoogleLogin"));
+const MatchesPage = lazy(() => import("./pages/Matches/MatchesPage"));
+const ChatPage = lazy(() => import("./pages/ChatPage/ChatPage"));
 
 function App() {
   const user = useSelector((state) => state.user.user);
