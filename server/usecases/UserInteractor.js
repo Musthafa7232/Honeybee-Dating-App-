@@ -103,7 +103,7 @@ export const UpdateUser = async (
         cloudinary,
         removeFile
       );
-      user.profilePic = result;
+      user.images[0] = result;
     }
 
     if (req?.files?.image1) {
@@ -112,7 +112,7 @@ export const UpdateUser = async (
         cloudinary,
         removeFile
       );
-      user.profilePic = result;
+      user.images[1] = result;
     }
 
     if (req?.files?.image2) {
@@ -121,11 +121,12 @@ export const UpdateUser = async (
         cloudinary,
         removeFile
       );
-      user.profilePic = result;
+      user.images[2]  = result;
     }
     user.save();
     return user;
   } catch (error) {
+    console.log(error);
     throw new Error("failed to update User");
   }
 };
