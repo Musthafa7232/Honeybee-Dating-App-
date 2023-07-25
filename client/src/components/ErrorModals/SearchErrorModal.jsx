@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Box, Typography, Button, } from "@mui/material";
+import { Modal, Box, Typography, Button, Grid, } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from "react-router-dom";
 
@@ -33,8 +33,26 @@ const navigate=useNavigate()
         </Button>
 
         <Box>
+        <Grid
+   container
+   sx={{ display: "flex", justifyContent: "center",alignContent:'center',height:'100%' }}
+ >
+   <Grid sx={{
+
+   }}>
+     <lottie-player
+       src="https://lottie.host/74df4dfe-f5db-4a8f-b7c8-3235d3fffcd1/uPOqoRkPak.json"
+       background="transparent"
+       speed="1"
+       style={{ width: "20rem", height: "20rem" }}
+       
+       autoplay
+     ></lottie-player>
+    
+   </Grid>
+ </Grid> 
           <Typography variant="overline" textAlign="center">
-            Inorder to use Videocall you must have  HoneyPlatinum Subscription.
+            Inorder to use Search you must have  HoneyPlatinum Subscription.
           </Typography>
         </Box>
       </Box>

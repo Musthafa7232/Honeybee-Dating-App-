@@ -42,7 +42,7 @@ function UserProfile({ edit, setEdit }) {
         container
         justifyContent="center"
         alignItems="center"
-        sx={{ mt: { lg: 15 }}}
+        sx={{ mt: {sm:8, lg: 15 }}}
       >
         <Grid item xs={12} sm={10} md={8} lg={6} xl={10}>
           <Card

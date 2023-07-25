@@ -24,7 +24,7 @@ export const createAccountApi = (userData) =>
 
 export const fetchLocationApi = (latitude, longitude) => {
   const geoApiUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
-  fetch(geoApiUrl);
+ return fetch(geoApiUrl);
 };
 
 export const userDataApi = () => axios.get("/userData", headers);

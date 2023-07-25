@@ -97,7 +97,7 @@ export default function DiscoverSide() {
           xs={12}
           lg={11}
           container
-          sx={{  position: "relative" }}
+          sx={{  position: "relative",minHeight:{xs:'85.7vh',lg:0} }}
         >
           <RenderContentData
             user={user}

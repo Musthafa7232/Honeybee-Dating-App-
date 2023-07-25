@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardContent, Grid, Skeleton } from "@mui/material";
+import { Card, CardContent, Grid, Skeleton, Typography } from "@mui/material";
 import axios from "../../Axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -16,12 +16,15 @@ function ChatContainer() {
     const user = useSelector((state) => state.user.user);
     const [contacts, setContacts] = useState([]);
     const [currentChat, setCurrentChat] = useState(undefined);
-
-
+    const [isEmpty,setIsEmpty]=useState(false)
       useEffect(() => {
         if (user) {
           ShowMatchesApi().then((res) => {
+            if(res.data.length>0){
                 setContacts(res.data);
+              }else{
+                setIsEmpty(true)
+              }
             });
         }
       }, [user]);
@@ -56,6 +59,32 @@ function ChatContainer() {
         backgroundColor: "rgba(255, 255, 255, 0.7)",
       }}
     >
+       {isEmpty?(
+   <Grid
+   container
+   sx={{ display: "flex", justifyContent: "center",alignContent:'center',height:'100%' }}
+ >
+   <Grid sx={{
+
+   }}>
+     <lottie-player
+       src="https://lottie.host/ce13803b-d08f-40ca-a716-c9d4c7f9589e/dmdOnSt8T6.json"
+       background="transparent"
+       speed="1"
+       style={{ width: "20rem", height: "20rem" }}
+       loop
+       autoplay
+     ></lottie-player>
+     <Grid sx={{
+      display:'flex',
+      justifyContent:'center'
+     }}>
+       <Typography variant="overline" sx={{color:'grey',textAlign:'ce'}}>No Messages Found</Typography>
+     </Grid>
+   
+   </Grid>
+ </Grid> 
+             ):(
     <CardContent>
         {currentChat === undefined ? (
  <SelectUserChat contacts={contacts} setContacts={setContacts} changeChat={handleChatChange} user={user}/>
@@ -63,7 +92,7 @@ function ChatContainer() {
         <ChatCard currentChat={currentChat} setCurrentChat={setCurrentChat} socket={socket} />
       )}
     </CardContent>
-
+ )}
     </Card>
       </Grid>
     </Grid>
