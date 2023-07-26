@@ -10,8 +10,8 @@ export const stripePayment = async (stripe, email, price,pack) => {
         },
       ],
       mode: 'payment',
-      success_url: `http://localhost:5173/HoneyVip?pack=${pack}`, 
-      cancel_url: `http://localhost:5173/HoneyVip?canceled=true`, 
+      success_url: `https://honeybee.zodiacwatches.shop/HoneyVip?pack=${pack}`, 
+      cancel_url: `https://honeybee.zodiacwatches.shop/HoneyVip?canceled=true`, 
     });
     return session;
   };
