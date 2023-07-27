@@ -1,45 +1,27 @@
 import * as React from "react";
-import { Button, IconButton } from "@mui/material";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import { TextField, Typography } from "@mui/material";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import FormLabel from "@mui/joy/FormLabel";
-import Radio, { radioClasses } from "@mui/joy/Radio";
-import RadioGroup from "@mui/joy/RadioGroup";
-import Sheet from "@mui/joy/Sheet";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { useState } from "react";
 import { useEffect } from "react";
-import Avatar from "@mui/material/Avatar";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Auth_user } from "../../features/users/AuthReducer";
-import SimpleDialog from "./SimpleDialog";
-import dayjs from "dayjs";
-import AddIcon from "@mui/icons-material/Add";
-import WineBar from "@mui/icons-material/WineBar";
-import SmokingRoomsIcon from "@mui/icons-material/SmokingRooms";
-import GenderIcon from "../icons/GenderIcon";
-import RelationIcon from "../icons/RelationIcon";
-import ReligionIcon from "../icons/ReligionIcon";
-import ModalEditUser from "../EditProfile/ModalEditUser";
-import Chip from "@mui/joy/Chip";
-import { createAccountApi, fetchLocationApi } from "../../services/api";
+import { createAccountApi } from "../../services/api";
+import FirstData from "./FirstData";
+import BoilerPlateCode from "../BoilerPlateCode";
+import SecondData from "./SecondData";
+import { Card, Grid } from "@mui/material";
+import Box from "@mui/material/Box";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import { useRef } from "react";
+import PreviewData from "./PreviewData";
+const steps = ["Basic Infos", "Add Your Photos", "Preview Account","All Set"];
 export default function InitialData() {
   const dispatch = useDispatch();
   const Phone = useSelector((state) => state.phone);
-  const {user}=useSelector(state=>state.google)
-  const [open, setOpen] = React.useState(false);
+  const { user } = useSelector((state) => state.google);
   const [loading, setloading] = useState(false);
-  const [option, setOption] = useState(null);
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [step, setStep] = useState(0);
   const [userData, setUserData] = useState({
     fullName: "",
     email: "",
@@ -50,681 +32,329 @@ export default function InitialData() {
     phone: "",
     Preference: "",
     isVerified: false,
-    firstData: false,
-    secondData: false,
-    thirdData: false,
-    fourthData: false,
-    fifthData: false,
-    sixthData: false,
-    seventhData: false,
+    faith: '',
+    realationshipStatus: '',
+    drinking: '',
+    smoking: '',
+    profilePic: "",
+    coverPic: "",
+    profilePicFile:{},
+    coverPicFile:{},
+    image0File:{},
+    image1File:{},
+    image2File:{}
   });
+  const [errorToast, setErrorToast] = useState({});
   const [error, setError] = useState({});
+  const coverPicREF = useRef();
+  const profilePicREF = useRef();
+  const image0 = useRef();
+  const image1 = useRef();
+  const image2 = useRef();
   const navigate = useNavigate();
   useEffect(() => {
-    if(user){
-          setUserData((prevState) => ({
-      ...prevState,
-      phone: Phone.number,
-      isVerified: true,
-      email:user.email,
-      fullName:user.fullName
-    }));
-    }else{
+    if (user) {
       setUserData((prevState) => ({
         ...prevState,
         phone: Phone.number,
-        isVerified: true
+        isVerified: true,
+        email: user.email,
+        fullName: user.fullName,
+      }));
+    } else {
+      setUserData((prevState) => ({
+        ...prevState,
+        phone: Phone.number,
+        isVerified: true,
       }));
     }
   }, []);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (value) => {
-    setOpen(false);
-    setUserData((prevState) => ({
-      ...prevState,
-      gender: value,
-    }));
-  };
- 
-  const openModal = (data) => {
-    setOption(data);
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
-  const validateInputs=()=>{
+  const validateInputs = () => {
     const regexEmail =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  // setUserData((prev) => ({
-  //   ...prev,
-  //   firstData: true,
-  // }));
-  if (!userData.fullName){
-    setError((prevState) => ({
-      ...prevState,
-      fullName: "*FullName is required",
-    }));
-    return false
-  }
-  else setError((prevState) => ({ ...prevState, fullName: null }));
-
-  if (!userData.email){
-    setError((prevState) => ({ ...prevState, email: "*Email is required" }));
-    return false
-  }
-  else if (!regexEmail.test(userData.email)){
-     setError((prevState) => ({
-      ...prevState,
-      email: "*Enter a valid email",
-    }));
-    return  false
-  }
-  else setError((prevState) => ({ ...prevState, email: null }));
-
-  if (!userData.birthday){
-    setError((prevState) => ({
-      ...prevState,
-      birthday: "*Birthdate is required",
-    }));
-    return false
-  }
-    
-  else if (userData.age < 18){
-    setError((prevState) => ({ ...prevState, birthday: "*Should be  18+" }));
-    return false
-  }
-    
-  else setError((prevState) => ({ ...prevState, birthday: null }));
-
-  if (!userData.gender){
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    // setUserData((prev) => ({
+    //   ...prev,
+    //   firstData: true,
+    // }));
+    if (!userData.fullName) {
       setError((prevState) => ({
-      ...prevState,
-      gender: "*Gender is required",
-    }));
-    return false
-  }
-  
-  else setError((prevState) => ({ ...prevState, gender: null }));
+        ...prevState,
+        fullName: "*FullName is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, fullName: null }));
 
-  if (!userData.Preference){
-    setError((prevState) => ({
-      ...prevState,
-      Preference: "*Preference is required",
-    }));
-    return false
-  }
-  else setError((prevState) => ({ ...prevState, Preference: null }));
-  if (!userData.bio){
-    setError((prevState) => ({
-      ...prevState,
-      bio: "*Bio is required",
-    }));
-    return false
-  }
-  else setError((prevState) => ({ ...prevState, bio: null }));
+    if (!userData.email) {
+      setError((prevState) => ({ ...prevState, email: "*Email is required" }));
+    } else if (!regexEmail.test(userData.email)) {
+      setError((prevState) => ({
+        ...prevState,
+        email: "*Enter a valid email",
+      }));
+    } else setError((prevState) => ({ ...prevState, email: null }));
 
+    if (!userData.birthday) {
+      setError((prevState) => ({
+        ...prevState,
+        birthday: "*Birthdate is required",
+      }));
+    } else if (userData.age < 18) {
+      setError((prevState) => ({ ...prevState, birthday: "*Should be  18+" }));
+    } else setError((prevState) => ({ ...prevState, birthday: null }));
 
-  if (!userData.location){
-    setError((prevState) => ({
-      ...prevState,
-      location: "*Location is required",
-    }));
-    return false
-  }
-  else setError((prevState) => ({ ...prevState, location: null }));
-  if (
-    error.fullName === null &&
-    error.email === null &&
-    error.birthday === null &&
-    error.gender === null &&
-    error.Preference === null &&
-    error.location === null
-  ) {
-    setError(false)
-    return true
-  }
-  }
+    if (!userData.gender) {
+      setError((prevState) => ({
+        ...prevState,
+        gender: "*Gender is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, gender: null }));
 
-  const handleSubmit = (event) => {
-     if(validateInputs){  
-      if (!loading) {
-        setloading(true);
-       createAccountApi(userData)
-          .then((res) => {
-            if (res.data.success) {
-              setloading(false);
-              localStorage.setItem(
-                "authorization.user",
-                JSON.stringify(res.data.token)
-              );
-              dispatch(Auth_user());
-              navigate(res.data.redirect);
-            }
-          })
-          .catch((err) => {
-            setloading(false);
-            console.log(err);
-          });
+    if (!userData.Preference) {
+      setError((prevState) => ({
+        ...prevState,
+        Preference: "*Preference is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, Preference: null }));
+    if (!userData.faith) {
+      setError((prevState) => ({
+        ...prevState,
+        faith: "*this field is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, faith: null }));
+    if (!userData.realationshipStatus) {
+      setError((prevState) => ({
+        ...prevState,
+        realationshipStatus: "*this field is required",
+      }));
+    } else
+      setError((prevState) => ({ ...prevState, realationshipStatus: null }));
+    if (!userData.smoking) {
+      setError((prevState) => ({
+        ...prevState,
+        smoking: "*this field is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, smoking: null }));
+    if (!userData.drinking) {
+      setError((prevState) => ({
+        ...prevState,
+        drinking: "*this field is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, drinking: null }));
+    if (!userData.bio) {
+      setError((prevState) => ({
+        ...prevState,
+        bio: "*Bio is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, bio: null }));
+
+    if (!userData.location) {
+      setError((prevState) => ({
+        ...prevState,
+        location: "*Location is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, location: null }));
+    if (error) {
+      setErrorToast({});
+      setErrorToast({
+        data: "Please check the form for errors.",
+        success: false,
+        open: true,
+      }); // Prevent form submission
+    }
+    if (
+      userData.fullName  &&
+      userData.email  &&
+      userData.birthday  &&
+      userData.gender  &&
+      userData.Preference  &&
+      userData.location  &&
+      userData.drinking && userData.realationshipStatus&&
+      userData.faith && userData.smoking
+    ) {
+      setError(false);
+      return true;
+    }
+    return false;
+  };
+
+  const validateImageInput = () => {
+    if (!userData.profilePic) {
+      setError((prevState) => ({
+        ...prevState,
+        profilePic: "*Location is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, profilePic: null }));
+
+    if (!userData.coverPic) {
+      setError((prevState) => ({
+        ...prevState,
+        profilePic: "*Location is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, profilePic: null }));
+
+    if (!userData.profilePic || !userData.coverPic) {
+      setErrorToast({});
+      setErrorToast({
+        data: "Please add a profile pic and a cover pic atleast!",
+        success: false,
+        open: true,
+      });
+    } else {
+      setError(false);
+      return true;
+    }
+    return false;
+  };
+
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    formData.append("fullName", userData.fullName);
+    formData.append("email", userData.email);
+    formData.append("birthday", userData.birthday);
+    formData.append("age", userData.age);
+    formData.append("gender", userData.gender);
+    formData.append("location", userData.location);
+    formData.append("faith", userData.faith);
+    formData.append("drinking", userData.drinking);
+    formData.append("smoking", userData.smoking);
+    formData.append("bio", userData.bio);
+    formData.append("phone", userData.phone);
+    formData.append("Preference", userData.Preference);
+    formData.append("realationshipStatus", userData.realationshipStatus);
+    console.log('j');
+    if (userData.profilePicFile) {
+      console.log('hlo',userData.profilePicFile);
+      formData.append(
+        "profilePic",
+        userData.profilePicFile,
+        userData.profilePicFile.name
+      );
+    }
+
+    if (userData.coverPicFile) {
+      console.log('bye',userData.coverPicFile);
+      formData.append(
+        "coverPic",
+        userData.coverPicFile,
+        userData.coverPicFile.name
+      );
+    }
+    if (userData.image0) {
+      console.log('hi');
+      if (userData.image0File) {
+        formData.append(
+          "image0",
+          userData.image0File,
+          userData.image0File.name
+        );
       }
     }
-  };
 
-  const locationSelector = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-         fetchLocationApi(latitude,longitude).then((res) => res.json())
-            .then((data) => {
-              setUserData((prevState) => ({
-                ...prevState,
-                location: data.city + "," + data.principalSubdivision,
-              }));
-            });
-        },
-        (error) => {
-          console.log(error);
+    if (userData.image1) {
+      if (userData.image1File) {
+        formData.append(
+          "image1",
+          userData.image1File,
+          userData.image1File.name
+        );
+      }
+    }
+    if (userData.image2) {
+      if (userData.image2File) {
+        formData.append(
+          "image2",
+          userData.image2File,
+          userData.image2File.name
+        );
+      }
+    }
+
+    createAccountApi(formData)
+      .then((res) => {
+        if (res.data.success) {
+          setloading(false);
+          localStorage.setItem(
+            "authorization.user",
+            JSON.stringify(res.data.token)
+          );
+          dispatch(Auth_user());
+          navigate(res.data.redirect);
         }
-      );
-    } else {
-      alert("Geolocation is not supported by this browser.");
-    }
+      })
+      .catch((err) => {
+        setloading(false);
+        setErrorToast({
+          data: "Failed to create an account. Please try again later.",
+          success: false,
+          open: true,
+        });
+        console.log(err);
+      });
   };
 
-  const dateToAge = (data) => {
-    const selectedDate = new Date(data.$d);
-    const currentDate = new Date();
-
-    const ageDiff = currentDate.getTime() - selectedDate.getTime();
-    const ageDate = new Date(ageDiff);
-
-    const calculatedAge = Math.abs(ageDate.getUTCFullYear() - 1970);
-    setUserData((prevState) => ({
-      ...prevState,
-      birthday: dayjs(data.$d),
-      age: calculatedAge,
-    }));
-  };
-
-  const genderHandler = (value) => {
-    if (value === "Other") {
-      handleClickOpen();
-    } else {
-      setUserData((prevState) => ({
-        ...prevState,
-        gender: value,
-      }));
-    }
-  };
-  const item = (
+  return (
     <>
-        <ModalEditUser
-          isModalOpen={isModalOpen}
-          closeModal={closeModal}
-          option={option}
-          setModalOpen={setModalOpen}
-          setUserData={setUserData}
-        />
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        sx={{ minHeight: "100vh",mt:3 }}
-      >
-        <Grid item xs={12} sm={10} md={8} lg={6} xl={6}>
+      <BoilerPlateCode
+        success={errorToast.success}
+        open={errorToast.open}
+        data={errorToast.data}
+        setToastClosed={() => setErrorToast({})}
+      />
+      <Grid container>
+        <Grid item xs={12}>
           <Card
             variant="outlined"
             sx={{
+              my: 5,
+              minHeight: "70vh",
               borderRadius: 6,
               backdropFilter: "brightness(0.9) blur(15px)",
               backgroundColor: "rgba(255, 255, 255, 0.5)",
             }}
           >
-            <CardContent>
-              <Box
-                component="form"
-                noValidate
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <Typography
-                  sx={{
-                    my: { xs: 3, sm: 3 },
-                    fontFamily: "Roboto",
-                    fontWeight: 700,
-                    color: "inherit",
-                    textDecoration: "none",
-                  }}
-                >
-                  Introduce Yourself
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Full Name"
-                      variant="outlined"
-                      value={userData.fullName}
-                      {...(error.fullName ? { error: true } : {})}
-                      fullWidth
-                      onChange={(e) =>
-                        setUserData((prevState) => ({
-                          ...prevState,
-                          fullName: e.target.value,
-                        }))
-                      }
-                    />
-                    {error.fullName && (
-                      <Typography sx={{ color: "red" }}>
-                        {error.fullName}
-                      </Typography>
-                    )}
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Email Address"
-                      variant="outlined"
-                      value={userData.email}
-                      {...(error.email ? { error: true } : {})}
-                      fullWidth
-                      onChange={(e) =>
-                        setUserData((prevState) => ({
-                          ...prevState,
-                          email: e.target.value,
-                        }))
-                      }
-                    />
-                    {error.email && (
-                      <Typography sx={{ color: "red" }}>
-                        {error.email}
-                      </Typography>
-                    )}
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Phone"
-                      variant="outlined"
-                      value={userData.phone}
-                      fullWidth
-                     disabled
-                    />
-                    {error.email && (
-                      <Typography sx={{ color: "red" }}>
-                        {error.email}
-                      </Typography>
-                    )}
-                  </Grid>
-                  <Grid item xs={12} sm={12}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={["DatePicker"]}>
-                        <DatePicker
-                          label="Birthday"
-                          value={userData.birthday}
-                          onChange={dateToAge}
-                        />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                    {error.birthday && (
-                      <Typography sx={{ color: "red" }}>
-                        {error.birthday}
-                      </Typography>
-                    )}
-                  </Grid>
+            {step === 0 && (
+              <FirstData
+                setUserData={setUserData}
+                userData={userData}
+                validateInputs={validateInputs}
+                error={error}
+                loading={loading}
+                setStep={setStep}
+              />
+            )}
+            {step === 1 && (
+              <SecondData
+                setUserData={setUserData}
+                userData={userData}
+                loading={loading}
+                validateImageInput={validateImageInput}
+                coverPicREF={coverPicREF}
+                profilePicREF={profilePicREF}
+                image0={image0}
+                image1={image1}
+                image2={image2}
+                handleSubmit={handleSubmit}
+                setStep={setStep}
+              />
+            )}
+            {step === 2 && <PreviewData user={userData} setStep={setStep} handleSubmit={handleSubmit}    coverPicREF={coverPicREF}
+                profilePicREF={profilePicREF}
+                image0={image0}
+                image1={image1}
+                image2={image2} />}
 
-                  <Grid item xs={12} sm={7}>
-                    <Typography>Gender</Typography>
-                    <RadioGroup
-                      aria-label="platform"
-                      defaultValue="Website"
-                      overlay
-                      name="platform"
-                      sx={{
-                        flexDirection: "row",
-                        gap: 2,
-                        [`& .${radioClasses.checked}`]: {
-                          [`& .${radioClasses.action}`]: {
-                            inset: -1,
-                            border: "3px solid",
-                            borderColor: "primary.500",
-                          },
-                        },
-                        [`& .${radioClasses.radio}`]: {
-                          display: "contents",
-                          "& > svg": {
-                            zIndex: 2,
-                            position: "absolute",
-                            top: "-8px",
-                            right: "-8px",
-                            bgcolor: "background.body",
-                            borderRadius: "50%",
-                          },
-                        },
-                      }}
-                    >
-                      {["Male", "Female", "Other"].map((value) => (
-                        <Sheet
-                          key={value}
-                          variant="outlined"
-                          sx={{
-                            borderRadius: "md",
-                            bgcolor: "background.body",
-                            boxShadow: "sm",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            textAlign: "center",
-                            p: 1,
-                            minWidth: 80,
-                          }}
-                        >
-                          <Radio
-                            id={value}
-                            value={value}
-                            onClick={() => genderHandler(value)}
-                            checkedIcon={<CheckCircleRoundedIcon />}
-                          />
-                          <FormLabel htmlFor={value}>{value}</FormLabel>
-                        </Sheet>
-                      ))}
-                    </RadioGroup>
-                    {error.gender && (
-                      <Typography sx={{ color: "red" }}>
-                        {error.gender}
-                      </Typography>
-                    )}
-                  </Grid>
-                  <Grid item xs={12} sm={6} sx={{ alignContent: "end" }}>
-                    <Typography>Show Me</Typography>
-                    <RadioGroup
-                      aria-label="platform"
-                      defaultValue="Website"
-                      overlay
-                      name="platform"
-                      sx={{
-                        flexDirection: "row",
-                        gap: 2,
-                        [`& .${radioClasses.checked}`]: {
-                          [`& .${radioClasses.action}`]: {
-                            inset: -1,
-                            border: "3px solid",
-                            borderColor: "primary.500",
-                          },
-                        },
-                        [`& .${radioClasses.radio}`]: {
-                          display: "contents",
-                          "& > svg": {
-                            zIndex: 2,
-                            position: "absolute",
-                            top: "-8px",
-                            right: "-8px",
-                            bgcolor: "background.body",
-                            borderRadius: "50%",
-                          },
-                        },
-                      }}
-                    >
-                      {["Male", "Female", "Everyone"].map((value) => (
-                        <Sheet
-                          key={value}
-                          variant="outlined"
-                          sx={{
-                            borderRadius: "md",
-                            bgcolor: "background.body",
-                            boxShadow: "sm",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            textAlign: "center",
-                            p: 1,
-                            minWidth: 80,
-                          }}
-                        >
-                          <Radio
-                            id={value}
-                            value={value}
-                            onClick={() =>
-                              setUserData((prevState) => ({
-                                ...prevState,
-                                Preference: value,
-                              }))
-                            }
-                            checkedIcon={<CheckCircleRoundedIcon />}
-                          />
-                          <SimpleDialog
-                            selectedValue={value}
-                            open={open}
-                            onClose={handleClose}
-                          />
-                          <FormLabel htmlFor={value}>{value}</FormLabel>
-                        </Sheet>
-                      ))}
-                    </RadioGroup>
-
-                    {error.Preference && (
-                      <Typography sx={{ color: "red" }}>
-                        {error.Preference}
-                      </Typography>
-                    )}
-                  </Grid>
-                  <Grid item xs={12} sm={12}>
-                    <Button
-                      sx={{ mt: 2 }}
-                      color={error.location ? "error" : "info"}
-                      size="small"
-                      fullWidth
-                      onClick={locationSelector}
-                      variant="contained"
-                      startIcon={<LocationOnIcon />}
-                    >
-                      {userData.location ? userData.location : "Location"}
-                    </Button>
-                    {error.location && (
-                      <Typography sx={{ color: "red" }}>
-                        {error.location}
-                      </Typography>
-                    )}
-                  </Grid>
-                  <Grid item xs={12} sm={12}>
-            <TextField
-              id="bio"
-              label="Your Bio"
-              multiline
-              fullWidth
-              rows={4}
-              value={userData.bio}
-              onChange={(e) =>
-                setUserData((prev) => ({ ...prev, bio: e.target.value }))
-              }
-            />
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            lg
-            sx={{
-              my: 3,
-              display: { xs: "flex", lg: "flex" },
-              flexDirection: { xs: "column", lg: "row" },
-              justifyContent: "space-between",
-            }}
-          >
-          
-            <Chip
-              sx={{ m: 1 }}
-              onClick={() => openModal("faith")}
-              startDecorator={<ReligionIcon />}
-              color="neutral"
-              size="lg"
-              variant="soft"
-            >
-              { userData.faith?userData.faith:'Your Faith'}
-            </Chip>
-            <Chip
-              sx={{ m: 1 }}
-              onClick={() => openModal("realationshipStatus")}
-              startDecorator={<RelationIcon />}
-              color="neutral"
-              size="lg"
-              variant="soft"
-            >
-              { userData.realationshipStatus? userData.realationshipStatus:'RelationShip Status'}
-            </Chip>
-            <Chip
-              sx={{ m: 1 }}
-              onClick={() => openModal("smoking")}
-              startDecorator={<SmokingRoomsIcon />}
-              color="neutral"
-              size="lg"
-              variant="soft"
-            >
-              { userData.smoking?userData.smoking:'Smoking'}
-            </Chip>
-            <Chip
-              sx={{ m: 1 }}
-              onClick={() => openModal("drinking")}
-              startDecorator={<WineBar />}
-              color="neutral"
-              size="lg"
-              variant="soft"
-            >
-              { userData.drinking?userData.drinking:'Drinking'}
-            </Chip>
-          </Grid>
-                </Grid>
-                <Button
-                  size="large"
-                  color="warning"
-                  variant="outlined"
-                  sx={{ mt: 3, mb: 2 }}
-                  onClick={handleSubmit}
-                >
-                  {loading ? "loading" : "Continue"}
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    </>
-  );
-  const item2 = (
-    <>
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        sx={{ minHeight: "100vh" }}
-      >
-        <Grid item xs={12} sm={10} md={8} lg={6} xl={4}>
-          <Card
-            variant="outlined"
-            sx={{
-              borderRadius: 6,
-              backdropFilter: "brightness(0.9) blur(15px)",
-              backgroundColor: "rgba(255, 255, 255, 0.5)",
-            }}
-          >
-            <Box
-              component="form"
-              noValidate
-              sx={{
-                ml: 1,
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <Grid container>
-                <Grid item xs={12}>
-                  <Typography
-                    sx={{
-                      my: { xs: 3, sm: 3 },
-                      fontFamily: "Roboto",
-                      fontWeight: 700,
-                      color: "inherit",
-                      textDecoration: "none",
-                    }}
-                  >
-                    Its all about Presentation
-                  </Typography>
-                </Grid>
-
-                <Grid xs={6}></Grid>
-                <Grid item xs={6}>
-                  <Card
-                    sx={{
-                      width: 100,
-                      height: 100,
-                      bgcolor: "lightgray",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <CardContent>
-                      <Avatar sx={{ bgcolor: "lightgray" }}>
-                        <IconButton
-                          color="primary"
-                          aria-label="upload picture"
-                          component="label"
-                        >
-                          <input hidden accept="image/*" type="file" />
-                          <AddIcon sx={{ color: "black" }} />
-                        </IconButton>
-                      </Avatar>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </Grid>
+            <Box sx={{ width: "100%", my: 5 }}>
+              <Stepper activeStep={step} alternativeLabel>
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
             </Box>
           </Card>
         </Grid>
       </Grid>
     </>
   );
-  const item3 = (
-    <>
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        sx={{ minHeight: "100vh" }}
-      >
-        <Grid item xs={12} sm={10} md={8} lg={6} xl={4}>
-          <Card
-            variant="outlined"
-            sx={{
-              borderRadius: 6,
-              backdropFilter: "brightness(0.9) blur(15px)",
-              backgroundColor: "rgba(255, 255, 255, 0.5)",
-            }}
-          >
-            <CardContent></CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    </>
-  );
-
-  return item;
-
-  if (!userData.firstData) {
-    return item;
-  }
-
-  if (userData.firstData) {
-    return item2;
-  }
-  if (!userData.secondData) {
-    return item3;
-  }
 }

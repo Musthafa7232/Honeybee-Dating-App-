@@ -48,8 +48,7 @@ function RenderContentData({
                 mb: 4,
                 minHeight: "70vh",
                 borderRadius: 6,
-                backdropFilter: "brightness(0.9) blur(15px)",
-                backgroundColor: "rgba(255, 255, 255, 0.7)",
+              
               }}
             >
               <Box sx={{ width: "100%", height: "40vh", position: "relative" }}>
@@ -67,7 +66,7 @@ function RenderContentData({
                     borderRadius: "5rem",
                     position: "absolute",
                     top: "100%",
-                    left: { xs: "10%", lg: "0%" },
+                    left: { xs: "10%",sm:'33%', lg: "0%" },
                     transform: "translate(50%, -50%)",
                   }}
                   loading="lazy"

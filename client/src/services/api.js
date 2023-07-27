@@ -20,7 +20,7 @@ export const otpApi = (data) => axios.post("/verifyOtp", data);
 export const googleLoginApi = (data) => axios.post("/googleLogin", data);
 
 export const createAccountApi = (userData) =>
-  axios.post("/createAccount", userData);
+  axios.post("/createAccount", userData,formDataHeaders);
 
 export const fetchLocationApi = (latitude, longitude) => {
   const geoApiUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
@@ -67,3 +67,5 @@ export const PaymentSuccessApi = (data) =>
 
 export const SearchFilterApi = (data) =>
   axios.post(`/searchFilter`, data, headers);
+
+  export const deleteImageApi=(data)=>axios.patch('/deleteImage',data,headers)

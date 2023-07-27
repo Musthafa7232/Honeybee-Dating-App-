@@ -24,8 +24,8 @@ import GenderIcon from "../icons/GenderIcon";
 import RelationIcon from "../icons/RelationIcon";
 import ReligionIcon from "../icons/ReligionIcon";
 import React from "react";
-import { fetchLocationApi } from "../../services/api";
-
+import { deleteImageApi, fetchLocationApi } from "../../services/api";
+import CloseIcon from "@mui/icons-material/Close";
 function EditProfileCard({
   userData,
   setUserData,
@@ -88,6 +88,13 @@ const handleClick=()=>{
     handleSubmit()
   }
 }
+
+const handleDeleteImage=async(path)=>{
+  const data={
+    path:path
+  }
+  await deleteImageApi(data)
+  }
 
   const locationSelector = () => {
     if (navigator.geolocation) {
@@ -357,8 +364,7 @@ const handleClick=()=>{
               alignItems: "end",
             }}
           >
-            <Card
-              onClick={() => image0.current()}
+     <Card
               sx={{
                 mr: 2,
                 width: { xs: 100, sm: 150, lg: 250 },
@@ -371,13 +377,32 @@ const handleClick=()=>{
                 justifyContent: "center",
                 alignContent: "center",
                 alignItems: "center",
+                position: "relative",
               }}
-            >
-              <CardContent>
-                <IconButton
-                  color="primary"
-                  aria-label="upload picture"
+            > 
+            {userData.image0&& <IconButton
+            sx={{
+              position: "absolute",
+              top: 5,
+              right: 5,
+              color: "black",
+              backgroundColor: "white",
+              zIndex: 1,
+            }}
+            size="small"
+          onClick={() => {
+           handleDeleteImage(userData.image0)
+            setUserData((prev) => ({
+              ...prev,
+              image0: "", // Set the image field to an empty string to clear it
+            }));
+          }}
+        ><CloseIcon /></IconButton>
+              }
+                <Button
                   component="label"
+                  hidden
+                  sx={{ width: "100%", height: "100%" }}
                 >
                   <input
                     ref={image0}
@@ -387,8 +412,8 @@ const handleClick=()=>{
                     onChange={(e) => handleimage1(e)}
                   />
                   {userData.image0 ? "" : <AddIcon sx={{ color: "black" }} />}
-                </IconButton>
-              </CardContent>
+                </Button>
+           
             </Card>
 
             <Card
@@ -404,14 +429,32 @@ const handleClick=()=>{
                 justifyContent: "center",
                 alignContent: "center",
                 alignItems: "center",
+                position: "relative",
               }}
-              onClick={() => image1.current()}
-            >
-              <CardContent>
-                <IconButton
-                  color="primary"
-                  aria-label="upload picture"
+            > 
+            {userData.image1&& <IconButton
+            sx={{
+              position: "absolute",
+              top: 5,
+              right: 5,
+              color: "black",
+              backgroundColor: "white",
+              zIndex: 1,
+            }}
+            size="small"
+          onClick={() => {
+           handleDeleteImage(userData.image1)
+            setUserData((prev) => ({
+              ...prev,
+              image1: "", // Set the image field to an empty string to clear it
+            }));
+          }}
+        ><CloseIcon /></IconButton>
+              }
+                <Button
                   component="label"
+                  hidden
+                  sx={{ width: "100%", height: "100%" }}
                 >
                   <input
                     ref={image1}
@@ -421,8 +464,8 @@ const handleClick=()=>{
                     onChange={(e) => handleimage2(e)}
                   />
                   {userData.image1 ? "" : <AddIcon sx={{ color: "black" }} />}
-                </IconButton>
-              </CardContent>
+                </Button>
+           
             </Card>
 
             <Card
@@ -438,14 +481,32 @@ const handleClick=()=>{
                 justifyContent: "center",
                 alignContent: "center",
                 alignItems: "center",
+                position: "relative",
               }}
-              onClick={() => image2.current()}
-            >
-              <CardContent>
-                <IconButton
-                  color="primary"
-                  aria-label="upload picture"
+            > 
+            {userData.image2&& <IconButton
+            sx={{
+              position: "absolute",
+              top: 5,
+              right: 5,
+              color: "black",
+              backgroundColor: "white",
+              zIndex: 1,
+            }}
+            size="small"
+          onClick={() => {
+           handleDeleteImage(userData.image2)
+            setUserData((prev) => ({
+              ...prev,
+              image2: "", // Set the image field to an empty string to clear it
+            }));
+          }}
+        ><CloseIcon /></IconButton>
+              }
+                <Button
                   component="label"
+                  hidden
+                  sx={{ width: "100%", height: "100%" }}
                 >
                   <input
                     ref={image2}
@@ -455,8 +516,8 @@ const handleClick=()=>{
                     onChange={(e) => handleimage3(e)}
                   />
                   {userData.image2 ? "" : <AddIcon sx={{ color: "black" }} />}
-                </IconButton>
-              </CardContent>
+                </Button>
+           
             </Card>
           </Grid>
           <Grid item sx={{display:'flex',justifyContent:'center',alignContent:'center',alignItems:'center',mt:4}} xs={12}>

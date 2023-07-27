@@ -1,8 +1,16 @@
 export const userDetails =
-  (createNewUser, createJwtToken, userModel, createUserToken) =>
+  (createNewUser, createJwtToken, userModel, createUserToken,  cloudinary,
+    uploadProfilePic,
+    uploadCoverPic,
+    image,
+    removeFile,req) =>
   async (req, res) => {
     try {
-      const user = await createNewUser(req.body, userModel);
+      const user = await createNewUser(req.body, userModel,  cloudinary,
+        uploadProfilePic,
+        uploadCoverPic,
+        image,
+        removeFile,req);
       const token = await createJwtToken(user, createUserToken);
       res
         .status(200)
@@ -75,7 +83,9 @@ export const googleData =
       }
       const user = await findUserWithEmail(email, userModel);
       if (user) {
-        res.redirect(`https://honeybee.zodiacwatches.shop/googleLogin?email=${email}`);
+        res.redirect(
+          `https://honeybee.zodiacwatches.shop/googleLogin?email=${email}`
+        );
       } else {
         res.redirect(
           `https://honeybee.zodiacwatches.shop/login?fullName=${name}&email=${email}`
@@ -186,7 +196,7 @@ export const blockUser = (userModel, blockAUser) => async (req, res) => {
     const user = await blockAUser(req.user.id, User, userModel);
     res.status(200).json(user);
   } catch (error) {
-    res.status(400).json(error);
+    res.status(500).json(error);
   }
 };
 
@@ -232,5 +242,16 @@ export const searchFilterUsers =
       res.status(200).json(result);
     } catch (error) {
       console.log(error);
+      res.status(500).json(error);
     }
   };
+
+export const deleteUserImage = (userModel, deleteImage) => async (req, res) => {
+  console.log('hi');
+  try {
+  await deleteImage(req.body.path, req.user.id, userModel)
+    res.json({message:true})
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};

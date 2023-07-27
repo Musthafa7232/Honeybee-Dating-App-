@@ -17,6 +17,7 @@ import {
   blockUser,
   verifyPayment,
   searchFilterUsers,
+  deleteUserImage,
 } from "../../controller/userController.js";
 
 import cloudinary from "../../Frameworks/utils/Cloudinary.js";
@@ -34,6 +35,7 @@ import {
   blockAUser,
   verifySubscription,
   searchOrFilterUsers,
+  deleteImage,
 } from "../../usecases/UserInteractor.js";
 
 import { SendPhoneOtp, VerifyPhoneOtp } from "../../usecases/OtpInteractor.js";
@@ -82,7 +84,24 @@ router.post(
 
 router.post(
   "/createAccount",
-  userDetails(createNewUser, createJwtToken, userModel, createUserToken)
+  upload.fields([
+    { name: "profilePic", maxCount: 1 },
+    { name: "coverPic", maxCount: 1 },
+    { name: "image0", maxCount: 1 },
+    { name: "image1", maxCount: 1 },
+    { name: "image2", maxCount: 1 },
+  ]),
+  userDetails(
+    createNewUser,
+    createJwtToken,
+    userModel,
+    createUserToken,
+    cloudinary,
+    uploadProfilePic,
+    uploadCoverPic,
+    image,
+    removeFile
+  )
 );
 
 router.post(
@@ -121,7 +140,7 @@ router.get("/matches", matchedUsers(getMatchedUsers, matchModel, userModel));
 router.post("/searchFilter", searchFilterUsers(searchOrFilterUsers, userModel));
 router.put("/likeUser", likeUser(userModel, matchModel, likeUserAndMatch));
 router.put("/dislikeUser", dislikeUser(userModel, dislikeAUser, matchModel));
-
+router.patch("/deleteImage", deleteUserImage(userModel, deleteImage));
 router.get("/allLikedUsers", getAllLikedUsers(showAllLikedUsers, userModel));
 
 router.post("/paymentVerified", verifyPayment(verifySubscription, userModel));

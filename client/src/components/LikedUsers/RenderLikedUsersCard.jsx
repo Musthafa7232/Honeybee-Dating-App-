@@ -14,7 +14,7 @@ function RenderLikedUsersCard({
   return (
     <>
       <Grid item xs={2} sm={0}></Grid>
-      <Grid item xs={8.2} lg={12} sx={{ my: 2 }}>
+      <Grid item sm={8.2} lg={12} sx={{ my: 2 }}>
         <Card
           className="CardItems"
           variant="outlined"

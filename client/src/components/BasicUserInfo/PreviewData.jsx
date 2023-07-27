@@ -1,46 +1,67 @@
 import {
-  Box,
-  Card,
-  CardContent,
-  Grid,
-  IconButton,
-  Skeleton,
-  Typography,
-} from "@mui/material";
-import Chip from "@mui/joy/Chip";
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import React, { useEffect } from "react";
-import { useState } from "react";
-import EditIcon from "@mui/icons-material/Edit";
-import WineBar from "@mui/icons-material/WineBar";
-import SmokingRoomsIcon from "@mui/icons-material/SmokingRooms";
-import GenderIcon from "../icons/GenderIcon";
-import RelationIcon from "../icons/RelationIcon";
-import ReligionIcon from "../icons/ReligionIcon";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-function UserProfile({ edit, setEdit }) {
-  const user = useSelector((state) => state.user.user);
-  const [isLoading, setLoading] = useState(true);
-  const navigate=useNavigate()
-  useEffect(() => {
-    if (user) {
-      setLoading(false);
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Grid,
+    IconButton,
+    Skeleton,
+    Typography,
+  } from "@mui/material";
+  import Chip from "@mui/joy/Chip";
+  import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+  import React, { useEffect } from "react";
+  import { useState } from "react";
+  import EditIcon from "@mui/icons-material/Edit";
+  import WineBar from "@mui/icons-material/WineBar";
+  import SmokingRoomsIcon from "@mui/icons-material/SmokingRooms";
+  import GenderIcon from "../icons/GenderIcon";
+  import RelationIcon from "../icons/RelationIcon";
+  import ReligionIcon from "../icons/ReligionIcon";
+ 
+function PreviewData({user,setStep,handleSubmit, coverPicREF,
+    profilePicREF,
+    image0,
+    image1,
+    image2,}) {
+useEffect(()=>{
+console.log( coverPicREF,
+    profilePicREF,
+    image0,
+    image1,
+    image2,);
+},[])
+    const handleAllSet=()=>{
+handleSubmit()
     }
-  }, [user]);
-
   return (
-    <>
+    <CardContent>
+    
       <Grid
         container
         justifyContent="center"
         alignItems="center"
-        sx={{ mt: {xs:8 }}}
       >
+            <Grid item xs={12}>
+                  <Typography
+                    sx={{
+                      my: { xs: 3, sm: 3, lg: 0 },
+                      fontFamily: "Roboto",
+                      fontWeight: 700,
+                      color: "inherit",
+                      textDecoration: "none",
+                    }}
+                  >
+                   <IconButton sx={{fontWeight:'bold'}}  onClick={()=>setStep(1)}>
+                  <ArrowBackIosIcon /> 
+                </IconButton>  Account Preview
+                  </Typography>
+                </Grid>
         <Grid item xs={12} sm={10} md={8} lg={6} xl={10}>
           <Card
             variant="outlined"
             sx={{
+                mt:2,
               borderRadius: 6,
               backdropFilter: "brightness(0.9) blur(15px)",
               backgroundColor: "rgba(255, 255, 255, 0.5)",
@@ -56,14 +77,7 @@ function UserProfile({ edit, setEdit }) {
                 backgroundRepeat: "no-repeat",
               }}
               >
-              <Box display={"flex"} sx={{height:'4rem', backdropFilter: "brightness(-5)",}} alignItems={"center"} component='nav' color="Menu">
-                <IconButton sx={{ml:2,fontWeight:'bold'}}  onClick={()=>navigate('/')}>
-                  <ArrowBackIosIcon /> 
-                </IconButton>
-                    <Typography color="black" marginLeft={2} fontFamily={"initial"} fontWeight={'bold'} variant="h5" >
-              Profile
-              </Typography>
-              </Box>
+             
               </Box>
               <Box
                 sx={{
@@ -97,24 +111,22 @@ function UserProfile({ edit, setEdit }) {
                       fontWeight: "bold",
                     }}
                   >
-                    {isLoading ? <Skeleton width="15rem" /> : user.fullName}{" "}
-                    {isLoading ? (
-                      <Skeleton width="5rem" />
-                    ) : (
+                    { user.fullName}
+                   
                       <Typography variant="caption">{user.age}</Typography>
-                    )}
+                   
                   </Typography>
                   <Typography
                     sx={{ fontSize: { xs: 7,sm:13, lg: 14 } }}
                     variant="subtitle2"
                   >
-                    {isLoading ? <Skeleton width="13rem" /> : user.bio}
+                    { user.bio}
                   </Typography>
                   <Typography
                     sx={{ fontSize: { xs: 7,sm:13, lg: 14 } }}
                     variant="subtitle2"
                   >
-                    {isLoading ? <Skeleton width="13rem" /> : user.location}
+                    { user.location}
                   </Typography>
                   <Grid
                     item
@@ -132,7 +144,7 @@ function UserProfile({ edit, setEdit }) {
                       size="lg"
                       variant="soft"
                     >
-                      {isLoading ? <Skeleton /> : user.gender}
+                      { user.gender}
                     </Chip>
                     <Chip
                       startDecorator={<ReligionIcon />}
@@ -140,7 +152,7 @@ function UserProfile({ edit, setEdit }) {
                       size="lg"
                       variant="soft"
                     >
-                      {isLoading ? <Skeleton /> : user.faith}
+                      { user.faith}
                     </Chip>
                     <Chip
                       startDecorator={<RelationIcon />}
@@ -148,7 +160,7 @@ function UserProfile({ edit, setEdit }) {
                       size="lg"
                       variant="soft"
                     >
-                      {isLoading ? <Skeleton /> : user.realationshipStatus}
+                      { user.realationshipStatus}
                     </Chip>
                     <Chip
                       startDecorator={<SmokingRoomsIcon />}
@@ -156,7 +168,7 @@ function UserProfile({ edit, setEdit }) {
                       size="lg"
                       variant="soft"
                     >
-                      {isLoading ? <Skeleton /> : user.smoking}
+                      { user.smoking}
                     </Chip>
                     <Chip
                       startDecorator={<WineBar />}
@@ -164,25 +176,13 @@ function UserProfile({ edit, setEdit }) {
                       size="lg"
                       variant="soft"
                     >
-                      {isLoading ? (
-                        <Skeleton />
-                      ) : user.drinking ? (
-                        user.drinking
-                      ) : (
-                        ""
-                      )}
+                    
+                    { user.drinking }
+                     
                     </Chip>
                   </Grid>
                 </Grid>
-                <Grid item xs sx={{ mt: { xs: 14, lg: 9, xl: 0 } }}>
-                  <IconButton
-                    onClick={() => setEdit(true)}
-                    aria-label="edit"
-                    size="large"
-                  >
-                    <EditIcon sx={{ color: "black" }} fontSize="inherit" />
-                  </IconButton>
-                </Grid>
+              
               
                
                 <Grid
@@ -196,15 +196,14 @@ function UserProfile({ edit, setEdit }) {
                     alignItems: {lg: "end",sm:'center'},
                   }}
                 >
-                  {user?.images.map((image,index) => {
-                    return (
+                  {user.images0&&(
                       <Card
                         key={index}
                         sx={{
                           m: 2,
                           width: { xs: 300, sm: 400, lg: 250 },
                           height: { xs: 250, sm: 400, lg: 250 },
-                          backgroundImage: `url(${image})`,
+                          backgroundImage: `url(${user.images0})`,
                           bgcolor: "lightgray",
                           backgroundSize: "cover",
                           backgroundRepeat: "no-repeat",
@@ -214,16 +213,70 @@ function UserProfile({ edit, setEdit }) {
                           alignItems: "center",
                         }}
                       />
-                    );
-                  })}
+                  )}
+                
+                  {user.images1&&(
+                      <Card
+                        key={index}
+                        sx={{
+                          m: 2,
+                          width: { xs: 300, sm: 400, lg: 250 },
+                          height: { xs: 250, sm: 400, lg: 250 },
+                          backgroundImage: `url(${user.images1})`,
+                          bgcolor: "lightgray",
+                          backgroundSize: "cover",
+                          backgroundRepeat: "no-repeat",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignContent: "center",
+                          alignItems: "center",
+                        }}
+                      />
+                  )}
+                
+                  {user.images2&&(
+                      <Card
+                        key={index}
+                        sx={{
+                          m: 2,
+                          width: { xs: 300, sm: 400, lg: 250 },
+                          height: { xs: 250, sm: 400, lg: 250 },
+                          backgroundImage: `url(${user.images2})`,
+                          bgcolor: "lightgray",
+                          backgroundSize: "cover",
+                          backgroundRepeat: "no-repeat",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignContent: "center",
+                          alignItems: "center",
+                        }}
+                      />
+                  )}
+                
+                  
                 </Grid>
               </Grid>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
-    </>
-  );
+      <Grid sx={{
+                 display: "flex",
+                 justifyContent:'center',
+                 mt:3
+            }}>
+                <Button
+                  size="large"
+                  color="warning"
+                  variant="outlined"
+                
+                  onClick={handleAllSet}
+                >
+                   All set
+                </Button> 
+            </Grid>
+    </CardContent>
+  )
 }
 
-export default UserProfile;
+export default PreviewData

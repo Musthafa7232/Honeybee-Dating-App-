@@ -6,14 +6,27 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { SetUserData } from "../../features/users/UserReducer";
 import RenderContentData from "./RenderContentData";
-import { DiscoverUsersApi, disLikeUserApi, likeUserApi } from "../../services/api";
+import {
+  DiscoverUsersApi,
+  disLikeUserApi,
+  likeUserApi,
+} from "../../services/api";
+import BoilerPlateCode from "../BoilerPlateCode";
 export default function DiscoverSide() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const [users, setusers] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [shuffledUsers, setShuffledUsers] = useState([]);
-
+  const [tost, settost] = useState({});
+  const initial={
+    open:false,
+    success:false,
+    data:''
+  }
+  useEffect(()=>{
+settost(initial)
+  },[])
   useEffect(() => {
     if (user) {
       setTimeout(() => {
@@ -23,11 +36,12 @@ export default function DiscoverSide() {
   }, [user]);
 
   useEffect(() => {
-  DiscoverUsersApi()
+    DiscoverUsersApi()
       .then((res) => {
         setusers(res.data);
-      }).catch((err)=>{
-        window.location.reload()
+      })
+      .catch((err) => {
+        window.location.reload();
       });
   }, [isLoading]);
 
@@ -69,25 +83,58 @@ export default function DiscoverSide() {
     const data = {
       User: id,
     };
-    try {
-      const response =await likeUserApi(data)
+    try { 
+      settost(initial)
+      const response = await likeUserApi(data);
+      settost({
+      data:'Liked user successfully',
+      success:true,
+      open:true
+     })
+    
       dispatch(SetUserData(response.data));
+   
     } catch (err) {
+      settost({
+        data:'Falied to like user ',
+        success:false,
+        open:true
+       })
       console.log(err);
     }
   };
+
+ 
 
   const dislikeHandler = async (id) => {
     const data = {
       User: id,
     };
     try {
-      const response = await disLikeUserApi(data)
+      settost(initial)
+      const response = await disLikeUserApi(data);
+      settost({
+        data:'Disliked user successfully',
+        success:true,
+        open:true
+       })
+       
       dispatch(SetUserData(response.data));
     } catch (err) {
+      settost({
+        data:'Falied to dislike user ',
+        success:false,
+        open:true
+       })
       console.log(err);
     }
   };
+useEffect(()=>{
+console.log(tost);
+},[tost])
+  const setToastClosed=()=>{
+    settost(initial)
+  }
 
   return (
     <>
@@ -97,7 +144,7 @@ export default function DiscoverSide() {
           xs={12}
           lg={11}
           container
-          sx={{  position: "relative",minHeight:{xs:'85.7vh',lg:0} }}
+          sx={{ position: "relative", minHeight: { xs: "85.7vh", lg: 0 } }}
         >
           <RenderContentData
             user={user}
@@ -106,6 +153,7 @@ export default function DiscoverSide() {
             likeHandler={likeHandler}
             dislikeHandler={dislikeHandler}
           />
+          <BoilerPlateCode success={tost.success} open={tost.open} data={tost.data} setToastClosed={setToastClosed} />
         </Grid>
       </Grid>
     </>

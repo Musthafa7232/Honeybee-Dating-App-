@@ -1,7 +1,63 @@
 import path from "path";
-export const createNewUser = async (userData, userModel) => {
+export const createNewUser = async (userData, userModel,  cloudinary,
+  uploadProfilePic,
+  uploadCoverPic,
+  image,
+  removeFile,req) => {
   try {
+    console.log(req.hostname);
     const user = new userModel(userData);
+    
+    if (req?.files?.profilePic) {
+      
+      const result = await uploadProfilePic(
+        req.files.profilePic[0].path,
+        cloudinary,
+        removeFile
+      );
+      user.profilePic = result;
+    }
+
+    if (req?.files?.coverPic) {
+      const result = await uploadCoverPic(
+        req.files.coverPic[0].path,
+        cloudinary,
+        removeFile
+      );
+      user.coverPic = result;
+    }
+
+   if (req?.files?.image0) {
+    console.log('hi');
+      const result = await image(
+        req.files.image0[0].path,
+        cloudinary,
+        removeFile
+      );
+      user.images.push(result) 
+    }
+
+   
+
+    if (req?.files?.image1) {
+      console.log('hlo');
+      const result = await image(
+        req.files.image1[0].path,
+        cloudinary,
+        removeFile
+      );
+      user.images.push(result) 
+    }
+
+    if (req?.files?.image2) {
+      console.log('bye');
+      const result = await image(
+        req.files.image2[0].path,
+        cloudinary,
+        removeFile
+      );
+      user.images.push(result) 
+    }
     await user.save();
     return user;
   } catch (error) {
@@ -80,6 +136,7 @@ export const UpdateUser = async (
       (user.realationshipStatus = realationshipStatus);
 
     if (req?.files?.profilePic) {
+      
       const result = await uploadProfilePic(
         req.files.profilePic[0].path,
         cloudinary,
@@ -97,7 +154,8 @@ export const UpdateUser = async (
       user.coverPic = result;
     }
 
-    if (req?.files?.image0) {
+   if (req?.files?.image0) {
+    console.log('hi');
       const result = await image(
         req.files.image0[0].path,
         cloudinary,
@@ -106,9 +164,12 @@ export const UpdateUser = async (
       user.images[0] = result;
     }
 
+   
+
     if (req?.files?.image1) {
+      console.log('hlo');
       const result = await image(
-        req.files.image0[1].path,
+        req.files.image1[0].path,
         cloudinary,
         removeFile
       );
@@ -116,14 +177,16 @@ export const UpdateUser = async (
     }
 
     if (req?.files?.image2) {
+      console.log('bye');
       const result = await image(
-        req.files.image0[2].path,
+        req.files.image2[0].path,
         cloudinary,
         removeFile
       );
-      user.images[2]  = result;
+      user.images[2] = result;
     }
     user.save();
+    console.log(user, "from usecase");
     return user;
   } catch (error) {
     console.log(error);
@@ -368,5 +431,18 @@ export const searchOrFilterUsers = async (data, userModel) => {
     return results;
   } catch (error) {
     throw new Error("Error while searching users: " + error.message);
+  }
+};
+
+export const deleteImage = async (path, id, userModel) => {
+  try {
+    
+   return  await userModel.findByIdAndUpdate(id, 
+      { $pull:
+           { images:path}
+              })
+
+  } catch (err) {
+    console.log(err);
   }
 };

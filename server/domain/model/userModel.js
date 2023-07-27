@@ -59,7 +59,6 @@ const userSchema = new mongoose.Schema(
     },
     HoneyVipType: {
       type: [String],
-      enum: ["gold", "platinum"],
     },
     isVerified: {
       type: Boolean,
