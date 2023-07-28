@@ -26,7 +26,9 @@ import ReligionIcon from "../icons/ReligionIcon";
 import React from "react";
 import { deleteImageApi, fetchLocationApi } from "../../services/api";
 import CloseIcon from "@mui/icons-material/Close";
+import { validateDate } from "@mui/x-date-pickers/internals";
 function EditProfileCard({
+  validateInputs,
   userData,
   setUserData,
   error,
@@ -83,9 +85,11 @@ function EditProfileCard({
   };
 
 const handleClick=()=>{
-  if (!loader) {
+  if(validateInputs()){
+      if (!loader) {
     setLoader(true);
     handleSubmit()
+  }
   }
 }
 
@@ -285,12 +289,16 @@ const handleDeleteImage=async(path)=>{
               label="Your Bio"
               multiline
               fullWidth
+              {...(error.bio ? { error: true } : {})}
               rows={4}
               value={userData.bio}
               onChange={(e) =>
                 setUserData((prev) => ({ ...prev, bio: e.target.value }))
               }
             />
+              {error.bio && (
+              <Typography sx={{ color: "red" }}>{error.bio}</Typography>
+            )}
           </Grid>
           <Grid
             item

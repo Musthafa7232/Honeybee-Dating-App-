@@ -11,12 +11,21 @@ import SelectUserChat from "./SelectUserChat";
 import { host } from "../../constants/Constants";
 import {socket } from '../../Socket'
 import { ReadMsgsApi, ShowMatchesApi } from "../../services/api";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import utc from "dayjs/plugin/utc";
+
+// Extend Day.js with the necessary plugins
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+
 function ChatContainer() {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.user);
     const [contacts, setContacts] = useState([]);
     const [currentChat, setCurrentChat] = useState(undefined);
     const [isEmpty,setIsEmpty]=useState(false)
+    const onlineUsers = useSelector((state) => state.onlineUsers.onlineUsers);
       useEffect(() => {
         if (user) {
           ShowMatchesApi().then((res) => {
@@ -28,6 +37,8 @@ function ChatContainer() {
             });
         }
       }, [user]);
+
+      console.log(user);
 
       const handleChatChange = (chat,id) => {
         setCurrentChat(chat);
@@ -87,9 +98,9 @@ function ChatContainer() {
              ):(
     <CardContent>
         {currentChat === undefined ? (
- <SelectUserChat contacts={contacts} setContacts={setContacts} changeChat={handleChatChange} user={user}/>
+ <SelectUserChat contacts={contacts} setContacts={setContacts} changeChat={handleChatChange} user={user} onlineUsers={onlineUsers}/>
       ) : (
-        <ChatCard currentChat={currentChat} setCurrentChat={setCurrentChat} socket={socket} />
+        <ChatCard currentChat={currentChat} setCurrentChat={setCurrentChat} socket={socket} onlineUsers={onlineUsers}/>
       )}
     </CardContent>
  )}

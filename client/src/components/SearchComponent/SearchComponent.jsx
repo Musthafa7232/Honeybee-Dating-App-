@@ -165,13 +165,33 @@ if(!userData?.HoneyVipType.includes("platinum")){
             sx={{
               width: "100%",
               minHeight: "70vh",
+              maxHeight:'70vh',
               borderRadius: 6,
               backdropFilter: "brightness(0.9) blur(15px)",
               backgroundColor: "rgba(255, 255, 255, 0.7)",
+              
             }}
           >
-            <Grid container>
-              <Grid sx={{ mx: 6, mt: 3 }} item xs={12}>
+            <Grid container sx={{
+                      height: "100%",
+                      overflowY: "scroll",
+                      "&::-webkit-scrollbar": {
+                        width: "7px",
+                      },
+                      "&::-webkit-scrollbar-track": {
+                        background: "transparent",
+                      },
+                      "&::-webkit-scrollbar-thumb": {
+                        backgroundColor: "darkgrey",
+                        borderRadius: "2rem",
+                      },
+                      "&::-webkit-scrollbar-thumb:hover": {
+                        backgroundColor: "grey",
+                        borderRadius: "2rem",
+                      },
+                    
+            }} >
+              <Grid sx={{ mx: 6, mt: 3, }} item xs={12}>
                 <Grid
                   sx={{
                     display: "flex",
@@ -215,6 +235,8 @@ if(!userData?.HoneyVipType.includes("platinum")){
                     <TuneIcon />
                   </Button>
                 </Grid>
+                <Grid item sx={{}}>
+
                 <List component="nav">
                   <Box>
                     {users.length > 0 &&
@@ -284,6 +306,7 @@ if(!userData?.HoneyVipType.includes("platinum")){
                     <Divider />
                   </Box>
                 </List>
+                </Grid>
               </Grid>
             </Grid>
           </Card>

@@ -38,12 +38,12 @@ export default function KeepMountedModal({user,setUser,open,setOpen,isLoading}) 
               <Box
                 sx={{
                   objectFit: "cover",
-                  width: 150,
-                  height: 150,
-                  borderRadius: "5rem",
+                  width: {xs:150,lg:200},
+                  height: {xs:150,lg:200},
+                  borderRadius: "10rem",
                   position: "absolute",
                   top: "100%",
-                  left: { xs: "10%", lg: "23%" },
+                  left: { xs: "0%",sm:'26%', lg: "25%" },
                   transform: "translate(50%, -50%)",
                 }}
                 loading="lazy"
@@ -52,40 +52,32 @@ export default function KeepMountedModal({user,setUser,open,setOpen,isLoading}) 
               />
             </Box>
               <Grid container>
-                <Grid item xs={2}/>
-                <Grid item xs={12} lg={8} sx={{ mt: { xs: 10, lg: 9, xl: 9 } }}>
-                  <Typography
+                <Grid item xs={3} lg={3}/>
+                <Grid item xs={8} lg={5} sx={{ mt: { xs: 10, lg: 15, xl: 9 } }}>
+                <Typography
                     sx={{
-                      textAlign: { xs: "center", lg: "" },
+                      mt:{lg:5},
                       fontFamily: "sans-serif",
-                      fontSize: { lg: "2rem" },
+                      fontSize: { sm: "1.5rem",md:'2rem' },
                       fontWeight: "bold",
                     }}
                   >
-                    {isLoading ? <Skeleton width="15rem" /> : user?.fullName}
-                    {isLoading ? (
-                      <Skeleton width="5rem" />
-                    ) : (
+                    { user?.fullName}
+                   
                       <Typography variant="caption">{user?.age}</Typography>
-                    )}
+                   
                   </Typography>
                   <Typography
-                    sx={{
-                      textAlign: { xs: "center", lg: "" },
-                      fontSize: { xs: 7, lg: 14 },
-                    }}
+                    sx={{ fontSize: { xs: 7,sm:13, lg: 14 } }}
                     variant="subtitle2"
                   >
-                    {isLoading ? <Skeleton width="13rem" /> : user?.bio}
+                    { user?.bio}
                   </Typography>
                   <Typography
-                    sx={{
-                      textAlign: { xs: "center", lg: "" },
-                      fontSize: { xs: 7, lg: 14 },
-                    }}
+                    sx={{ fontSize: { xs: 7,sm:13, lg: 14 } }}
                     variant="subtitle2"
                   >
-                    {isLoading ? <Skeleton width="13rem" /> : user?.location}
+                    { user?.location}
                   </Typography>
                   <Grid
                     item

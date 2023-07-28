@@ -7,8 +7,11 @@ import { SetUserData } from "../../features/users/UserReducer";
 import ModalEditUser from "./ModalEditUser";
 import EditProfileCard from "./EditProfileCard";
 import { editUserDataApi } from "../../services/api";
+
+import BoilerPlateCode from "../BoilerPlateCode";
 function EditProfile({ edit, setEdit }) {
   const dispatch = useDispatch();
+  const [errorToast, setErrorToast] = useState({});
   const user = useSelector((state) => state.user.user);
   const [isLoading, setLoading] = useState(true);
   const [option, setOption] = useState(null);
@@ -135,6 +138,131 @@ function EditProfile({ edit, setEdit }) {
     console.log(image0.current.files);
   }, [image0, image1, image2]);
 
+  const validateInputs = () => {
+    console.log('inHere to validate',error);
+    const regexEmail =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    // setUserData((prev) => ({
+    //   ...prev,
+    //   firstData: true,
+    // }));
+    if (!userData.fullName) {
+      setError((prevState) => ({
+        ...prevState,
+        fullName: "*FullName is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, fullName: null }));
+
+    if (!userData.email) {
+      setError((prevState) => ({ ...prevState, email: "*Email is required" }));
+    } else if (!regexEmail.test(userData.email)) {
+      setError((prevState) => ({
+        ...prevState,
+        email: "*Enter a valid email",
+      }));
+    } else setError((prevState) => ({ ...prevState, email: null }));
+
+    if (!userData.birthday) {
+      setError((prevState) => ({
+        ...prevState,
+        birthday: "*Birthdate is required",
+      }));
+    } 
+     if (userData.birthday&&userData.age < 18) {
+      setError((prevState) => ({ ...prevState, birthday: "*Should be  18+" }));
+    } else setError((prevState) => ({ ...prevState, birthday: null }));
+
+    if (!userData.gender) {
+      setError((prevState) => ({
+        ...prevState,
+        gender: "*Gender is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, gender: null }));
+
+    if (!userData.Preference) {
+      setError((prevState) => ({
+        ...prevState,
+        Preference: "*Preference is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, Preference: null }));
+    if (!userData.faith) {
+      setError((prevState) => ({
+        ...prevState,
+        faith: "*this field is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, faith: null }));
+    if (!userData.realationshipStatus) {
+      setError((prevState) => ({
+        ...prevState,
+        realationshipStatus: "*this field is required",
+      }));
+    } else
+      setError((prevState) => ({ ...prevState, realationshipStatus: null }));
+    if (!userData.smoking) {
+      setError((prevState) => ({
+        ...prevState,
+        smoking: "*this field is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, smoking: null }));
+    if (!userData.drinking) {
+      setError((prevState) => ({
+        ...prevState,
+        drinking: "*this field is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, drinking: null }));
+    if (!userData.bio) {
+      setError((prevState) => ({
+        ...prevState,
+        bio: "*Bio is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, bio: null }));
+
+    if (!userData.location) {
+      setError((prevState) => ({
+        ...prevState,
+        location: "*Location is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, location: null })); 
+    if (!userData.profilePic) {
+      setError((prevState) => ({
+        ...prevState,
+        profilePic: "*Location is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, profilePic: null }));
+
+    if (!userData.coverPic) {
+      setError((prevState) => ({
+        ...prevState,
+        profilePic: "*Location is required",
+      }));
+    } else setError((prevState) => ({ ...prevState, profilePic: null }));
+
+    if (
+      userData.fullName  &&
+      userData.email  &&
+      userData.birthday  &&
+      userData.age>18  &&
+      userData.gender  &&
+      userData.Preference  &&
+      userData.location  &&
+      userData.drinking && userData.realationshipStatus&&
+      userData.faith && userData.smoking&&userData.profilePic &&userData.coverPic
+    ) {
+      setError({});
+      return true;
+    }else{
+       setErrorToast({});
+      setErrorToast({
+        data: "Please check the form for errors.",
+        success: false,
+        open: true,
+    })
+
+    return false;
+    }
+  };
+
+
   return (
     <>
       <Grid
@@ -143,8 +271,15 @@ function EditProfile({ edit, setEdit }) {
         alignItems="center"
         sx={{ my: { lg: 5 }, minHeight: "100vh" }}
       >
+         <BoilerPlateCode
+        success={errorToast.success}
+        open={errorToast.open}
+        data={errorToast.data}
+        setToastClosed={() => setErrorToast({})}
+      />
         <Grid item xs={12} sm={10} md={8} lg={6} xl={10}>
           <EditProfileCard
+          validateInputs={validateInputs}
             userData={userData}
             setUserData={setUserData}
             error={error}

@@ -5,7 +5,7 @@ import { addNewMsg, getLatestMessage } from "../usecases/ChatInteractor.js";
 import { isUserMatched } from "../usecases/MatchesInteractor.js";
 const io = new Server({
   cors: {
-    origin: "https://honeyhub.zodiacwatches.shop",
+    origin: "http://localhost:5173",
   },
   pingTimeout: 60000,
 });
@@ -28,7 +28,6 @@ io.on("connection", (Socket) => {
   });
 
   Socket.on("getOnlineUsers", async (user) => {
-    console.log(user,'from top');
     let users = [];
     for (const [key, value] of onlineUsers.entries()) {
       if (key != user) {

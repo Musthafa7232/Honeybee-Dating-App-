@@ -64,7 +64,7 @@ function RenderLikedUsersCard({
                 >
                   <Card1
                     sx={{
-                      width: { xs: 300, sm: 450, md: 250, lg: 250 },
+                      width: { xs: '95%', sm: 450, md: 300, lg: 250 },
                       height: { xs: 500, sm: 500, md: 250, lg: 250 },
                     }}
                   >

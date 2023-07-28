@@ -352,7 +352,7 @@ export const showAllLikedUsers = async (id, userModel) => {
 
 export const verifySubscription = async (userModel, pack, user) => {
   try {
-    let updatedUser;
+    console.log('hi');
     const isuserPresent = await userModel.find({
       _id: user,
       HoneyVipType: {
@@ -361,15 +361,15 @@ export const verifySubscription = async (userModel, pack, user) => {
     });
     console.log(isuserPresent);
     if (!isuserPresent.length > 0) {
-      updatedUser = await userModel.findByIdAndUpdate(user, {
+          await userModel.findByIdAndUpdate(user, {
         $push: {
           HoneyVipType: pack,
         },
       });
-    } else {
-      updatedUser = isuserPresent;
+         const userData = await userModel.findById(user);
+    return userData
     }
-    return updatedUser;
+ 
   } catch (error) {
     console.log(error, "");
   }

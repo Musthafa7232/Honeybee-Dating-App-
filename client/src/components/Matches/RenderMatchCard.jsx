@@ -20,7 +20,7 @@ function RenderMatchCard({ matches, isLoading }) {
      <Grid item xs={2} sm={0}>
 
 </Grid>
-<Grid item sm={8.2} lg={12} sx={{ my: 2 }}>
+<Grid item xs={12} sm={8.2} md={12} lg={12} sx={{ my: 2 }}>
         <Card
           className="CardItems"
           variant="outlined"
@@ -70,8 +70,8 @@ function RenderMatchCard({ matches, isLoading }) {
                 >
                   <Card1
                     sx={{
-                      width: { xs: 300, sm: 450,md:250, lg: 250 },
-                      height: { xs: 500, sm: 500,md:250, lg: 250 },
+                      width: { xs: '95%', sm: 450, md: 300, lg: 250 },
+                      height: { xs: 500, sm: 500, md: 250, lg: 250 },
                     }}
                   >
                     <CardCover>

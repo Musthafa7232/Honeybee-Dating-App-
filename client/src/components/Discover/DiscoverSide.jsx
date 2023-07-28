@@ -144,7 +144,7 @@ console.log(tost);
           xs={12}
           lg={11}
           container
-          sx={{ position: "relative", minHeight: { xs: "85.7vh", lg: 0 } }}
+          sx={{ position: "relative", minHeight: { xs: "90vh", lg: '9' } }}
         >
           <RenderContentData
             user={user}

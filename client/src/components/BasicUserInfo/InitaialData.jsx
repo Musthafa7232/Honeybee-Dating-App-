@@ -71,6 +71,7 @@ export default function InitialData() {
   }, []);
 
   const validateInputs = () => {
+    console.log('inHere to validate',error);
     const regexEmail =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     // setUserData((prev) => ({
@@ -98,7 +99,8 @@ export default function InitialData() {
         ...prevState,
         birthday: "*Birthdate is required",
       }));
-    } else if (userData.age < 18) {
+    } 
+     if (userData.birthday&&userData.age < 18) {
       setError((prevState) => ({ ...prevState, birthday: "*Should be  18+" }));
     } else setError((prevState) => ({ ...prevState, birthday: null }));
 
@@ -152,29 +154,33 @@ export default function InitialData() {
         ...prevState,
         location: "*Location is required",
       }));
-    } else setError((prevState) => ({ ...prevState, location: null }));
-    if (error) {
-      setErrorToast({});
-      setErrorToast({
-        data: "Please check the form for errors.",
-        success: false,
-        open: true,
-      }); // Prevent form submission
-    }
+    } else setError((prevState) => ({ ...prevState, location: null })); 
+    
     if (
       userData.fullName  &&
       userData.email  &&
       userData.birthday  &&
+      userData.age>18  &&
       userData.gender  &&
       userData.Preference  &&
       userData.location  &&
       userData.drinking && userData.realationshipStatus&&
       userData.faith && userData.smoking
     ) {
-      setError(false);
+      setError({});
       return true;
-    }
+    }else{
+       setErrorToast({});
+      setErrorToast({
+        data: "Please check the form for errors.",
+        success: false,
+        open: true,
+    })
+
     return false;
+    }
+   
+   
   };
 
   const validateImageInput = () => {

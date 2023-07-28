@@ -21,13 +21,24 @@ import { ReadMsgsApi, addNewMSgApi, getAllmsgsApi } from "../../services/api";
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import VIdeoCallModal from "../ErrorModals/VIdeoCallModal";
-function ChatCard({ currentChat, setCurrentChat, socket }) {
+function ChatCard({ currentChat, setCurrentChat, socket,onlineUsers }) {
   const user = useSelector((state) => state.user.user);
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [typing, setTyping] = useState(null);
   const [modal,setModal]=useState(false)
+  
+  useEffect(() => {
+    console.log(onlineUsers);
+    if (onlineUsers.length > 0) {
+      if (onlineUsers.includes(currentChat._id)) {
+  setCurrentChat((prev)=>({...prev,isOnline:true}))
+      }else{
+        setCurrentChat((prev)=>({...prev,isOnline:false}))  
+      }
+    }
+  }, [onlineUsers]);
 
   const handleClose=()=>{
     setModal(false)
@@ -234,7 +245,7 @@ function ChatCard({ currentChat, setCurrentChat, socket }) {
           borderBottom: "solid 1px #DFDFDF",
         }}
       >
-        <Grid item xs={0.5} sx={{mr:1}}>
+        <Grid item xs={1} sm={0.8} md={0.5} lg={0.5} sx={{mr:1}}>
           <Button color="inherit" onClick={() => setCurrentChat(undefined)}>
             <ArrowBackIcon />
           </Button>

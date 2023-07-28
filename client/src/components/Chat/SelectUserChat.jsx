@@ -19,51 +19,52 @@ import CloseIcon from "@mui/icons-material/Close";
 import { socket } from "../../Socket";
 import { getLastMsgsApi } from "../../services/api";
 import { useSelector } from "react-redux";
-import { styled } from '@mui/material/styles';
-import Badge from '@mui/material/Badge';
+import { styled } from "@mui/material/styles";
+import Badge from "@mui/material/Badge";
 import BlockedUsermodal from "../ErrorModals/BlockedUsermodal";
-function SelectUserChat({ contacts, setContacts, changeChat, user }) {
+import dayjs from "dayjs";
+function SelectUserChat({ contacts, setContacts, changeChat, user,onlineUsers }) {
   const [searchText, setSearchText] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [lastChatteduser, setLastChattedUser] = useState([]);
-  const onlineUsers = useSelector((state) => state.onlineUsers.onlineUsers);
   const [typing, setTyping] = useState({
     to: null,
     show: false,
   });
-  const [modalOpen,setModalOpen]=useState(false)
+  const [chattedUser, setChattedUsers] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
-    '& .MuiBadge-badge': {
-      backgroundColor: '#44b700',
-      color: '#44b700',
+    "& .MuiBadge-badge": {
+      backgroundColor: "#44b700",
+      color: "#44b700",
       boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-      '&::after': {
-        position: 'absolute',
+      "&::after": {
+        position: "absolute",
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
-        borderRadius: '50%',
-        animation: 'ripple 1.2s infinite ease-in-out',
-        border: '1px solid currentColor',
+        width: "100%",
+        height: "100%",
+        borderRadius: "50%",
+        animation: "ripple 1.2s infinite ease-in-out",
+        border: "1px solid currentColor",
         content: '""',
       },
     },
-    '@keyframes ripple': {
-      '0%': {
-        transform: 'scale(.8)',
+    "@keyframes ripple": {
+      "0%": {
+        transform: "scale(.8)",
         opacity: 1,
       },
-      '100%': {
-        transform: 'scale(2.4)',
+      "100%": {
+        transform: "scale(2.4)",
         opacity: 0,
       },
     },
   }));
 
   useEffect(() => {
-    if (onlineUsers.length>0) {
+    if (onlineUsers.length > 0) {
       setContacts((contacts) =>
         contacts.map((contact) => {
           if (onlineUsers.includes(contact._id)) {
@@ -86,8 +87,29 @@ function SelectUserChat({ contacts, setContacts, changeChat, user }) {
     };
     getLastMsgsApi(data).then((res) => setLastChattedUser(res.data));
   }, [contacts]);
+//FUTURE UPDATION FOR SHOWING TIME
 
+  // useEffect(() => {
+  //   const userData = lastChatteduser.map((user) => {
+  //     const messageTime = dayjs.utc(user.updatedAt);
 
+  //     const daysDiff = dayjs().diff(messageTime, "day");
+
+  //     const timeAgo = messageTime.fromNow();
+
+  //     let displayTime;
+  //     if (daysDiff >= 2) {
+  //       displayTime = messageTime.format("MMM DD, YYYY");
+  //     } else if (daysDiff === 1) {
+  //       displayTime = "Yesterday";
+  //     } else {
+  //       displayTime = timeAgo;
+  //     }
+
+  //     return { ...user, lastmessaged: displayTime };
+  //   });
+  //   setLastChattedUser(userData);
+  // }, []);
 
   useEffect(() => {
     if (socket) {
@@ -103,13 +125,20 @@ function SelectUserChat({ contacts, setContacts, changeChat, user }) {
   useEffect(() => {
     if (socket) {
       socket.on("new-msg", (data) => {
+          console.log(data);
         setLastChattedUser((prev) => {
+          let found=false
           const updatedUsers = prev.map((user) => {
             if (user.conversationId === data[0].conversationId) {
+              found=true
               return { ...user, ...data[0] };
             }
             return user;
           });
+
+          if(!found){
+            updatedUsers.push(data[0])
+          }
           // Sort the updatedUsers array based on updatedAt property
           updatedUsers.sort(
             (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
@@ -120,24 +149,36 @@ function SelectUserChat({ contacts, setContacts, changeChat, user }) {
     }
   }, []);
 
-
+  useEffect(() => {
+    const sortUsers = contacts.map((user) => {
+      lastChatteduser.forEach((chat) => {
+        if (user.conversationId === chat.conversationId) {
+          user.updatedAt = chat.updatedAt;
+        }
+      });
+      return user;
+    });
+    let sort = sortUsers.sort(
+      (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+    );
+    setChattedUsers(sort);
+  }, [lastChatteduser]);
 
   const filteredContacts = Array.from(contacts).filter((contact) =>
     contact?.fullName.toLowerCase().includes(searchText.toLowerCase())
   );
 
   const changeCurrentChat = (index, contact, id) => {
-    if(user.blockedUsers.includes(contact._id)){
-setModalOpen(true)
-    }else{
+    if (user.blockedUsers.includes(contact._id)) {
+      setModalOpen(true);
+    } else {
       changeChat(contact, id);
     }
   };
 
-  const handleClose=()=>{
-    setModalOpen(false)
-  }
-  
+  const handleClose = () => {
+    setModalOpen(false);
+  };
 
   const handleInputChange = (e) => {
     setSearchText(e.target.value);
@@ -201,7 +242,7 @@ setModalOpen(true)
           </Paper>
         </Popper>
         <List component="nav">
-          {contacts.map((contact, index) => {
+          {chattedUser.map((contact, index) => {
             const filteredUser = lastChatteduser.filter(
               (result) => result.conversationId === contact.conversationId
             );
@@ -225,10 +266,7 @@ setModalOpen(true)
                         sx={{ mr: 2 }}
                         variant="dot"
                       >
-                        <Avatar
-                          alt={contact.name}
-                          src={contact.profilePic}
-                        />
+                        <Avatar alt={contact.name} src={contact.profilePic} />
                       </StyledBadge>
                     ) : (
                       <Avatar
@@ -238,7 +276,11 @@ setModalOpen(true)
                       />
                     )}
 
-                    <Grid>
+                    <Grid
+                      sx={{
+                        width: "100%",
+                      }}
+                    >
                       <Typography
                         {...(!result.read && result.sender === contact._id
                           ? { fontWeight: "bold" }
@@ -265,6 +307,22 @@ setModalOpen(true)
                         ) : (
                           `You:${result.message}`
                         )}
+                      </Typography>
+                    </Grid>
+                    <Grid
+                      sx={{
+                        width: "100%",
+                      }}
+                    >
+                      <Typography
+                        {...(!result.read && result.sender === contact._id
+                          ? { fontWeight: "bold" }
+                          : {})}
+                        sx={{
+                          textAlign: "end",
+                        }}
+                      >
+                        {result.lastmessaged}
                       </Typography>
                     </Grid>
                   </ListItem>

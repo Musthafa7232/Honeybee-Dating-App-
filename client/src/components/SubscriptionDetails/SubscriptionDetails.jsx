@@ -20,8 +20,10 @@ const SubscriptionDetails = () => {
   const [load, setLoad] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  console.log(user);
   useEffect(() => {
-    if (!load) {
+    if (!load && user) {
+      
       setLoad(true);
       if (query.get("pack")) {
         const pack = query.get("pack");
@@ -35,7 +37,7 @@ const SubscriptionDetails = () => {
           });
       }
     }
-  }, []);
+  }, [user]);
   const handleGold = async () => {
     try {
       const email = {
@@ -184,7 +186,7 @@ const SubscriptionDetails = () => {
                 alignContent: "center",
               }}
             >
-       {user?.HoneyVipType.includes('gold')?(
+       {user?.HoneyVipType?.includes('gold')?(
         <Button
                 variant="contained"
                 color="success"
