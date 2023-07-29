@@ -43,9 +43,22 @@ function App() {
     if (user) {
       socket.connect();
       socket.emit("add-user", user._id);
-      socket.emit("getOnlineUsers", user._id);
     }
   }, [user, pathname]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      socket.emit("getOnlineUsers", user._id);
+      console.log('Emitting socket event every second');
+    }, 5000); // 1000 milliseconds = 1 second
+
+    return () => {
+      // Clear the interval when the component unmounts to avoid memory leaks
+      clearInterval(interval);
+    };
+  }, [user]);
+
+
 
   useEffect(() => {
     setTimeout(() => {
@@ -66,6 +79,7 @@ function App() {
         setCall(data);
       });
       socket.on("onlineUsersList", (data) => {
+        console.log(data,'<=from app');
         dispatch(SetOnlineUserData(data));
       });
     }

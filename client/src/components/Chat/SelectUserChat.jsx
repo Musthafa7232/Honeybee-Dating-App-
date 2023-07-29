@@ -23,10 +23,17 @@ import { styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
 import BlockedUsermodal from "../ErrorModals/BlockedUsermodal";
 import dayjs from "dayjs";
-function SelectUserChat({ contacts, setContacts, changeChat, user,onlineUsers }) {
+function SelectUserChat({
+  contacts,
+  setContacts,
+  changeChat,
+  user,
+  onlineUsers,
+}) {
   const [searchText, setSearchText] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [lastChatteduser, setLastChattedUser] = useState([]);
+  const [lastMessages, setLastMessages] = useState([]);
   const [typing, setTyping] = useState({
     to: null,
     show: false,
@@ -64,18 +71,8 @@ function SelectUserChat({ contacts, setContacts, changeChat, user,onlineUsers })
   }));
 
   useEffect(() => {
-    if (onlineUsers.length > 0) {
-      setContacts((contacts) =>
-        contacts.map((contact) => {
-          if (onlineUsers.includes(contact._id)) {
-            return { ...contact, isOnline: true };
-          } else {
-            return { ...contact, isOnline: false };
-          }
-        })
-      );
-    }
-  }, [onlineUsers]);
+    console.log(chattedUser, "<=userStateChanged");
+  }, [chattedUser]);
 
   useEffect(() => {
     let conversationIds = [];
@@ -87,29 +84,29 @@ function SelectUserChat({ contacts, setContacts, changeChat, user,onlineUsers })
     };
     getLastMsgsApi(data).then((res) => setLastChattedUser(res.data));
   }, [contacts]);
-//FUTURE UPDATION FOR SHOWING TIME
+  //FUTURE UPDATION FOR SHOWING TIME
 
-  // useEffect(() => {
-  //   const userData = lastChatteduser.map((user) => {
-  //     const messageTime = dayjs.utc(user.updatedAt);
+  useEffect(() => {
+    const userData = lastChatteduser.map((user) => {
+      const messageTime = dayjs.utc(user.updatedAt);
 
-  //     const daysDiff = dayjs().diff(messageTime, "day");
+      const daysDiff = dayjs().diff(messageTime, "day");
 
-  //     const timeAgo = messageTime.fromNow();
+      const timeAgo = messageTime.fromNow();
 
-  //     let displayTime;
-  //     if (daysDiff >= 2) {
-  //       displayTime = messageTime.format("MMM DD, YYYY");
-  //     } else if (daysDiff === 1) {
-  //       displayTime = "Yesterday";
-  //     } else {
-  //       displayTime = timeAgo;
-  //     }
+      let displayTime;
+      if (daysDiff >= 2) {
+        displayTime = messageTime.format("MMM DD, YYYY");
+      } else if (daysDiff === 1) {
+        displayTime = "Yesterday";
+      } else {
+        displayTime = timeAgo;
+      }
 
-  //     return { ...user, lastmessaged: displayTime };
-  //   });
-  //   setLastChattedUser(userData);
-  // }, []);
+      return { ...user, lastmessaged: displayTime };
+    });
+    setLastMessages(userData);
+  }, [lastChatteduser]);
 
   useEffect(() => {
     if (socket) {
@@ -125,19 +122,19 @@ function SelectUserChat({ contacts, setContacts, changeChat, user,onlineUsers })
   useEffect(() => {
     if (socket) {
       socket.on("new-msg", (data) => {
-          console.log(data);
+        console.log(data);
         setLastChattedUser((prev) => {
-          let found=false
+          let found = false;
           const updatedUsers = prev.map((user) => {
             if (user.conversationId === data[0].conversationId) {
-              found=true
+              found = true;
               return { ...user, ...data[0] };
             }
             return user;
           });
 
-          if(!found){
-            updatedUsers.push(data[0])
+          if (!found) {
+            updatedUsers.push(data[0]);
           }
           // Sort the updatedUsers array based on updatedAt property
           updatedUsers.sort(
@@ -163,6 +160,28 @@ function SelectUserChat({ contacts, setContacts, changeChat, user,onlineUsers })
     );
     setChattedUsers(sort);
   }, [lastChatteduser]);
+
+  useEffect(() => {
+    if (onlineUsers.length > 0) {
+      if (chattedUser.length > 0) {
+        const newChattedUser = chattedUser.map((user) => {
+          return onlineUsers.includes(user._id)
+            ? { ...user, isOnline: true }
+            : { ...user, isOnline: false };
+        });
+        console.log(newChattedUser, "<=OnlineUsers");
+        setChattedUsers(newChattedUser);
+      }
+    }else{
+      if (chattedUser.length > 0) {
+        const newChattedUser = chattedUser.map((user) => {
+            return { ...user, isOnline: false };
+        });
+        console.log(newChattedUser, "<=offlineUsers");
+        setChattedUsers(newChattedUser);
+      }
+    }
+  }, [onlineUsers, lastChatteduser]);
 
   const filteredContacts = Array.from(contacts).filter((contact) =>
     contact?.fullName.toLowerCase().includes(searchText.toLowerCase())
@@ -242,96 +261,132 @@ function SelectUserChat({ contacts, setContacts, changeChat, user,onlineUsers })
           </Paper>
         </Popper>
         <List component="nav">
-          {chattedUser.map((contact, index) => {
-            const filteredUser = lastChatteduser.filter(
-              (result) => result.conversationId === contact.conversationId
-            );
-            if (filteredUser.length > 0) {
-              const result = filteredUser[0];
-              return (
-                <Box key={contact._id}>
-                  <ListItem
-                    button
-                    onClick={() =>
-                      changeCurrentChat(index, contact, result._id)
-                    }
-                  >
-                    {contact.isOnline ? (
-                      <StyledBadge
-                        overlap="circular"
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "right",
-                        }}
-                        sx={{ mr: 2 }}
-                        variant="dot"
-                      >
-                        <Avatar alt={contact.name} src={contact.profilePic} />
-                      </StyledBadge>
-                    ) : (
-                      <Avatar
-                        sx={{ mr: 2 }}
-                        alt={contact.name}
-                        src={contact.profilePic}
-                      />
-                    )}
-
-                    <Grid
-                      sx={{
-                        width: "100%",
-                      }}
-                    >
-                      <Typography
-                        {...(!result.read && result.sender === contact._id
-                          ? { fontWeight: "bold" }
-                          : {})}
-                      >
-                        {contact.fullName}
-                      </Typography>
-                      <Typography
-                        {...(!result.read && result.sender === contact._id
-                          ? { fontWeight: "bold" }
-                          : {})}
-                        variant="body2"
-                        color="textSecondary"
-                      >
-                        {typing.show && typing.to === contact._id ? (
-                          <Typography
-                            variant="caption"
-                            sx={{ color: "green", display: "block" }}
-                          >
-                            Typing...
-                          </Typography>
-                        ) : result.sender === contact._id ? (
-                          `${contact.fullName}:${result.message}`
-                        ) : (
-                          `You:${result.message}`
-                        )}
-                      </Typography>
-                    </Grid>
-                    <Grid
-                      sx={{
-                        width: "100%",
-                      }}
-                    >
-                      <Typography
-                        {...(!result.read && result.sender === contact._id
-                          ? { fontWeight: "bold" }
-                          : {})}
-                        sx={{
-                          textAlign: "end",
-                        }}
-                      >
-                        {result.lastmessaged}
-                      </Typography>
-                    </Grid>
-                  </ListItem>
-                  <Divider />
-                </Box>
+          {chattedUser.length > 0 ? (
+            chattedUser.map((contact, index) => {
+              const filteredUser = lastMessages.filter(
+                (result) => result.conversationId === contact.conversationId
               );
-            }
-            return null; // Return null if there's no matching lastChatteduser
-          })}
+              if (filteredUser.length > 0) {
+                const result = filteredUser[0];
+                return (
+                  <Box key={contact._id}>
+                    <ListItem
+                      button
+                      onClick={() =>
+                        changeCurrentChat(index, contact, result._id)
+                      }
+                    >
+                      {contact.isOnline ? (
+                        <StyledBadge
+                          overlap="circular"
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "right",
+                          }}
+                          sx={{ mr: 2 }}
+                          variant="dot"
+                        >
+                          <Avatar alt={contact.name} src={contact.profilePic} />
+                        </StyledBadge>
+                      ) : (
+                        <Avatar
+                          sx={{ mr: 2 }}
+                          alt={contact.name}
+                          src={contact.profilePic}
+                        />
+                      )}
+
+                      <Grid
+                        sx={{
+                          width: "100%",
+                        }}
+                      >
+                        <Typography
+                          {...(!result.read && result.sender === contact._id
+                            ? { fontWeight: "bold" }
+                            : {})}
+                        >
+                          {contact.fullName}
+                        </Typography>
+                        <Typography
+                          {...(!result.read && result.sender === contact._id
+                            ? { fontWeight: "bold" }
+                            : {})}
+                          variant="body2"
+                          color="textSecondary"
+                        >
+                          {typing.show && typing.to === contact._id ? (
+                            <Typography
+                              variant="caption"
+                              sx={{ color: "green", display: "block" }}
+                            >
+                              Typing...
+                            </Typography>
+                          ) : result.sender === contact._id ? (
+                            `${contact.fullName}:${result.message}`
+                          ) : (
+                            `You:${result.message}`
+                          )}
+                        </Typography>
+                      </Grid>
+                      <Grid
+                        sx={{
+                          width: "100%",
+                        }}
+                      >
+                        <Typography
+                          {...(!result.read && result.sender === contact._id
+                            ? { fontWeight: "bold" }
+                            : {})}
+                          sx={{
+                            textAlign: "end",
+                          }}
+                        >
+                          {result.lastmessaged}
+                        </Typography>
+                      </Grid>
+                    </ListItem>
+                    <Divider />
+                  </Box>
+                );
+              }
+              return null; // Return null if there's no matching lastChatteduser
+            })
+          ) : (
+            <Grid
+              container
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignContent: "center",
+                height: "100%",
+              }}
+            >
+              <Grid sx={{}}>
+                <lottie-player
+                  src="https://lottie.host/ce13803b-d08f-40ca-a716-c9d4c7f9589e/dmdOnSt8T6.json"
+                  background="transparent"
+                  speed="1"
+                  style={{ width: "20rem", height: "20rem" }}
+                  loop
+                  autoplay
+                ></lottie-player>
+                <Grid
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Typography
+                    variant="overline"
+                    sx={{ color: "grey", textAlign: "ce" }}
+                  >
+                    No Messages Found
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          )}
         </List>
       </Grid>
       <BlockedUsermodal open={modalOpen} close={handleClose} user={user} />

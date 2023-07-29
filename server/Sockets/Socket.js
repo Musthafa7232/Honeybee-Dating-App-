@@ -3,9 +3,10 @@ import chatModel from "../domain/model/chatModel.js";
 import matchModel from "../domain/model/matchesModel.js";
 import { addNewMsg, getLatestMessage } from "../usecases/ChatInteractor.js";
 import { isUserMatched } from "../usecases/MatchesInteractor.js";
+import { disconnect } from "mongoose";
 const io = new Server({
   cors: {
-    origin: "https://honeybee.zodiacwatches.shop",
+    origin: "http://localhost:5173",
   },
   pingTimeout: 60000,
 });
@@ -21,9 +22,8 @@ io.on("connection", (Socket) => {
 
   Socket.on("disconnect", () => {
     const userId = [...onlineUsers.entries()].find(([key, value]) => value === Socket.id)?.[0];
-
     if (userId) {
-      onlineUsers.delete(userId);
+     onlineUsers.delete(userId);
     }
   });
 
@@ -35,19 +35,14 @@ io.on("connection", (Socket) => {
         if (matchedUser) users.push(key);
       }
     }
-    if (users.length > 0) {
-      console.log("users=", users, "from=", user);
-      const socketUser=onlineUsers.get(user)
-      console.log(socketUser,'userSocketId');
       Socket.emit("onlineUsersList", users);
-    }
+    
   });
 
   Socket.on("videoCall", (data) => {
     console.log("video call", data);
     const sendUserSocket = onlineUsers.get(data.to);
     if (sendUserSocket) {
-      console.log(sendUserSocket, "buhaaa");
       data.video = true;
       data.modal = true;
       Socket.to(sendUserSocket).emit("incoming-video-call", data);
