@@ -23,7 +23,6 @@ const SubscriptionDetails = () => {
   console.log(user);
   useEffect(() => {
     if (!load && user) {
-      
       setLoad(true);
       if (query.get("pack")) {
         const pack = query.get("pack");
@@ -72,7 +71,13 @@ const SubscriptionDetails = () => {
     }
   };
   return (
-    <Grid item xs={11.9} lg={11} container sx={{ mb: 10, position: "relative" }}>
+    <Grid
+      item
+      xs={11.9}
+      lg={11}
+      container
+      sx={{ mb: 10, position: "relative" }}
+    >
       <Card
         className="CardItems"
         variant="outlined"
@@ -90,7 +95,7 @@ const SubscriptionDetails = () => {
               item
               xs={12}
               sx={{
-                mt:1,
+                mt: 1,
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "center",
@@ -131,7 +136,8 @@ const SubscriptionDetails = () => {
                 component="a"
                 href="/"
                 sx={{
-                  mt:1,mr:1,
+                  mt: 1,
+                  mr: 1,
                   fontFamily: "Montez",
                   fontWeight: 700,
                   letterSpacing: ".3rem",
@@ -153,8 +159,12 @@ const SubscriptionDetails = () => {
                 alignContent: "center",
               }}
             >
-              <Typography variant="h6" noWrap sx={{color:'goldenrod',mb:2}}>
-               <b>GOLD TIER SUBSCRIPTION</b> 
+              <Typography
+                variant="h6"
+                noWrap
+                sx={{ color: "goldenrod", mb: 2 }}
+              >
+                <b>GOLD TIER SUBSCRIPTION</b>
               </Typography>
             </Grid>
 
@@ -168,7 +178,11 @@ const SubscriptionDetails = () => {
                 alignContent: "center",
               }}
             >
-              <Typography variant="subtitle2" component="ul" sx={{color:'goldenrod'}}>
+              <Typography
+                variant="subtitle2"
+                component="ul"
+                sx={{ color: "goldenrod" }}
+              >
                 <li>
                   Video Call - Gold tier subscribers can initiate video calls
                   with Matched users.
@@ -186,36 +200,37 @@ const SubscriptionDetails = () => {
                 alignContent: "center",
               }}
             >
-       {user?.HoneyVipType?.includes('gold')?(
-        <Button
-                variant="contained"
-                color="success"
-                large
-                fullWidth
-                disabled
-                onClick={handleGold}
-              >
-               You have Gold Access
-              </Button>
-       ):(
-        <Button
-                variant="outlined"
-                color="inherit"
-                large
-                fullWidth
-                onClick={handleGold}
-                sx={{
-                  backgroundColor: 'goldenrod',
-                  color: 'black',
-                  '&:hover': {
-                    backgroundColor: 'black',
-                    color: 'goldenrod',
-                  },
-                }}
-              >
-                Access Gold Now for just RS:500
-              </Button>
-       )}       
+              {user?.HoneyVipType?.includes("gold") ||
+              user?.HoneyVipType.includes("platinum") ? (
+                <Button
+                  variant="contained"
+                  color="success"
+                  large
+                  fullWidth
+                  disabled
+                  onClick={handleGold}
+                >
+                  You have Gold Access
+                </Button>
+              ) : (
+                <Button
+                  variant="outlined"
+                  color="inherit"
+                  large
+                  fullWidth
+                  onClick={handleGold}
+                  sx={{
+                    backgroundColor: "goldenrod",
+                    color: "black",
+                    "&:hover": {
+                      backgroundColor: "black",
+                      color: "goldenrod",
+                    },
+                  }}
+                >
+                  Access Gold Now for just RS:500
+                </Button>
+              )}
             </Grid>
 
             <Grid
@@ -229,7 +244,7 @@ const SubscriptionDetails = () => {
                 alignContent: "center",
               }}
             >
-              <Typography variant="h6" noWrap sx={{color:'grey',mb:2}}>
+              <Typography variant="h6" noWrap sx={{ color: "grey", mb: 2 }}>
                 <b>PLATINUM TIER SUBSCRIPTION</b>
               </Typography>
             </Grid>
@@ -243,8 +258,12 @@ const SubscriptionDetails = () => {
                 alignContent: "center",
               }}
             >
-              <Typography variant="subtitle2" component="ul"  sx={{color:'grey'}}>
-              <li>
+              <Typography
+                variant="subtitle2"
+                component="ul"
+                sx={{ color: "grey" }}
+              >
+                <li>
                   Video Call - Gold tier subscribers can initiate video calls
                   with Matched users.
                 </li>
@@ -268,8 +287,8 @@ const SubscriptionDetails = () => {
                 alignContent: "center",
               }}
             >
-               {user?.HoneyVipType.includes('platinum')?(
-                  <Button
+              {user?.HoneyVipType.includes("platinum") ? (
+                <Button
                   variant="contained"
                   color="inherit"
                   large
@@ -279,26 +298,25 @@ const SubscriptionDetails = () => {
                 >
                   You have Platinum Access
                 </Button>
-               ):(
-  <Button
-                variant="outlined"
-                color="inherit"
-                large
-                fullWidth
-                onClick={handlePlatinum}
-                sx={{
-                  backgroundColor:'grey',
-                  color: 'black',
-                  '&:hover': {
-                    backgroundColor: 'black',
-                    color: 'white',
-                  },
-                }}
-              >
-                Access Platinum Now for just RS:1500
-              </Button>
-               )}
-            
+              ) : (
+                <Button
+                  variant="outlined"
+                  color="inherit"
+                  large
+                  fullWidth
+                  onClick={handlePlatinum}
+                  sx={{
+                    backgroundColor: "grey",
+                    color: "black",
+                    "&:hover": {
+                      backgroundColor: "black",
+                      color: "white",
+                    },
+                  }}
+                >
+                  Access Platinum Now for just RS:1500
+                </Button>
+              )}
             </Grid>
           </Grid>
         </CardContent>
