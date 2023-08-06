@@ -17,7 +17,7 @@ export default function DiscoverSide() {
   const user = useSelector((state) => state.user.user);
   const [users, setusers] = useState([]);
   const [isLoading, setLoading] = useState(true);
-  const [shuffledUsers, setShuffledUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [tost, settost] = useState({});
   const initial={
     open:false,
@@ -45,40 +45,27 @@ settost(initial)
       });
   }, [isLoading]);
 
-  let filteredUsers = [];
 
-  if (users) {
+  useEffect(() => {
+if (users) {
     const likedUserIds = user?.likedUsers?.map((likedUser) =>
       likedUser.toString()
     );
     const dislikedUserIds = user?.dislikedUsers?.map((dislikedUser) =>
       dislikedUser.toString()
     );
-
-    filteredUsers = shuffledUsers?.filter(
+const filtered=users?.filter(
       (user) =>
         !likedUserIds.includes(user?._id.toString()) &&
         !dislikedUserIds.includes(user?._id.toString())
     );
+    setFilteredUsers(filtered)
   }
-
-  useEffect(() => {
-    // Function to shuffle the array using Fisher-Yates algorithm
-    const shuffleArray = (array) => {
-      const shuffledArray = array.slice();
-      for (let i = shuffledArray.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffledArray[i], shuffledArray[j]] = [
-          shuffledArray[j],
-          shuffledArray[i],
-        ];
-      }
-      return shuffledArray;
-    };
-
-    setShuffledUsers(shuffleArray(users));
   }, [users]);
 
+ 
+
+  
   const likeHandler = async (id) => {
     const data = {
       User: id,

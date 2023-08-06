@@ -298,6 +298,21 @@ export default function InitialData() {
       });
   };
 
+  const validateImageSize=(fileSize)=>{
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+    if(fileSize>MAX_FILE_SIZE){
+      setErrorToast({});
+      setErrorToast({
+        data: "The image you provide is greater than  5mb",
+        success: false,
+        open: true,
+      });
+      return false
+    }
+    return true
+  }
+
   return (
     <>
       <BoilerPlateCode
@@ -341,6 +356,7 @@ export default function InitialData() {
                 image2={image2}
                 handleSubmit={handleSubmit}
                 setStep={setStep}
+                validateImageSize={validateImageSize}
               />
             )}
             {step === 2 && <PreviewData user={userData} setStep={setStep} handleSubmit={handleSubmit}    coverPicREF={coverPicREF}

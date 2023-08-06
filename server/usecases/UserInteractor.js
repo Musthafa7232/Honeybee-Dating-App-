@@ -209,7 +209,22 @@ export const showUsers = async (req, userModel) => {
         },
       ]);
     }
-    return users;
+
+      // Function to shuffle the array using Fisher-Yates algorithm
+      const shuffleArray = (array) => {
+        const shuffledArray = array.slice();
+        for (let i = shuffledArray.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledArray[i], shuffledArray[j]] = [
+            shuffledArray[j],
+            shuffledArray[i],
+          ];
+        }
+        return shuffledArray;
+      };
+  
+     const Users= shuffleArray(users)
+    return Users;
   } catch (error) {
     throw new Error("Failed to lookup users");
   }

@@ -88,7 +88,7 @@ function SelectUserChat({
 
   useEffect(() => {
     const userData = lastChatteduser.map((user) => {
-      const messageTime = dayjs.utc(user.updatedAt);
+      const messageTime = dayjs.utc(user.createdAt);
 
       const daysDiff = dayjs().diff(messageTime, "day");
 
@@ -138,7 +138,7 @@ function SelectUserChat({
           }
           // Sort the updatedUsers array based on updatedAt property
           updatedUsers.sort(
-            (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
           );
           return updatedUsers;
         });
@@ -150,13 +150,13 @@ function SelectUserChat({
     const sortUsers = contacts.map((user) => {
       lastChatteduser.forEach((chat) => {
         if (user.conversationId === chat.conversationId) {
-          user.updatedAt = chat.updatedAt;
+          user.createdAt = chat.createdAt;
         }
       });
       return user;
     });
     let sort = sortUsers.sort(
-      (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     );
     setChattedUsers(sort);
   }, [lastChatteduser]);
@@ -172,15 +172,16 @@ function SelectUserChat({
         console.log(newChattedUser, "<=OnlineUsers");
         setChattedUsers(newChattedUser);
       }
-    }else{
+    } else {
       if (chattedUser.length > 0) {
         const newChattedUser = chattedUser.map((user) => {
-            return { ...user, isOnline: false };
+          return { ...user, isOnline: false };
         });
         console.log(newChattedUser, "<=offlineUsers");
         setChattedUsers(newChattedUser);
       }
     }
+    console.log(lastMessages, "<= last messages");
   }, [onlineUsers, lastChatteduser]);
 
   const filteredContacts = Array.from(contacts).filter((contact) =>
@@ -259,7 +260,8 @@ function SelectUserChat({
               </List>
             )}
           </Paper>
-        </Popper>
+        </Popper> </Grid>
+        <Grid sx={{ mx:{xs:0,lg:6}  }} item xs={12}>
         <List component="nav">
           {chattedUser.length > 0 ? (
             chattedUser.map((contact, index) => {
@@ -269,7 +271,7 @@ function SelectUserChat({
               if (filteredUser.length > 0) {
                 const result = filteredUser[0];
                 return (
-                  <Box key={contact._id}>
+                  <Box  key={contact._id}>
                     <ListItem
                       button
                       onClick={() =>
@@ -312,6 +314,14 @@ function SelectUserChat({
                           {...(!result.read && result.sender === contact._id
                             ? { fontWeight: "bold" }
                             : {})}
+                          sx={{
+                            display:
+                              "-webkit-box" /* For Safari, Chrome, and newer versions of Opera */,
+                            WebkitLineClamp: 1 /* Show only 2 lines of text */,
+                            WebkitBoxOrient:
+                              "vertical" /* Set the box layout vertically */,
+                            overflow: "hidden",
+                          }}
                           variant="body2"
                           color="textSecondary"
                         >
@@ -356,6 +366,7 @@ function SelectUserChat({
             <Grid
               container
               sx={{
+                mt: 10,
                 display: "flex",
                 justifyContent: "center",
                 alignContent: "center",
@@ -388,7 +399,7 @@ function SelectUserChat({
             </Grid>
           )}
         </List>
-      </Grid>
+        </Grid>
       <BlockedUsermodal open={modalOpen} close={handleClose} user={user} />
     </Grid>
   );

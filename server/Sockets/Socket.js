@@ -6,7 +6,7 @@ import { isUserMatched } from "../usecases/MatchesInteractor.js";
 import { disconnect } from "mongoose";
 const io = new Server({
   cors: {
-    origin: "https://honeyhub.zodiacwatches.shop",
+    origin: "http://localhost:5173",
   },
   pingTimeout: 60000,
 });
