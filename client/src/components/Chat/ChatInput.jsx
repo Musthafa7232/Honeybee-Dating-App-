@@ -86,7 +86,6 @@ export default function ChatInput({ handleSendMsg, currentChat, user }) {
           </Box>
           <TextField
             fullWidth
-            autoFocus={true}
             value={msg}
             placeholder="Type Something..."
             onChange={(e) => handleTextChange(e)}
