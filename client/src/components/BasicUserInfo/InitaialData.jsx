@@ -213,98 +213,101 @@ export default function InitialData() {
   };
 
   const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append("fullName", userData.fullName);
-    formData.append("email", userData.email);
-    formData.append("birthday", userData.birthday);
-    formData.append("age", userData.age);
-    formData.append("gender", userData.gender);
-    formData.append("location", userData.location);
-    formData.append("faith", userData.faith);
-    formData.append("drinking", userData.drinking);
-    formData.append("smoking", userData.smoking);
-    formData.append("bio", userData.bio);
-    formData.append("phone", userData.phone);
-    formData.append("Preference", userData.Preference);
-    formData.append("realationshipStatus", userData.realationshipStatus);
-    console.log('j');
-    if (userData.profilePicFile) {
-      console.log('hlo',userData.profilePicFile);
-      formData.append(
-        "profilePic",
-        userData.profilePicFile,
-        userData.profilePicFile.name
-      );
-    }
-
-    if (userData.coverPicFile) {
-      console.log('bye',userData.coverPicFile);
-      formData.append(
-        "coverPic",
-        userData.coverPicFile,
-        userData.coverPicFile.name
-      );
-    }
-    if (userData.image0) {
-      console.log('hi');
-      if (userData.image0File) {
+    if(!loading){
+      setloading(true);
+      const formData = new FormData();
+      formData.append("fullName", userData.fullName);
+      formData.append("email", userData.email);
+      formData.append("birthday", userData.birthday);
+      formData.append("age", userData.age);
+      formData.append("gender", userData.gender);
+      formData.append("location", userData.location);
+      formData.append("faith", userData.faith);
+      formData.append("drinking", userData.drinking);
+      formData.append("smoking", userData.smoking);
+      formData.append("bio", userData.bio);
+      formData.append("phone", userData.phone);
+      formData.append("Preference", userData.Preference);
+      formData.append("realationshipStatus", userData.realationshipStatus);
+      console.log('j');
+      if (userData.profilePicFile) {
+        console.log('hlo',userData.profilePicFile);
         formData.append(
-          "image0",
-          userData.image0File,
-          userData.image0File.name
+          "profilePic",
+          userData.profilePicFile,
+          userData.profilePicFile.name
         );
       }
-    }
-
-    if (userData.image1) {
-      if (userData.image1File) {
+  
+      if (userData.coverPicFile) {
+        console.log('bye',userData.coverPicFile);
         formData.append(
-          "image1",
-          userData.image1File,
-          userData.image1File.name
+          "coverPic",
+          userData.coverPicFile,
+          userData.coverPicFile.name
         );
       }
-    }
-    if (userData.image2) {
-      if (userData.image2File) {
-        formData.append(
-          "image2",
-          userData.image2File,
-          userData.image2File.name
-        );
-      }
-    }
-
-    createAccountApi(formData)
-      .then((res) => {
-        if (res.data.success) {
-          setloading(false);
-          localStorage.setItem(
-            "authorization.user",
-            JSON.stringify(res.data.token)
+      if (userData.image0) {
+        console.log('hi');
+        if (userData.image0File) {
+          formData.append(
+            "image0",
+            userData.image0File,
+            userData.image0File.name
           );
-          dispatch(Auth_user());
-          navigate(res.data.redirect);
         }
-      })
-      .catch((err) => {
-        setloading(false);
-        setErrorToast({
-          data: "Failed to create an account. Please try again later.",
-          success: false,
-          open: true,
+      }
+  
+      if (userData.image1) {
+        if (userData.image1File) {
+          formData.append(
+            "image1",
+            userData.image1File,
+            userData.image1File.name
+          );
+        }
+      }
+      if (userData.image2) {
+        if (userData.image2File) {
+          formData.append(
+            "image2",
+            userData.image2File,
+            userData.image2File.name
+          );
+        }
+      }
+  
+      createAccountApi(formData)
+        .then((res) => {
+          if (res.data.success) {
+            setloading(false);
+            localStorage.setItem(
+              "authorization.user",
+              JSON.stringify(res.data.token)
+            );
+            dispatch(Auth_user());
+            navigate(res.data.redirect);
+          }
+        })
+        .catch((err) => {
+          setloading(false);
+          setErrorToast({
+            data: "Failed to create an account. Please try again later.",
+            success: false,
+            open: true,
+          });
+          console.log(err);
         });
-        console.log(err);
-      });
+    }
   };
 
   const validateImageSize=(fileSize)=>{
-    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const MAX_FILE_SIZE = 2 * 1024 * 1024; // 5MB
 
     if(fileSize>MAX_FILE_SIZE){
       setErrorToast({});
       setErrorToast({
-        data: "The image you provide is greater than  5mb",
+        data: "The image you provide is greater than 2 mb",
         success: false,
         open: true,
       });
@@ -363,7 +366,8 @@ export default function InitialData() {
                 profilePicREF={profilePicREF}
                 image0={image0}
                 image1={image1}
-                image2={image2} />}
+                image2={image2}
+                loading={loading} />}
 
             <Box sx={{ width: "100%", my: 5 }}>
               <Stepper activeStep={step} alternativeLabel>

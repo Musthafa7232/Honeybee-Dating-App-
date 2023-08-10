@@ -23,7 +23,9 @@ function PreviewData({user,setStep,handleSubmit, coverPicREF,
     profilePicREF,
     image0,
     image1,
-    image2,}) {
+    image2,
+    loading
+  }) {
 useEffect(()=>{
 console.log( coverPicREF,
     profilePicREF,
@@ -57,7 +59,7 @@ handleSubmit()
                 </IconButton>  Account Preview
                   </Typography>
                 </Grid>
-        <Grid item xs={12} sm={10} md={8} lg={6} xl={10}>
+        <Grid item xs={12} sm={10} md={8} lg={8} xl={10}>
           <Card
             variant="outlined"
             sx={{
@@ -97,17 +99,17 @@ handleSubmit()
 
             <CardContent>
               <Grid container>
-                <Grid item xs={2.3} sm={2.5} lg={2.6}></Grid>
+                <Grid item xs={2.3} sm={2.5} lg={3}></Grid>
                 <Grid
                   item
                   xs={6}
-                  lg={8}
+                  lg={8.5}
                   sx={{ mt: { xs: 14, lg: 9, xl: 0 }, ml: 3 }}
                 >
                   <Typography
                     sx={{
                       fontFamily: "sans-serif",
-                      fontSize: { sm: "1.5rem",md:'2rem' },
+                      fontSize: { sm: "1.5rem",md:'2rem',lg:'1.5rem' },
                       fontWeight: "bold",
                     }}
                   >
@@ -272,7 +274,7 @@ handleSubmit()
                 
                   onClick={handleAllSet}
                 >
-                   All set
+                {loading?'Loading':'All set'}   
                 </Button> 
             </Grid>
     </CardContent>

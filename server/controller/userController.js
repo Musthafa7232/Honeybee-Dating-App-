@@ -14,7 +14,7 @@ export const userDetails =
       const token = await createJwtToken(user, createUserToken);
       res
         .status(200)
-        .json({ success: true, redirect: "/profile", user, token });
+        .json({ success: true, redirect: "/discover", user, token });
     } catch (error) {
       res.status(400).json({ error: "Failed to create user" });
     }
@@ -84,16 +84,16 @@ export const googleData =
       const user = await findUserWithEmail(email, userModel);
       if (user) {
         res.redirect(
-          `http://localhost:5173/googleLogin?email=${email}`
+          `https://honeybee.zodiacwatches.shop/googleLogin?email=${email}`
         );
       } else {
         res.redirect(
-          `http://localhost:5173/login?fullName=${name}&email=${email}`
+          `https://honeybee.zodiacwatches.shop/login?fullName=${name}&email=${email}`
         );
       }
     } catch (error) {
       console.error("Failed to authorize Google User", error);
-      res.redirect(`http://localhost:5173`);
+      res.redirect(`https://honeybee.zodiacwatches.shop`);
     }
   };
 

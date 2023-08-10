@@ -106,7 +106,7 @@ function App() {
               <Route path="/HoneyVip" element={<SubscriptionPage />} />
               <Route path="/Chat" element={<ChatPage />} />
               <Route path="/room/:roomId" element={<VideoCall />} />
-            </Route>  <Route path="/createAccount" element={<CreateAccount />} />
+            </Route>  
             <Route element={<UserPublicRoute />}>
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />
@@ -115,7 +115,7 @@ function App() {
               </Route>
               <Route path="/googleLogin" element={<GoogleLogin />} />
               <Route element={<RegisterRoute />}>
-              
+              <Route path="/createAccount" element={<CreateAccount />} />
               </Route>
             </Route>
           </Route>

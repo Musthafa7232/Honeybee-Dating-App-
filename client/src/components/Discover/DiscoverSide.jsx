@@ -43,7 +43,7 @@ settost(initial)
       .catch((err) => {
         window.location.reload();
       });
-  }, [isLoading]);
+  }, []);
 
 
   useEffect(() => {
@@ -61,7 +61,7 @@ const filtered=users?.filter(
     );
     setFilteredUsers(filtered)
   }
-  }, [users]);
+  }, [users,user]);
 
  
 

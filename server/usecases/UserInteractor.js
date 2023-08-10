@@ -201,13 +201,7 @@ export const showUsers = async (req, userModel) => {
     if (user.Preference === "Everyone") {
       users = await userModel.find({ _id: { $ne: user._id } });
     } else {
-      users = await userModel.aggregate([
-        {
-          $match: {
-            gender: user.Preference,
-          },
-        },
-      ]);
+      users = await userModel.find({ _id: { $ne: user._id }, gender: user.Preference });
     }
 
       // Function to shuffle the array using Fisher-Yates algorithm

@@ -3,7 +3,6 @@ import chatModel from "../domain/model/chatModel.js";
 import matchModel from "../domain/model/matchesModel.js";
 import { addNewMsg, getLatestMessage } from "../usecases/ChatInteractor.js";
 import { isUserMatched } from "../usecases/MatchesInteractor.js";
-import { disconnect } from "mongoose";
 const io = new Server({
   cors: {
     origin: "https://honeybee.zodiacwatches.shop",
